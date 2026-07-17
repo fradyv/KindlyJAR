@@ -1,0 +1,3355 @@
+/* ── KEYFRAMES ── */
+@keyframes dashFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dashSlideLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes dashFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashFadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashScaleFade {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── DASHBOARD LAYOUT ── */
+.dashboard-body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-attachment: scroll;
+  padding: 14px;
+  box-sizing: border-box;
+  gap: 14px;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  will-change: transform, opacity;
+  animation: dashSlideLeft 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.5) !important; 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0 24px 24px 0;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 10;
+  overflow-y: auto;
+  box-shadow: 
+    0 4px 24px rgba(33, 163, 255, 0.15), 
+    0 0 0 1px rgba(33, 163, 255, 0.08);
+}
+
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  background: none !important;
+  border-radius: 0 !important;
+  padding: 0 8px !important;
+  margin-bottom: 28px;
+}
+
+.sidebar-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b0b7c3;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.sidebar-nav {
+  display: flex !important; /* Override: jangan ikut hidden oleh nav { display:none } di style.css */
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 2px !important;
+}
+
+.sidebar-nav .sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.93rem;
+  color: #3D3D4E !important;
+  text-decoration: none;
+  padding: 10px 12px !important;
+  border-radius: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-nav .sidebar-link:hover {
+  background: rgba(33, 163, 255, 0.08) !important;
+  color: #21A3FF !important;
+}
+
+.sidebar-nav .sidebar-link.active {
+  background: rgba(33, 163, 255, 0.13) !important;
+  color: #21A3FF !important;
+  font-weight: 700;
+}
+
+.sidebar-nav .sidebar-link svg {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.sidebar-cta {
+  padding: 0 4px;
+  margin-top: 20px;
+}
+
+.btn-join-hero {
+  width: 100%;
+  background: #21A3FF;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.93rem;
+  border: none;
+  border-radius: 50px;
+  padding: 13px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.12s;
+  box-shadow: 0 6px 20px rgba(33, 163, 255, 0.3);
+}
+
+.btn-join-hero:hover {
+  background: #1a8fe0;
+  transform: translateY(-1px);
+}
+/* ── VERIFICATION BANNER SYSTEM ── */
+.verification-banner {
+  background: #FFF9E6; 
+  border: 1px solid #FFE0B2;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 14px 36px 0; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: dashFadeDown 0.45s ease both;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.banner-icon {
+  font-size: 1.2rem;
+}
+
+.banner-content p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #664D03; 
+}
+
+.banner-content strong {
+  font-weight: 700;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.banner-btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: #FFAA00;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.banner-btn:hover {
+  background: #e69900;
+}
+
+.banner-close {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  color: #A1887F;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.banner-close:hover {
+  color: #664D03;
+}
+/* ── DASHBOARD MAIN ── */
+.dash-right {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;              
+  margin: 14px 36px 0;             
+  background: rgba(255, 255, 255, 0.7); 
+  backdrop-filter: blur(12px);      
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;              
+  box-shadow: 
+    0 4px 18px rgba(33, 163, 255, 0.08), 
+    0 0 0 1px rgba(33, 163, 255, 0.06); 
+  z-index: 10;
+  will-change: transform, opacity;
+  animation: dashFadeDown 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s both;
+}
+
+.dash-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 36px 48px;
+}
+
+.dash-greeting {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1.45rem;
+  color: #1A1A2E;
+  /* Bisa menyusut agar tidak mendorong sisi kanan keluar */
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-username {
+  color: #21A3FF;
+}
+
+.dash-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0; /* Jangan pernah menyusut / terdorong keluar */
+}
+
+.notif-btn {
+  width: 42px;
+  height: 42px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #3D3D4E;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.notif-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(33, 163, 255, 0.2);
+}
+
+.dash-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 6px 18px 6px 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  /* Batasi lebar agar tidak meluber keluar topbar */
+  max-width: 260px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dash-profile:hover {
+  background: #eef6ff;
+  box-shadow: 0 4px 16px rgba(33, 163, 255, 0.15);
+}
+
+.dash-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  border: 2px solid rgba(33, 163, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.dash-profile-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1A1A2E;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.dash-profile-email {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.74rem;
+  color: #b0b7c3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+/* ── SATU CARD BESAR ── */
+.dash-main-card {
+  background: rgba(255, 255, 255, 0.5) !important; 
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 18px rgba(33, 163, 255, 0.07);
+  will-change: transform, opacity;
+  animation: dashFadeUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 32px rgba(33, 163, 255, 0.18), 0 0 0 1px rgba(33, 163, 255, 0.06);
+}
+
+/* Section di dalam card besar: pisahkan dengan garis */
+.dash-section {
+  padding: 0;
+}
+
+.dash-section + .dash-section {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(33, 163, 255, 0.1);
+}
+
+/* ── DASHBOARD CARDS (legacy) ── */
+.dash-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 18px rgba(33, 163, 255, 0.07);
+}
+
+.dash-card-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #1A1A2E;
+  margin-bottom: 4px;
+}
+
+.dash-card-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #6b7a8d;
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  gap: 14px;
+}
+
+.summary-card:nth-child(1) { will-change: transform,opacity; animation: dashScaleFade 0.4s cubic-bezier(0.22,0.61,0.36,1) 0.35s both; }
+.summary-card:nth-child(2) { will-change: transform,opacity; animation: dashScaleFade 0.4s cubic-bezier(0.22,0.61,0.36,1) 0.45s both; }
+.summary-card:nth-child(3) { will-change: transform,opacity; animation: dashScaleFade 0.4s cubic-bezier(0.22,0.61,0.36,1) 0.55s both; }
+.summary-card:nth-child(4) { will-change: transform,opacity; animation: dashScaleFade 0.4s cubic-bezier(0.22,0.61,0.36,1) 0.65s both; }
+
+.summary-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid rgba(33, 163, 255, 0.12);
+  border-radius: 14px;
+  padding: 20px 18px;
+  cursor: pointer;
+  transition: background 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.summary-card:hover {
+  background: #21A3FF;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(33, 163, 255, 0.35);
+}
+
+.summary-card:hover .summary-value,
+.summary-card:hover .summary-label {
+  color: #ffffff;
+}
+
+.summary-card.primary {
+  background: #21A3FF;
+  border-color: transparent;
+  flex: 1.5;
+  box-shadow: 0 6px 20px rgba(33, 163, 255, 0.3);
+  cursor: default;
+}
+
+.summary-value {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.45rem;
+  color: #1A1A2E;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+.summary-card.primary .summary-value {
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+.summary-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b0b7c3;
+}
+
+.summary-card.primary .summary-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── PROFILE DROPDOWN ── */
+.profile-wrap {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(33, 163, 255, 0.15);
+  border: 1px solid rgba(33, 163, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.profile-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.profile-dropdown-menu {
+  padding: 8px;
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #3D3D4E;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background 0.18s, color 0.18s;
+}
+
+.profile-menu-item:hover {
+  background: rgba(33, 163, 255, 0.08);
+  color: #21A3FF;
+}
+
+.profile-menu-item.danger {
+  color: #ef4444;
+}
+
+.profile-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+}
+
+.profile-menu-divider {
+  height: 1px;
+  background: rgba(33, 163, 255, 0.08);
+  margin: 6px 0;
+}
+
+/* ── NOTIFIKASI DROPDOWN ── */
+.notif-wrap {
+  position: relative;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(33, 163, 255, 0.15);
+  border: 1px solid rgba(33, 163, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 9999;
+}
+
+.notif-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(33, 163, 255, 0.08);
+}
+
+.notif-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #1A1A2E;
+}
+
+.notif-badge {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #b0b7c3;
+  background: #f0f7ff;
+  padding: 2px 10px;
+  border-radius: 99px;
+}
+
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 36px 20px;
+  color: #b0b7c3;
+}
+
+.notif-empty p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #b0b7c3;
+}
+
+/* ── ACTIVITY TABLE ── */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.activity-table th {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #1A1A2E;
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1.5px solid rgba(33, 163, 255, 0.1);
+}
+
+.activity-table td {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #3D3D4E;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(33, 163, 255, 0.05);
+}
+
+.activity-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.activity-table tbody tr:hover td {
+  background: rgba(33, 163, 255, 0.03);
+}
+
+.activity-table tbody tr:nth-child(1) { animation: dashFadeIn 0.35s ease 0.5s both; }
+.activity-table tbody tr:nth-child(2) { animation: dashFadeIn 0.35s ease 0.6s both; }
+.activity-table tbody tr:nth-child(3) { animation: dashFadeIn 0.35s ease 0.7s both; }
+.activity-table tbody tr:nth-child(4) { animation: dashFadeIn 0.35s ease 0.8s both; }
+
+.badge {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.badge.berhasil { color: #22c55e; }
+.badge.gagal    { color: #ef4444; }
+
+/* ── BOX PUTIH RIWAYAT ── */
+.history-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(33, 163, 255, 0.08);
+  margin-top: 16px;
+}
+
+.history-box .table-wrap {
+  margin-bottom: 16px;
+}
+
+/* ── PAGINATION SYSTEM ── */
+.history-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.page-nav-btn {
+  background: transparent;
+  border: 1px solid #b0b7c3;
+  color: #3D3D4E;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  border-color: #21A3FF;
+  color: #21A3FF;
+  background: rgba(33, 163, 255, 0.05);
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
+.page-num-display {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3D3D4E;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ── TRENDING ── */
+.dash-trending {
+  margin-bottom: 20px;
+}
+
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.trending-card {
+  background: #f7fbff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(33, 163, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(33, 163, 255, 0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-card:nth-child(1) { will-change: transform,opacity; animation: dashFadeUp 0.45s cubic-bezier(0.22,0.61,0.36,1) 0.55s both; }
+.trending-card:nth-child(2) { will-change: transform,opacity; animation: dashFadeUp 0.45s cubic-bezier(0.22,0.61,0.36,1) 0.67s both; }
+.trending-card:nth-child(3) { will-change: transform,opacity; animation: dashFadeUp 0.45s cubic-bezier(0.22,0.61,0.36,1) 0.79s both; }
+.trending-card:nth-child(4) { will-change: transform,opacity; animation: dashFadeUp 0.45s cubic-bezier(0.22,0.61,0.36,1) 0.91s both; }
+
+.trending-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(33, 163, 255, 0.18);
+}
+
+.trending-img {
+  width: 100%;
+  height: 148px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.trending-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.trending-card:hover .trending-img img {
+  transform: scale(1.06);
+}
+
+.trending-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.trending-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #1A1A2E;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.t-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.t-bar {
+  width: 100%;
+  height: 5px;
+  background: #d6eeff;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.t-fill {
+  height: 100%;
+  background: #21A3FF;
+  border-radius: 99px;
+}
+
+.t-pct {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.74rem;
+  color: #b0b7c3;
+  text-align: right;
+}
+
+.btn-t-donasi {
+  width: 100%;
+  background: #ffffff;
+  color: #21A3FF;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 2px solid #21A3FF;
+  border-radius: 50px;
+  padding: 9px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.12s;
+}
+
+.btn-t-donasi:hover {
+  background: #21A3FF;
+  color: #ffffff;
+}
+
+.btn-t-donasi:active {
+  transform: scale(0.96);
+}
+
+.t-detail {
+  display: block;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8rem;
+  color: #21A3FF;
+  text-decoration: none;
+}
+
+.t-detail:hover {
+  text-decoration: underline;
+}
+
+.dash-search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 450px; 
+}
+
+.dash-search-input {
+  width: 100%;
+  padding: 10px 16px 10px 42px; 
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #4a5568;
+  background-color: #dceefb; 
+  border: none !important;
+  outline: none;
+  border-radius: 50px;
+  transition: background-color 0.2s ease;
+}
+
+.dash-search-input:focus {
+  background-color: #c9e2f5;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  pointer-events: none; 
+}
+/* ── BANNER HEADER ── */
+.donation-header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  background: linear-gradient(180deg, #75C0F6 0%, #21A3FF 100%);
+  
+  margin: 0 0 24px 0; 
+  
+  border-radius: 16px;
+  overflow: hidden; 
+  position: relative;
+  min-height: 200px;
+}
+
+.banner-text-content {
+  flex: 1;
+  padding: 32px; 
+  max-width: 60%;
+  z-index: 2;
+}
+
+.banner-text-content h2 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.banner-text-content p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.banner-image-container {
+  flex: 1;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.banner-fade-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  mask-image: linear-gradient(to right, transparent 0%, black 40%);
+}
+
+.category-filter-row {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 16px 0;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+/* ── COMPONENT: DROPDOWN PILLS FILTER ── */
+.category-filter-row {
+  display: flex;
+  gap: 14px;
+  margin: 0 0 24px 0; /* Tetap 0 kiri-kanan agar presisi lurus */
+  overflow-x: auto;
+  padding: 4px 2px 10px 2px;
+  scrollbar-width: none; 
+}
+
+.category-filter-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Base style pill putih border biru */
+.btn-category-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid #21A3FF; /* Border biru terang khas KindlyJAR */
+  border-radius: 50px;
+  padding: 8px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+  
+  /* Text Style */
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #21A3FF; 
+}
+
+/* Icon chevron kecil di kanan */
+.btn-category-pill .chevron-icon {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: #21A3FF;
+}
+
+/* Hover effect */
+.btn-category-pill:hover {
+  background: rgba(33, 163, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* State Aktif (Saat diklik/pilihan utama) */
+.btn-category-pill.active {
+  background: #21A3FF;
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(33, 163, 255, 0.2);
+}
+
+.btn-category-pill.active .chevron-icon {
+  color: #ffffff;
+}
+/* ── COMPONENT: CARD DONASI HORIZONTAL (SLIM & PAS) ── */
+.horizontal-donation-section {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.horizontal-donation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Jarak antar card lebih rapat */
+}
+
+.donation-card-horizontal {
+  display: flex;
+  background: #ffffff;
+  border-radius: 12px; /* Border radius sedikit diperkecil agar pas dengan ukuran baru */
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(33, 163, 255, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  
+  /* KUNCI TINGGI CARD UTAMA */
+  height: 190px; 
+}
+
+.donation-card-horizontal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(33, 163, 255, 0.1);
+}
+
+/* Sisi Gambar (Kiri) - Sekarang Pas Atas Bawah */
+.card-horizontal-img {
+  width: 240px;      /* Diperkecil dari 300px agar proporsional */
+  min-width: 240px;
+  height: 100%;      /* Memaksa container gambar setinggi card (190px) */
+}
+
+.card-horizontal-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Memotong gambar secara otomatis agar penuh atas-bawah & kiri-kanan */
+  display: block;
+}
+
+/* Konten (Kanan) - Dibuat Lebih Padat */
+.card-horizontal-body {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 6px; /* Jarak antar element dipersempit */
+  overflow: hidden;
+}
+
+.card-horizontal-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem; /* Ukuran font diperkecil sedikit */
+  color: #1A1A2E;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Badges Menggunakan Komponen Asli */
+.card-horizontal-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.card-horizontal-badges .btn-category-pill {
+  pointer-events: none;
+  transform: scale(0.85); /* Diperkecil lagi agar serasi dengan card yang slim */
+  transform-origin: left center;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.card-horizontal-desc {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #718096;
+  line-height: 1.4;
+  margin: 0;
+  /* Membatasi teks deskripsi agar tidak luber jika terlalu panjang */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Meta Lokasi & Relawan */
+.card-horizontal-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+/* Area Progress Bar */
+.card-horizontal-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto; /* Tetap mengunci area progress dan tombol di bawah */
+}
+
+.card-horizontal-progress .progress-bar-bg {
+  width: 100%;
+  height: 5px;
+  background: #e2f2fe;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.card-horizontal-progress .progress-bar-fill {
+  height: 100%;
+  background: #21A3FF;
+  border-radius: 99px;
+}
+
+.progress-target {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #1A1A2E;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Area Aksi Tombol (Dibuat Inline Kiri-Kanan Agar Hemat Ruang Vertikal) */
+.card-horizontal-actions {
+  display: flex;
+  flex-direction: row; /* Berjejer kesamping, bukan menumpuk kebawah */
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.btn-horizontal-donasi {
+  flex: 1; /* Membuat tombol donasi mengambil sisa ruang yang ada */
+  max-width: 180px; /* Membatasi panjang tombol donasi agar tidak terlalu melar */
+  background: #ffffff;
+  color: #21A3FF;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1.5px solid #21A3FF;
+  border-radius: 50px;
+  padding: 6px 16px; /* Padding diperkecil */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-horizontal-donasi:hover {
+  background: #21A3FF;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(33, 163, 255, 0.15);
+}
+
+.horizontal-detail-link {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8rem;
+  color: #21A3FF;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ── COMPONENT: KINDLYSHOP PRODUCT GRID (ala e-Bay) ── */
+.shop-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.product-card {
+  background: #f7fbff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(33, 163, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(33, 163, 255, 0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(33, 163, 255, 0.18);
+}
+
+.product-img {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover .product-img img {
+  transform: scale(1.06);
+}
+
+.product-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.product-tag {
+  align-self: flex-start;
+  background: rgba(33, 163, 255, 0.1);
+  color: #21A3FF;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+
+.product-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #1A1A2E;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.product-price {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #21A3FF;
+  margin: 0;
+}
+
+.product-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-add-cart {
+  flex: 1;
+  background: #21A3FF;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 50px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.12s;
+}
+
+.btn-add-cart:hover {
+  background: #1a8ee0;
+}
+
+.btn-add-cart:active {
+  transform: scale(0.96);
+}
+
+.product-detail-link {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #21A3FF;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.product-detail-link:hover {
+  text-decoration: underline;
+}
+
+.shop-empty-state {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  color: #718096;
+  padding: 40px 0;
+}
+
+.horizontal-detail-link:hover {
+  text-decoration: underline;
+}
+#cartDropdown {
+  top: 52px;
+}
+#notifDropdown {
+  top: 85px;
+  right: 60px;
+}
+#profileDropdown {
+  top: 90px;
+  right:40px;
+}
+/* ── INISIASI DONASI ── */
+.inisiasi-hero {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.inisiasi-hero-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: #1A1A2E;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.inisiasi-hero-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #3D3D4E;
+  max-width: 520px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+
+.inisiasi-cta-btn {
+  display: inline-block;
+  background: #21A3FF;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 40px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(33, 163, 255, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inisiasi-cta-btn:hover {
+  background: #1a8fe0;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(33, 163, 255, 0.45);
+}
+
+.inisiasi-cta-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(33, 163, 255, 0.35);
+}
+
+/* Why grid */
+.inisiasi-why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.inisiasi-why-card {
+  background: #f7fbff;
+  border: 1px solid rgba(33, 163, 255, 0.12);
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.inisiasi-why-card:hover {
+  box-shadow: 0 6px 20px rgba(33, 163, 255, 0.15);
+  transform: translateY(-3px);
+}
+
+.inisiasi-why-icon {
+  font-size: 1.6rem;
+}
+
+.inisiasi-why-card h4 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #1A1A2E;
+}
+
+.inisiasi-why-card p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.82rem;
+  color: #3D3D4E;
+  line-height: 1.6;
+}
+
+/* Checklist */
+.inisiasi-checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.inisiasi-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #3D3D4E;
+}
+
+.check-icon {
+  width: 24px;
+  height: 24px;
+  background: #21A3FF;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* CTA closing */
+.inisiasi-cta-closing {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1A1A2E;
+  margin-bottom: 16px;
+}
+
+/* Status banner */
+.inisiasi-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.inisiasi-status-banner span {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.inisiasi-status-banner strong {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.inisiasi-status-banner.pending {
+  background: #fffbea;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+}
+
+.inisiasi-status-banner.ditolak {
+  background: #fff1f1;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.inisiasi-status-banner .inisiasi-cta-btn {
+  margin-top: 12px;
+}
+.inisiasi-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: 160px; /* dorong teks ke bawah, kasih ruang buat foto di atas */
+}
+
+.inisiasi-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 220px;
+  z-index: 0;
+}
+
+.inisiasi-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 45%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 45%, transparent 100%);
+}
+
+.inisiasi-hero-title,
+.inisiasi-hero-sub,
+.inisiasi-hero .inisiasi-cta-btn {
+  position: relative;
+  z-index: 1;
+}
+.inisiasi-siapkan-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.inisiasi-siapkan-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.inisiasi-siapkan-img {
+  flex: 1;
+  height: 240px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.inisiasi-siapkan-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%);
+  mask-image: linear-gradient(to left, black 40%, transparent 100%);
+}
+
+@media (max-width: 900px) {
+  .inisiasi-siapkan-row {
+    flex-direction: column;
+  }
+}
+/* ── MULTI-STEP PROGRESS TRACKER ── */
+.form-progress-container {
+  margin-bottom: 32px;
+}
+
+.form-steps-track {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.form-steps-track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  height: 4px;
+  background: #e2f2fe;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.form-progress-bar-fill {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  height: 4px;
+  background: #21A3FF;
+  transform: translateY(-50%);
+  z-index: 2;
+  transition: width 0.3s ease;
+  width: 25%;
+}
+
+.step-node {
+  position: relative;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: 3px solid #e2f2fe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #b0b7c3;
+  transition: all 0.3s ease;
+}
+
+.step-node.active {
+  border-color: #21A3FF;
+  color: #21A3FF;
+  box-shadow: 0 0 0 4px rgba(33, 163, 255, 0.15);
+}
+
+.step-node.completed {
+  background: #21A3FF;
+  border-color: #21A3FF;
+  color: #ffffff;
+}
+
+.step-labels-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.step-label-text {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #b0b7c3;
+  width: 80px;
+  text-align: center;
+}
+
+.step-label-text.active {
+  color: #1A1A2E;
+  font-weight: 700;
+}
+
+/* ── FORM ARCHITECTURE ── */
+.verify-step-panel {
+  display: none;
+  animation: dashFadeUp 0.4s ease both;
+}
+
+.verify-step-panel.active {
+  display: block;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+}
+
+.form-label {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #3D3D4E;
+}
+
+.form-input-style {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  padding: 11px 16px;
+  background: #f7fbff;
+  border: 1.5px solid rgba(33, 163, 255, 0.15);
+  border-radius: 12px;
+  color: #1A1A2E;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input-style:focus {
+  background: #ffffff;
+  border-color: #21A3FF;
+  box-shadow: 0 0 0 3px rgba(33, 163, 255, 0.1);
+}
+
+select.form-input-style {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 42px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2321A3FF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+/* ── CUSTOM FILE UPLOAD DRAG & DROP ── */
+.custom-file-upload {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f7fbff;
+  border: 2px dashed rgba(33, 163, 255, 0.25);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.custom-file-upload:hover {
+  background: rgba(33, 163, 255, 0.03);
+  border-color: #21A3FF;
+}
+
+.custom-file-upload input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-icon-style {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.upload-text-main {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #21A3FF;
+}
+
+.upload-text-sub {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.76rem;
+  color: #b0b7c3;
+  margin-top: 2px;
+}
+
+/* Template Download Link */
+.template-download-link {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #21A3FF;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.template-download-link:hover {
+  text-decoration: underline;
+}
+
+/* ── OTP WRAPPER ── */
+.otp-input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-request-otp {
+  background: #ffffff;
+  color: #21A3FF;
+  border: 1.5px solid #21A3FF;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  padding: 0 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-request-otp:hover {
+  background: rgba(33, 163, 255, 0.05);
+}
+
+/* ── STEP ACTION BUTTONS ── */
+.form-action-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(33, 163, 255, 0.1);
+}
+
+.btn-form-back {
+  background: transparent;
+  color: #b0b7c3;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: color 0.2s;
+}
+
+.btn-form-back:hover {
+  color: #3D3D4E;
+}
+
+.btn-form-next {
+  background: #21A3FF;
+  color: #ffffff;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  padding: 12px 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(33, 163, 255, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-form-next:hover {
+  background: #1a8fe0;
+  transform: translateY(-1px);
+}
+
+/* ── SIDEBAR VARIANT: PROFIL & PENGATURAN ── */
+.sidebar-back-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #6b7a8d;
+  text-decoration: none;
+  padding: 8px 8px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-back-link:hover {
+  background: rgba(33, 163, 255, 0.08);
+  color: #21A3FF;
+}
+
+.sidebar-nav .sidebar-link.sidebar-link-danger {
+  color: #ef4444 !important;
+}
+
+.sidebar-nav .sidebar-link.sidebar-link-danger:hover {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #ef4444 !important;
+}
+
+/* ── FORM HINTS ── */
+.form-hint {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b0b7c3;
+}
+
+.form-hint-link {
+  color: #21A3FF;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-hint-link:hover {
+  text-decoration: underline;
+}
+
+.form-label-optional {
+  color: #b0b7c3;
+  font-weight: 500;
+}
+
+.form-input-style:disabled {
+  background: #f0f3f7;
+  color: #6b7a8d;
+  cursor: not-allowed;
+}
+
+/* ── PROFILE PHOTO EDIT ── */
+.profile-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-photo-edit {
+  position: relative;
+  display: block;
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.profile-photo-preview {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  border: 3px solid rgba(33, 163, 255, 0.2);
+}
+
+.profile-photo-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: #21A3FF;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(33, 163, 255, 0.4);
+  transition: background 0.2s;
+}
+
+.profile-photo-btn:hover {
+  background: #1a8fe0;
+}
+
+.profile-photo-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1A1A2E;
+}
+
+.profile-photo-hint {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b0b7c3;
+  margin-top: 2px;
+}
+
+/* ── TOGGLE SWITCH ── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #d6dde5;
+  border-radius: 99px;
+  transition: background 0.2s ease;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: #21A3FF;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(18px);
+}
+
+.toggle-switch input:focus-visible + .toggle-slider {
+  box-shadow: 0 0 0 3px rgba(33, 163, 255, 0.25);
+}
+
+.toggle-switch.small {
+  width: 36px;
+  height: 21px;
+}
+
+.toggle-switch.small .toggle-slider::before {
+  width: 15px;
+  height: 15px;
+}
+
+.toggle-switch.small input:checked + .toggle-slider::before {
+  transform: translateX(15px);
+}
+
+/* ── TOGGLE ROW (label + description + switch) ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(33, 163, 255, 0.08);
+}
+
+.form-group + .toggle-row,
+.toggle-row:first-of-type {
+  border-top: 1px solid rgba(33, 163, 255, 0.08);
+  margin-top: 6px;
+}
+
+.toggle-row-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #1A1A2E;
+  margin-bottom: 2px;
+}
+
+.toggle-row-desc {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.82rem;
+  color: #6b7a8d;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+/* ── SETTINGS: SECTION SAVE ROW ── */
+.section-save-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* ── SETTINGS: NOTIFICATION PREFERENCE TABLE ── */
+.notif-pref-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(33, 163, 255, 0.08);
+}
+
+.notif-pref-row:first-child {
+  border-top: none;
+}
+
+.notif-pref-label {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1A1A2E;
+}
+
+.notif-pref-channels {
+  display: flex;
+  gap: 28px;
+  flex-shrink: 0;
+}
+
+.notif-pref-channel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.notif-pref-channel span {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.72rem;
+  color: #b0b7c3;
+}
+
+/* ── SETTINGS: PAYMENT METHOD LIST ── */
+.payment-method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.payment-method-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f7fbff;
+  border: 1px solid rgba(33, 163, 255, 0.1);
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+
+.payment-method-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(33, 163, 255, 0.1);
+}
+
+.payment-method-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.payment-method-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1A1A2E;
+}
+
+.payment-method-number {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b0b7c3;
+}
+
+.payment-method-remove {
+  background: transparent;
+  border: none;
+  color: #b0b7c3;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.2s;
+}
+
+.payment-method-remove:hover {
+  color: #ef4444;
+}
+
+.btn-add-payment {
+  align-self: flex-start;
+  background: #ffffff;
+  color: #21A3FF;
+  border: 1.5px solid #21A3FF;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-radius: 50px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-payment:hover {
+  background: rgba(33, 163, 255, 0.05);
+}
+
+/* ── SETTINGS: DANGER ZONE ── */
+.danger-zone {
+  background: #fff5f5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.danger-zone-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #991b1b;
+  margin-bottom: 4px;
+}
+
+.danger-zone-desc {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #6b7a8d;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  max-width: 620px;
+}
+
+.danger-zone-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-danger-outline,
+.btn-danger-solid {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-radius: 50px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger-outline {
+  background: #ffffff;
+  color: #ef4444;
+  border: 1.5px solid #ef4444;
+}
+
+.btn-danger-outline:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.btn-danger-solid {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger-solid:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 640px) {
+  .toggle-row,
+  .notif-pref-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .notif-pref-channels {
+    align-self: flex-end;
+  }
+}
+/* ── SETTINGS LAYOUT ── */
+.settings-layout {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  min-height: 0;
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+.settings-sidenav {
+  background: #ffffff;
+  width: 200px;
+  min-width: 200px;
+  border-right: 1px solid rgba(33, 163, 255, 0.1);
+  padding: 24px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  border-radius: 20px 0 0 20px; 
+}
+
+.settings-nav-item {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #3D3D4E;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background 0.2s, color 0.2s;
+  text-align: left !important;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-nav-item:hover {
+  background: rgba(33, 163, 255, 0.08);
+  color: #21A3FF;
+}
+
+.settings-nav-item.active {
+  background: rgba(33, 163, 255, 0.13);
+  color: #21A3FF;
+  font-weight: 700;
+}
+
+.settings-nav-item.danger {
+  color: #ef4444;
+}
+
+.settings-nav-item.danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+}
+.settings-content,
+.settings-layout,
+.dash-main-card.settings-layout {
+  text-align: left;
+}
+.settings-content .dash-section + .dash-section {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.settings-content .dash-section {
+  padding: 0;
+  margin: 0;
+}
+/* ── DETAIL PROGRAM ── */
+.detail-hero {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 280px;
+  margin-bottom: 24px;
+}
+
+.detail-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  padding: 24px;
+  color: #ffffff;
+}
+
+.detail-badge {
+  background: #21A3FF;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 99px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.detail-judul {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.detail-penyelenggara {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Progress box */
+.detail-progress-box {
+  background: #f7fbff;
+  border: 1px solid rgba(33,163,255,0.12);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.detail-progress-bar-wrap {
+  width: 100%;
+  height: 10px;
+  background: #d6eeff;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.detail-progress-fill {
+  height: 100%;
+  background: #21A3FF;
+  border-radius: 99px;
+}
+
+.detail-progress-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.detail-stat-value {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #1A1A2E;
+}
+
+.detail-stat-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8rem;
+  color: #6b7a8d;
+}
+
+.detail-pct {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: #21A3FF;
+}
+
+.detail-meta-row {
+  display: flex;
+  gap: 20px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #6b7a8d;
+}
+
+/* Sticky CTA */
+.detail-sticky-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(33,163,255,0.1);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-donasi-besar {
+  font-size: 1rem !important;
+  padding: 14px 40px !important;
+  border-radius: 50px !important;
+}
+
+.detail-share-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-share-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #6b7a8d;
+}
+
+.btn-share {
+  background: #f0f7ff;
+  color: #21A3FF;
+  border: 1px solid rgba(33,163,255,0.2);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: 50px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-share:hover {
+  background: #21A3FF;
+  color: #ffffff;
+}
+
+/* Section umum */
+.detail-section {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(33,163,255,0.08);
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #1A1A2E;
+  margin-bottom: 14px;
+}
+
+.detail-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #3D3D4E;
+  line-height: 1.8;
+}
+
+/* Dana breakdown */
+.detail-dana-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detail-dana-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-dana-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-dana-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #3D3D4E;
+}
+
+.detail-dana-pct {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #21A3FF;
+}
+
+.detail-dana-bar {
+  width: 100%;
+  height: 6px;
+  background: #d6eeff;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.detail-dana-bar div {
+  height: 100%;
+  background: #21A3FF;
+  border-radius: 99px;
+}
+
+.detail-dana-nominal {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #6b7a8d;
+  text-align: right;
+}
+
+/* Galeri */
+.detail-galeri {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.detail-galeri img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.detail-galeri img:hover {
+  transform: scale(1.03);
+}
+
+/* Donatur */
+.detail-donatur-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-donatur-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.detail-donatur-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #21A3FF;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-donatur-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1A1A2E;
+}
+
+.detail-donatur-time {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #b0b7c3;
+}
+
+.detail-donatur-nominal {
+  margin-left: auto;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #21A3FF;
+}
+
+/* Update timeline */
+.detail-update-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-update-item {
+  display: flex;
+  gap: 14px;
+}
+
+.detail-update-dot {
+  width: 12px;
+  height: 12px;
+  background: #21A3FF;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.detail-update-date {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #21A3FF;
+  margin-bottom: 4px;
+}
+
+.detail-update-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #3D3D4E;
+  line-height: 1.6;
+}
+.detail-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #6b7a8d;
+  text-decoration: none;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+}
+
+.detail-back-link:hover {
+  color: #21A3FF;
+}
+/* ── DONASI MODAL (PAYMENT POPUP) ── */
+.donasi-modal-box { max-width: 460px; text-align: left; padding: 28px 26px; }
+.donasi-modal-header { margin-bottom: 20px; }
+.donasi-modal-badge {
+  display: inline-block; background: rgba(33, 163, 255, 0.1); color: #21A3FF;
+  font-family: 'Open Sans', sans-serif; font-weight: 600; font-size: 0.72rem;
+  padding: 3px 12px; border-radius: 99px; margin-bottom: 8px;
+}
+.donasi-modal-header h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.2rem; color: #1A1A2E; line-height: 1.3; }
+.donasi-modal-section { margin-bottom: 18px; }
+.donasi-modal-label { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; color: #1A1A2E; margin-bottom: 10px; }
+.donasi-nominal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+.donasi-nominal-btn {
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem; color: #21A3FF;
+  background: #f7fbff; border: 1.5px solid rgba(33, 163, 255, 0.2); border-radius: 12px;
+  padding: 10px; cursor: pointer; transition: all 0.18s ease;
+}
+.donasi-nominal-btn:hover { border-color: #21A3FF; }
+.donasi-nominal-btn.active { background: #21A3FF; color: #ffffff; border-color: transparent; }
+.donasi-input-custom {
+  width: 100%; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; padding: 11px 16px;
+  border: 1.5px solid rgba(33, 163, 255, 0.2); border-radius: 12px; outline: none; transition: border-color 0.2s;
+}
+.donasi-input-custom:focus { border-color: #21A3FF; }
+.donasi-checkbox-row {
+  display: flex; align-items: center; gap: 8px; font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem; color: #3D3D4E; margin-bottom: 10px; cursor: pointer;
+}
+.donasi-checkbox-row input { accent-color: #21A3FF; }
+.donasi-textarea {
+  width: 100%; min-height: 64px; font-family: 'Open Sans', sans-serif; font-size: 0.85rem;
+  padding: 10px 14px; border: 1.5px solid rgba(33, 163, 255, 0.2); border-radius: 12px;
+  outline: none; resize: vertical; margin-top: 4px;
+}
+.donasi-metode-list { display: flex; flex-direction: column; gap: 8px; }
+.donasi-metode-item {
+  display: flex; align-items: center; gap: 10px; font-family: 'Open Sans', sans-serif;
+  font-size: 0.88rem; color: #3D3D4E; background: #f7fbff; border: 1.5px solid rgba(33, 163, 255, 0.12);
+  border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: border-color 0.2s;
+}
+.donasi-metode-item:has(input:checked) { border-color: #21A3FF; background: rgba(33, 163, 255, 0.05); }
+.donasi-metode-item input { accent-color: #21A3FF; }
+.donasi-modal-summary {
+  display: flex; justify-content: space-between; align-items: center; background: #f0f7ff;
+  border-radius: 12px; padding: 14px 18px; margin-bottom: 18px;
+}
+.donasi-modal-summary span { font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #6b7a8d; }
+.donasi-modal-summary strong { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.15rem; color: #21A3FF; }
+.donasi-confirm-btn { width: 100%; }
+/* ── MODAL OVERLAY BASE ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 46, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 10000;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-box {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(16px);
+  transition: transform 0.25s ease;
+}
+
+.modal-overlay.show .modal-box {
+  transform: translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0,0,0,0.05);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.3rem;
+  color: #6b7a8d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* ── SIDEBAR: MENU HERO (setelah gabung jadi Hero) ── */
+.sidebar-hero-menu-wrap {
+  margin-top: 20px;
+}
+
+/* ── GABUNG HERO: PANEL SUKSES ── */
+.hero-success-panel {
+  text-align: center;
+  padding: 20px 10px 8px;
+}
+
+.hero-success-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.hero-success-panel .dash-card-title {
+  font-size: 1.3rem;
+}
+
+.hero-success-panel .dash-card-sub {
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-success-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════════════
+   DASHBOARD BOTTOM NAVIGATION (Mobile)
+   ══════════════════════════════════════════════ */
+
+.dash-bottom-nav {
+  display: none; /* Hanya tampil di mobile via media query */
+}
+
+@media (max-width: 768px) {
+  .dash-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(33, 163, 255, 0.12);
+    box-shadow: 0 -4px 20px rgba(33, 163, 255, 0.1);
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .dash-bnav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    text-decoration: none;
+    color: #b0b7c3;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 4px 0;
+    border-radius: 12px;
+    transition: color 0.2s ease, transform 0.15s ease;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+  }
+
+  .dash-bnav-item svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    flex-shrink: 0;
+    transition: stroke 0.2s ease;
+  }
+
+  .dash-bnav-item:hover {
+    color: #21A3FF;
+    transform: translateY(-2px);
+  }
+
+  .dash-bnav-item.active {
+    color: #21A3FF;
+  }
+
+  .dash-bnav-item.active svg {
+    filter: drop-shadow(0 0 4px rgba(33, 163, 255, 0.4));
+  }
+
+  /* Tombol tengah (Beranda) lebih menonjol */
+  .dash-bnav-item.bnav-center {
+    position: relative;
+  }
+
+  .dash-bnav-item.bnav-center .bnav-icon-wrap {
+    width: 48px;
+    height: 48px;
+    background: #21A3FF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(33, 163, 255, 0.45);
+    margin-bottom: 2px;
+    transform: translateY(-8px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dash-bnav-item.bnav-center svg {
+    stroke: #ffffff;
+    width: 22px;
+    height: 22px;
+  }
+
+  .dash-bnav-item.bnav-center:hover .bnav-icon-wrap {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 20px rgba(33, 163, 255, 0.55);
+  }
+
+  .dash-bnav-item.bnav-center.active .bnav-icon-wrap {
+    background: #1a8fe0;
+  }
+}
+
+/* ── MOBILE HERO FLOATING BUTTON ── */
+/* Tombol "Gabung menjadi Hero!" muncul sebagai pill melayang di atas bottom nav */
+.dash-mobile-hero-btn {
+  display: none; /* Hanya tampil di mobile */
+}
+
+@media (max-width: 768px) {
+  .dash-mobile-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: fixed;
+    bottom: 108px; /* dinaikkan agar ada jarak lebih dari bottom nav */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 198;
+
+    /* Styling pill */
+    background: linear-gradient(135deg, #21A3FF, #1a8fe0);
+    color: #ffffff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 11px 26px;
+    border-radius: 50px;
+    box-shadow:
+      0 6px 20px rgba(33, 163, 255, 0.45),
+      0 2px 6px rgba(0, 0, 0, 0.1);
+
+    /* Animasi masuk */
+    animation: heroFloatIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dash-mobile-hero-btn:hover {
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 10px 28px rgba(33, 163, 255, 0.55);
+  }
+
+  .dash-mobile-hero-btn:active {
+    transform: translateX(-50%) scale(0.96);
+  }
+
+  @keyframes heroFloatIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE DASHBOARD — FLEXBOX BASED
+   ══════════════════════════════════════════════ */
+
+/* ── Tablet: 1024px ke bawah ── */
+@media (max-width: 1024px) {
+  /* Summary cards: 2 kolom di tablet */
+  .summary-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .summary-card {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+  }
+
+  .summary-card.primary {
+    flex: 1 1 100%;
+  }
+
+  /* Trending grid: 2 kolom */
+  .trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Inisiasi why grid: 2 kolom */
+  .inisiasi-why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Settings layout: tumpuk vertikal */
+  .settings-layout {
+    flex-direction: column;
+  }
+
+  .settings-sidenav {
+    width: 100%;
+    min-width: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(33, 163, 255, 0.1);
+    border-radius: 20px 20px 0 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .settings-content {
+    padding: 20px 24px;
+  }
+
+  /* Sidebar: lebih sempit */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+  }
+
+  /* Banner verifikasi */
+  .verification-banner {
+    margin: 14px 20px 0;
+    flex-wrap: wrap;
+  }
+
+  /* Detail galeri: 3 kolom */
+  .detail-galeri {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Tablet kecil / Mobile landscape: 768px ke bawah ── */
+@media (max-width: 768px) {
+  /* Dashboard layout: sidebar jadi overlay / tersembunyi */
+  .dashboard-body {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+    padding: 0;
+    gap: 0;
+  }
+
+  /* Sidebar: sembunyikan di mobile, digantikan bottom nav */
+  .sidebar {
+    display: none;
+  }
+
+  .dash-right {
+    height: auto;
+    overflow: visible;
+  }
+
+  .dash-scroll {
+    overflow-y: visible;
+    /* Ruang bawah: bottom nav (~68px) + tombol hero floating (~48px) + gap */
+    padding: 16px 16px 160px;
+  }
+
+  /* Topbar */
+  .dash-topbar {
+    margin: 12px 12px 0;
+    padding: 12px 16px;
+    border-radius: 16px;
+  }
+
+  .dash-greeting {
+    font-size: 1.1rem;
+  }
+
+  .dash-topbar-right {
+    gap: 8px;
+  }
+
+  /* Sembunyikan email profil di layar kecil */
+  .dash-profile-email {
+    display: none;
+  }
+
+  /* Main card */
+  .dash-main-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  /* Summary cards: flexbox tumpuk */
+  .summary-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .summary-card {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .summary-card.primary {
+    flex: none;
+    width: 100%;
+  }
+
+  /* Banner header */
+  .donation-header-banner {
+    flex-direction: column;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .banner-text-content {
+    max-width: 100%;
+    padding: 24px 20px 16px;
+  }
+
+  .banner-image-container {
+    position: static;
+    width: 100%;
+    height: 160px;
+  }
+
+  .banner-fade-img {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
+  }
+
+  /* Trending: 1 kolom di mobile */
+  .trending-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Card horizontal donasi */
+  .donation-card-horizontal {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .card-horizontal-img {
+    width: 100%;
+    min-width: 0;
+    height: 180px;
+  }
+
+  .card-horizontal-body {
+    padding: 14px;
+  }
+
+  /* Inisiasi */
+  .inisiasi-why-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .inisiasi-siapkan-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .inisiasi-siapkan-img {
+    height: 180px;
+  }
+
+  /* Form grid */
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+
+  /* Detail */
+  .detail-galeri {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-progress-stats {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .detail-sticky-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-share-row {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Banner verifikasi */
+  .verification-banner {
+    margin: 12px 12px 0;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .banner-actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  /* Profile row */
+  .profile-photo-row {
+    flex-wrap: wrap;
+  }
+
+  /* Notif pref */
+  .notif-pref-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .notif-pref-channels {
+    align-self: flex-end;
+    gap: 16px;
+  }
+
+  /* Donasi nominal grid */
+  .donasi-nominal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Search bar */
+  .dash-search-container {
+    max-width: 100%;
+  }
+}
+
+/* ── Mobile portrait: 480px ke bawah ── */
+@media (max-width: 480px) {
+  .dash-topbar {
+    margin: 8px 8px 0;
+    padding: 10px 12px;
+  }
+
+  .dash-scroll {
+    padding: 12px 12px 40px;
+  }
+
+  /* Trending: 1 kolom penuh */
+  .trending-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Inisiasi: 1 kolom */
+  .inisiasi-why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero success actions */
+  .hero-success-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Summary cards: 1 kolom */
+  .summary-row {
+    flex-direction: column;
+  }
+
+  /* Detail galeri: 2 kolom */
+  .detail-galeri {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-meta-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Danger zone actions */
+  .danger-zone-actions {
+    flex-direction: column;
+  }
+
+  /* Form action footer */
+  .form-action-footer {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .btn-form-next,
+  .btn-form-back {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Pagination */
+  .history-pagination {
+    gap: 8px;
+  }
+
+  /* Donasi modal */
+  .donasi-modal-box {
+    padding: 20px 16px;
+  }
+
+  /* Settings sidenav wrap */
+  .settings-sidenav {
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .settings-nav-item {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* OTP group */
+  .otp-input-group {
+    flex-direction: column;
+  }
+
+  .btn-request-otp {
+    padding: 12px;
+  }
+}
