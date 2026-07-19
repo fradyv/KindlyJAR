@@ -1,0 +1,693 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KindlyJAR </title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
+</head>
+<body>
+
+  <div id="authModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+    <div class="modal-content">
+      <div class="modal-icon">👋</div>
+      <h3>Yuk, Gabung Bersama Kami!</h3>
+      <p>Kamu perlu memiliki akun terlebih dahulu untuk berdonasi atau mengikuti program keren di KindlyJAR.</p>
+      <div class="modal-actions">
+        <a href="{{ route('register') }}" class="modal-btn btn-primary">Daftar Sekarang</a>
+        <a href="{{ route('login') }}" class="modal-btn btn-secondary">Sudah Punya Akun</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ── MOBILE NAV ── -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#" onclick="closeMobileNav()">Home</a>
+    <a href="#program-donasi" onclick="closeMobileNav()">Program Donasi</a>
+    <a href="#katalog-produk" onclick="closeMobileNav()">Katalog Produk</a>
+    <div class="mobile-nav-divider"></div>
+    <a href="{{ route('login') }}">Sign In</a>
+    <a href="{{ route('register') }}" class="btn-signup-mobile">Galang Dana</a>
+  </div>
+
+  <!-- ── NAVBAR ── -->
+  <header>
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <img src="{{ asset('assets/logo_putih.png') }}" alt="KindlyJAR toples" />
+      </div>
+      <span class="logo-name">KindlyJAR</span>
+    </a>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#program-donasi">Program Donasi</a>
+      <a href="#katalog-produk">Katalog Produk</a>
+      <div class="nav-divider"></div>
+      <a href="{{ route('login') }}">Sign In</a>
+      <a href="{{ route('register') }}" class="btn-signup">Galang Dana</a>
+    </nav>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Menyalakan Lentera<br> di Ujung Negeri</h1>
+      <p class="hero-sub">
+        Rekam jejak kepedulian yang mengubah setiap transaksi menjadi jembatan akses, air bersih, dan ruang tumbuh yang setara.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-hero">Ikuti Program sebagai Hero!</button>
+        <p class="hero-social-proof">
+          Join <strong><span id="counter-users">0</span>+</strong> Users yang sudah ikut membangun negeri.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <img src="{{ asset('assets/toples.png') }}" alt="KindlyJAR toples" />
+    </div>
+  </section>
+ <!-- ── PROGRAM DONASI ── -->
+  <section id="program-donasi">
+    <div class="section-header">
+      <h2 class="section-title">Program Donasi</h2>
+      <p class="section-sub">Pilih misi kebaikanmu dan bantu wujudkan mimpi mereka hari ini.</p>
+    </div>
+ 
+    <div class="cards-grid">
+ 
+      <!-- Card 1 -->
+      <div class="donation-card">
+        <div class="card-img-wrap">
+          <img src="{{ asset('assets/program1.jpg') }}" alt="Jembatan Gantung Asa di Sungai Ririn" />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Jembatan Gantung Asa di Sungai Ririn</h3>
+          <p class="card-desc">Pembangunan kembali jembatan gantung yang rusak agar akses sekolah anak-anak dan jalur logistik warga antar-desa kembali aman.</p>
+          <div class="card-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 85%"></div>
+            </div>
+            <span class="progress-label">85% Terpenuhi</span>
+          </div>
+          <button class="btn-donasi">Donasi!</button>
+        </div>
+      </div>
+ 
+      <!-- Card 2 -->
+      <div class="donation-card">
+        <div class="card-img-wrap">
+          <img src="{{ asset('assets/program2.jpg') }}" alt="Pipa Air Bersih Dusun Long Beluah" />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Pipa Air Bersih Dusun Long Beluah</h3>
+          <p class="card-desc">Penyaluran pipa air bersih sepanjang 2 KM dari mata air pegunungan langsung ke area pemukiman warga terpencil yang kekeringan.</p>
+          <div class="card-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 97%"></div>
+            </div>
+            <span class="progress-label">97% Terpenuhi</span>
+          </div>
+          <button class="btn-donasi">Donasi!</button>
+        </div>
+      </div>
+ 
+      <!-- Card 3 -->
+      <div class="donation-card">
+        <div class="card-img-wrap">
+          <img src="{{ asset('assets/program3.jpg') }}" alt="Atap Layak untuk SDK Flores Pedalaman" />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Atap Layak untuk SDK Flores Pedalaman</h3>
+          <p class="card-desc">Perbaikan total struktur atap dan dinding kelas yang bocor serta rapuh, agar anak-anak bisa belajar dengan aman.</p>
+          <div class="card-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 62%"></div>
+            </div>
+            <span class="progress-label">62% Terpenuhi</span>
+          </div>
+          <button class="btn-donasi">Donasi!</button>
+        </div>
+      </div>
+ 
+      <!-- Card 4 -->
+      <div class="donation-card">
+        <div class="card-img-wrap">
+          <img src="{{ asset('assets/program4.jpg') }}" alt="Perahu Rakit Sekolah Anak Sungai Kapuas" />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Perahu Rakit Sekolah Anak Sungai Kapuas</h3>
+          <p class="card-desc">Pengadaan perahu motor penyeberangan yang aman bagi para siswa yang setiap hari harus bertaruh nyawa mengarungi sungai deras.</p>
+          <div class="card-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 46%"></div>
+            </div>
+            <span class="progress-label">46% Terpenuhi</span>
+          </div>
+          <button class="btn-donasi">Donasi!</button>
+        </div>
+      </div>
+ 
+    </div>
+  </section>
+
+<!-- ── KATALOG PRODUK ── -->
+  <section id="katalog-produk">
+    <div class="section-header">
+      <h2 class="section-title">Katalog Produk Digital</h2>
+      <p class="section-sub">Aset kreatif premium pilihan dari Hero untuk mendukung pemerataan Nusantara.</p>
+    </div>
+ 
+    <div class="katalog-masonry">
+ 
+      <div class="katalog-item tall">
+        <img src="{{ asset('assets/kata1.jpg') }}" alt="Produk 1" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Poster</span>
+        </div>
+      </div>
+
+            <div class="katalog-item">
+        <img src="{{ asset('assets/kata16.jpg') }}" alt="Produk 16" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Illustrasi Digital</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata2.jpg') }}" alt="Produk 2" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Poster</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata3.jpg') }}" alt="Produk 3" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Poster</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item tall">
+        <img src="{{ asset('assets/kata4.jpg') }}" alt="Produk 4" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Web</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata5.jpg') }}" alt="Produk 5" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Web</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata6.jpg') }}" alt="Produk 6" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Aset 3D</span>
+        </div>
+      </div>
+
+            <div class="katalog-item">
+        <img src="{{ asset('assets/kata15.jpg') }}" alt="Produk 14" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Aset 3D</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item tall">
+        <img src="{{ asset('assets/kata7.jpg') }}" alt="Produk 7" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Aset 3D</span>
+        </div>
+      </div>
+ 
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata8.jpg') }}" alt="Produk 8" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Logo</span>
+        </div>
+      </div>
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata9.jpg') }}" alt="Produk 9" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Logo</span>
+        </div>
+      </div>
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata10.jpg') }}" alt="Produk 10" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Ilustrasi Digital</span>
+        </div>
+      </div>
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata11.jpg') }}" alt="Produk 11" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Ilustrasi Digital</span>
+        </div>
+      </div>
+
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata14.jpg') }}" alt="Produk 14" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Aset 3D</span>
+        </div>
+      </div> 
+
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata12.jpg') }}" alt="Produk 12" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Stok Foto</span>
+        </div>
+      </div>
+      <div class="katalog-item">
+        <img src="{{ asset('assets/kata13.jpg') }}" alt="Produk 13" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Stok Foto</span>
+        </div>
+      </div>
+
+       <div class="katalog-item">
+        <img src="{{ asset('assets/kata17.jpg') }}" alt="Produk 17" />
+        <div class="katalog-overlay">
+          <span class="katalog-label">Desain Logo</span>
+        </div>
+      </div>
+ 
+    </div>
+  </section>
+ 
+   <!-- ── JEJAK KEBAIKAN ── -->
+  <section id="jejak-kebaikan">
+    <div class="section-header">
+      <h2 class="section-title">Jejak Kebaikan KindlyJAR</h2>
+      <p class="section-sub">Setiap angka adalah cerita tentang perubahan yang kita ciptakan bersama.</p>
+    </div>
+ 
+    <div class="stats-grid">
+ 
+      <div class="stat-item">
+        <span class="stat-number" data-target="1250">0</span>
+        <h3 class="stat-label">People Helped</h3>
+        <p class="stat-desc">Penerima manfaat dan bantuan nyata.</p>
+      </div>
+ 
+      <div class="stat-item">
+        <span class="stat-number" data-target="89">0</span>
+        <h3 class="stat-label">Heros</h3>
+        <p class="stat-desc">Agen yang mendonasikan keahlian mereka.</p>
+      </div>
+ 
+      <div class="stat-item">
+        <span class="stat-number" data-target="340">0</span>
+        <h3 class="stat-label">Saviors</h3>
+        <p class="stat-desc">Sahabat peduli yang mengapresiasi jasa.</p>
+      </div>
+ 
+      <div class="stat-item">
+        <span class="stat-number" data-target="24">0</span>
+        <h3 class="stat-label">Programs Supported</h3>
+        <p class="stat-desc">Program sosial yang berhasil didanai.</p>
+      </div>
+ 
+    </div>
+  </section>
+<!-- ── KENALI PARA HERO ── -->
+<section id="para-hero">
+  <div class="section-header">
+    <h2 class="section-title">Kenali Para Hero di Balik Perubahan</h2>
+    <p class="section-sub">Kolaborasi dengan talenta digital berbakat.</p>
+  </div>
+
+  <div class="slider-outer">
+  <div class="hero-slider-wrap">
+    <div class="hero-slider" id="heroSlider">
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero1.jpg') }}" alt="Aruna Dewanta" />
+        <h3 class="hero-name">Aruna Dewanta</h3>
+        <p class="hero-role">Logo & Brand Designer</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero1-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero1-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero1-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Template Logo</span>
+          <span class="tag">UI Kit</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero2.jpg') }}" alt="Kala Pradipta" />
+        <h3 class="hero-name">Kala Pradipta</h3>
+        <p class="hero-role">Graphic Designer & Brand Strategist</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero2-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero2-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero2-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Aset Branding</span>
+          <span class="tag">Stok Foto</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero3.jpg') }}" alt="Reza Mahendra" />
+        <h3 class="hero-name">Reza Mahendra</h3>
+        <p class="hero-role">3D Artist & Motion Designer</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero3-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero3-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero3-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Aset 3D</span>
+          <span class="tag">Motion Graphic</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero4.jpg') }}" alt="Sinta Nirmala" />
+        <h3 class="hero-name">Sinta Nirmala</h3>
+        <p class="hero-role">Illustrator & Digital Artist</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero4-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero4-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero4-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Ilustrasi Digital</span>
+          <span class="tag">Icon Pack</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero5.jpg') }}" alt="Bagas Pratama" />
+        <h3 class="hero-name">Bagas Pratama</h3>
+        <p class="hero-role">Web & UI Designer</p>
+        <div class="hero-products hero5-prods">
+          <img src="{{ asset('assets/hero5-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero5-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero5-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Template Website</span>
+          <span class="tag">Landing Page</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero6.jpg') }}" alt="Ayudia Sekar" />
+        <h3 class="hero-name">Ayudia Sekar</h3>
+        <p class="hero-role">Graphic Designer & Brand Strategist</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero6-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero6-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero6-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Aset Branding</span>
+          <span class="tag">Stok Foto</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero7.jpg') }}" alt="Damar Sasongko" />
+        <h3 class="hero-name">Damar Sasongko</h3>
+        <p class="hero-role">3D Artist & Motion Designer</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero7-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero7-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero7-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Aset 3D</span>
+          <span class="tag">Motion Graphic</span>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="hero-avatar" src="{{ asset('assets/hero8.jpg') }}" alt="Kirana Maheswari" />
+        <h3 class="hero-name">Kirana Maheswari</h3>
+        <p class="hero-role">Illustrator & Digital Artist</p>
+        <div class="hero-products">
+          <img src="{{ asset('assets/hero8-prod1.jpg') }}" alt="Produk 1" />
+          <img src="{{ asset('assets/hero8-prod2.jpg') }}" alt="Produk 2" />
+          <img src="{{ asset('assets/hero8-prod3.jpg') }}" alt="Produk 3" />
+        </div>
+        <div class="hero-tags">
+          <span class="tag">Ilustrasi Digital</span>
+          <span class="tag">Icon Pack</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="slider-controls">
+    <button class="slider-btn prev" id="heroPrev" aria-label="Sebelumnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="slider-btn next" id="heroNext" aria-label="Selanjutnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  </div>
+  <div class="slider-dots" id="heroDots" aria-label="Navigasi slider"></div>
+</section>
+
+<!-- ── TESTIMONI SAVIOR ── -->
+<section id="testimoni">
+  <div class="section-header">
+    <h2 class="section-title">Apa Kata Mereka yang Telah Memulai?</h2>
+    <p class="section-sub">Simak pengalaman para Savior yang berhasil melejitkan bisnis mereka.</p>
+  </div>
+
+  <div class="slider-outer">
+  <div class="testi-slider-wrap">
+    <div class="testi-slider" id="testiSlider">
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior1.jpg') }}" alt="Baskara Adi" />
+          <div>
+            <h4>Baskara Adi</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Awalnya ragu, ternyata Hero di KindlyJAR profesional banget. Bisnis kami naik drastis dan dana langsung ke program sosial. Transparan dan beneran berdampak!"</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior2.jpg') }}" alt="Nayara Kalila" />
+          <div>
+            <h4>Nayara Kalila</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Suka banget sama konsep platform ini. Template yang aku beli kualitasnya luar biasa, dan tahu dananya lari ke program sosial bikin makin semangat beli lagi!"</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior3.jpg') }}" alt="Danendra" />
+          <div>
+            <h4>Danendra</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Aset 3D yang aku dapat kualitasnya premium banget. Proses belinya mudah dan langsung bisa dipakai. Bangga bisa bantu sesama lewat pembelian produk kreatif."</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior4.jpg') }}" alt="Maharani Putri" />
+          <div>
+            <h4>Maharani Putri</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Pengalaman belanja di KindlyJAR menyenangkan banget. Aset desain yang aku beli kualitasnya bagus dan harganya masuk akal. Senang tahu sebagian dananya buat program pendidikan anak-anak!"</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior5.jpg') }}" alt="Arsenio Wibowo" />
+          <div>
+            <h4>Arsenio Wibowo</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Awalnya cuma iseng beli template, ternyata kualitasnya pro banget. Yang bikin beda, tiap transaksi langsung berdampak ke program sosial. Jadi makin sering belanja di sini."</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior6.jpg') }}" alt="Salwa Anindya" />
+          <div>
+            <h4>Salwa Anindya</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Platform yang punya hati. Selain produknya keren-keren, aku suka transparansi laporan dananya. Beli karya kreatif sambil bantu sesama, kombinasi yang sempurna!"</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior7.jpg') }}" alt="Rafa Alfarizi" />
+          <div>
+            <h4>Rafa Alfarizi</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Pelayanannya cepat dan Hero-nya ramah. Produk yang aku dapat sesuai ekspektasi, malah lebih. Bangga jadi bagian dari gerakan yang nyata bantu masyarakat."</p>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <img src="{{ asset('assets/savior8.jpg') }}" alt="Talita Zahra" />
+          <div>
+            <h4>Talita Zahra</h4>
+            <span>Savior</span>
+          </div>
+        </div>
+        <p>"Suka banget konsepnya! Setiap pembelian terasa lebih bermakna karena tahu dananya disalurkan ke program sosial. Produk berkualitas, dampak nyata. Recommended!"</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="slider-controls">
+    <button class="slider-btn prev" id="testiPrev" aria-label="Sebelumnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="slider-btn next" id="testiNext" aria-label="Selanjutnya">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  </div>
+  <div class="slider-dots" id="testiDots" aria-label="Navigasi slider"></div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="footer-top">
+
+    <div class="footer-brand">
+      <a class="logo footer-logo" href="#hero">
+        <div class="logo-icon">
+          <img src="{{ asset('assets/logo_putih.png') }}" alt="KindlyJAR toples" />
+        </div>
+        <span class="logo-name">KindlyJAR</span>
+      </a>
+      <p class="footer-tagline">
+        Mengubah setiap transaksi menjadi jembatan akses, air bersih, dan ruang tumbuh yang setara di ujung negeri.
+      </p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.7 0 3 0 4.1.06 1.1.05 1.8.24 2.4.5.6.24 1.1.56 1.6 1.06.5.5.82 1 .96 1.6.26.6.45 1.3.5 2.4.06 1.1.06 1.4.06 4.1s0 3-.06 4.1c-.05 1.1-.24 1.8-.5 2.4-.24.6-.56 1.1-1.06 1.6-.5.5-1 .82-1.6.96-.6.26-1.3.45-2.4.5-1.1.06-1.4.06-4.1.06s-3 0-4.1-.06c-1.1-.05-1.8-.24-2.4-.5a4.3 4.3 0 0 1-1.6-1.06 4.3 4.3 0 0 1-.96-1.6c-.26-.6-.45-1.3-.5-2.4C2 15 2 14.7 2 12s0-3 .06-4.1c.05-1.1.24-1.8.5-2.4.24-.6.56-1.1 1.06-1.6.5-.5 1-.82 1.6-.96.6-.26 1.3-.45 2.4-.5C9 2 9.3 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm5.3-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2z"/></svg>
+        </a>
+        <a href="#" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23 22h-6.6l-5.2-6.8L5.3 22H2.2l7.6-8.7L1.6 2h6.8l4.7 6.2zm-1.2 18h1.8L7.4 3.8H5.5z"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.87.24-1.46 1.5-1.46H16V5.1c-.28-.04-1.2-.12-2.28-.12-2.26 0-3.8 1.38-3.8 3.9V11H7.3v3H9.9v8z"/></svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2 1.6 3.4 3.5 3.6V9c-1.3 0-2.5-.4-3.5-1v6.5a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v2.6a2.9 2.9 0 1 0 2 2.7V3z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h4>Navigasi</h4>
+      <a href="#hero">Home</a>
+      <a href="#program-donasi">Program Donasi</a>
+      <a href="#katalog-produk">Katalog Produk</a>
+      <a href="#para-hero">Para Hero</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Perusahaan</h4>
+      <a href="#">Tentang Kami</a>
+      <a href="#">Cara Kerja</a>
+      <a href="#">Laporan Dana</a>
+      <a href="#">Karier</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Bantuan</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Hubungi Kami</a>
+      <a href="#">Syarat &amp; Ketentuan</a>
+      <a href="#">Kebijakan Privasi</a>
+    </div>
+
+    <div class="footer-newsletter">
+      <h4>Ikuti Kabar Baik</h4>
+      <p>Dapatkan cerita dampak &amp; program terbaru langsung ke emailmu.</p>
+      <form class="footer-subscribe" onsubmit="return false;">
+        <input type="email" placeholder="Email kamu" aria-label="Email langganan" />
+        <button type="submit" aria-label="Langganan">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 KindlyJAR. Dibuat dengan ❤️ untuk Nusantara.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Privasi</a>
+      <a href="#">Ketentuan</a>
+      <a href="#">Cookie</a>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ asset('global/script.js') }}"></script>
+<script>
+  // ── HAMBURGER MENU ──
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileNav = document.getElementById('mobileNav');
+
+  function closeMobileNav() {
+    hamburgerBtn.classList.remove('open');
+    mobileNav.classList.remove('open');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = hamburgerBtn.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Tutup saat klik di luar nav
+  mobileNav.addEventListener('click', (e) => {
+    if (e.target === mobileNav) closeMobileNav();
+  });
+
+  // Tutup saat ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
+</script>
+</body>
+</html>
