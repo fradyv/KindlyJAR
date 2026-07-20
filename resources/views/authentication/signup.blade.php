@@ -21,25 +21,33 @@
     <h1 class="auth-title">Saatnya Bergerak Bersama!</h1>
     <p class="auth-sub">Buat akun dan mulai jejak kebaikanmu.</p>
 
-  <form class="auth-form" id="signupForm">
+    @if ($errors->any())
+      <div style="background:#fef2f2;color:#ef4444;border-radius:10px;padding:10px 14px;font-size:0.875rem;margin-bottom:16px;">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
+  <form class="auth-form" method="POST" action="{{ route('register') }}" id="signupForm">
+    @csrf
     <label class="auth-field">
       <span>Nama Lengkap</span>
-      <input type="text" id="signupNama" placeholder="Nama kamu" autocomplete="name" required />
+      <input type="text" name="legal_name" id="signupNama" value="{{ old('legal_name') }}" placeholder="Nama kamu" autocomplete="name" required />
+      <span class="form-hint" style="color:#9aa1b3;font-size:0.75rem;">Nama ini tidak dapat diubah setelah pendaftaran.</span>
     </label>
 
     <label class="auth-field">
       <span>Email</span>
-      <input type="email" id="signupEmail" placeholder="nama@email.com" autocomplete="email" required />
+      <input type="email" name="email" id="signupEmail" value="{{ old('email') }}" placeholder="nama@email.com" autocomplete="email" required />
     </label>
 
       <label class="auth-field">
         <span>Password</span>
-        <input type="password" placeholder="Buat password" autocomplete="new-password" required />
+        <input type="password" name="password" placeholder="Buat password" autocomplete="new-password" required minlength="8" />
       </label>
 
       <label class="auth-field">
         <span>Konfirmasi Password</span>
-        <input type="password" placeholder="Ulangi password" autocomplete="new-password" required />
+        <input type="password" name="password_confirmation" placeholder="Ulangi password" autocomplete="new-password" required minlength="8" />
       </label>
 
       <label class="auth-remember">

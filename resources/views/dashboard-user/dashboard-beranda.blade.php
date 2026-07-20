@@ -183,6 +183,14 @@
         </div>
       </div>
     </div>
+  @if (session('success'))
+    <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
+      <div class="banner-content">
+        <span class="banner-icon">✅</span>
+        <p>{{ session('success') }}</p>
+      </div>
+    </div>
+  @endif
   <div class="verification-banner" id="verifyBanner">
     <div class="banner-content">
       <span class="banner-icon">⚠️</span>
@@ -392,14 +400,17 @@
       Pengaturan
     </a>
     <div class="profile-menu-divider"></div>
-    <a href="{{ route('home') }}" class="profile-menu-item danger">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-        <polyline points="16 17 21 12 16 7"/>
-        <line x1="21" y1="12" x2="9" y2="12"/>
-      </svg>
-      Keluar
-    </a>
+    <form method="POST" action="{{ route('logout') }}">
+      @csrf
+      <button type="submit" class="profile-menu-item danger" style="border:none;background:none;width:100%;text-align:left;cursor:pointer;font:inherit;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Keluar
+      </button>
+    </form>
   </div>
 </div>
 

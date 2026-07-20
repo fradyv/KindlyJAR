@@ -337,26 +337,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
   });
 });
-document.getElementById('signupForm')?.addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const nama  = document.getElementById('signupNama').value;
-  const email = document.getElementById('signupEmail').value;
-
-  localStorage.setItem('userName', nama);
-  localStorage.setItem('userEmail', email);
-
-  window.location.href = '/login';
-});
-
-document.getElementById('signinForm')?.addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const email = document.getElementById('signinEmail').value;
-  localStorage.setItem('userEmail', email);
-
-  window.location.href = '/dashboard';
-});
 document.addEventListener("DOMContentLoaded", function () {
   const verifyBanner = document.getElementById("verifyBanner");
   const closeBannerBtn = document.getElementById("closeBannerBtn");

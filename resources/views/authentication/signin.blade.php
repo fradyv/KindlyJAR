@@ -21,21 +21,28 @@
     <h1 class="auth-title">Selamat Datang Kembali</h1>
     <p class="auth-sub">Masuk untuk melanjutkan kebaikanmu.</p>
 
-    <form class="auth-form" id="signinForm">
+    @if ($errors->any())
+      <div style="background:#fef2f2;color:#ef4444;border-radius:10px;padding:10px 14px;font-size:0.875rem;margin-bottom:16px;">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
+    <form class="auth-form" method="POST" action="{{ route('login') }}" id="signinForm">
+      @csrf
       <label class="auth-field">
         <span>Email</span>
-        <input type="email" id="signinEmail" placeholder="nama@email.com" autocomplete="email" required />
+        <input type="email" name="email" id="signinEmail" value="{{ old('email') }}" placeholder="nama@email.com" autocomplete="email" required />
       </label>
 
 
       <label class="auth-field">
         <span>Password</span>
-        <input type="password" placeholder="Masukkan password" autocomplete="current-password" required />
+        <input type="password" name="password" placeholder="Masukkan password" autocomplete="current-password" required />
       </label>
 
       <div class="auth-row">
         <label class="auth-remember">
-          <input type="checkbox" /> Ingat saya
+          <input type="checkbox" name="remember" /> Ingat saya
         </label>
         <a href="#" class="auth-link">Lupa password?</a>
       </div>
