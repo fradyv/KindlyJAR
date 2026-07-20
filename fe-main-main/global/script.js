@@ -257,7 +257,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   const revealEls = [...document.querySelectorAll(
-    '.section-header, .donation-card, .katalog-item, .stat-item, ' +
+    '.section-header, .donation-card, .katalog-item, .stat-item, .dana-item, ' +
     '#para-hero .slider-outer, #testimoni .slider-outer'
   )];
   revealEls.forEach(el => el.classList.add('reveal'));
@@ -586,6 +586,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     return isValid;
   }
+
+  // ── INISIALISASI: set state awal progress bar ──
+  updateFormProgress();
 
   // Event Klik Lanjut
   if (!btnNext) return;

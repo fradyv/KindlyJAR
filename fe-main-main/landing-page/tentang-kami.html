@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KindlyJAR </title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../global/style.css"/>
+  <style>
+    /* ══════════════════════════════════════════
+       TENTANG KAMI — ANIMATION STYLES
+    ══════════════════════════════════════════ */
+
+    /* ── Floating Particles ── */
+    #tk-particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .tk-particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      animation: tk-float linear infinite;
+    }
+    @keyframes tk-float {
+      0%   { transform: translateY(0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-110vh) scale(1.3); opacity: 0; }
+    }
+
+    /* ── Hero section needs relative position for particles ── */
+    #hero { position: relative; overflow: hidden; }
+    #hero .hero-content,
+    #hero .hero-image-wrap { position: relative; z-index: 1; }
+
+    /* ── Scroll Reveal Base ── */
+    .tk-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1),
+                  transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .tk-reveal.tk-reveal-left {
+      transform: translateX(-50px);
+    }
+    .tk-reveal.tk-reveal-right {
+      transform: translateX(50px);
+    }
+    .tk-reveal.tk-reveal-scale {
+      transform: scale(0.88);
+    }
+    .tk-reveal.visible {
+      opacity: 1;
+      transform: translate(0) scale(1);
+    }
+
+    /* ── Stagger delays ── */
+    .tk-delay-1 { transition-delay: 0.10s !important; }
+    .tk-delay-2 { transition-delay: 0.22s !important; }
+    .tk-delay-3 { transition-delay: 0.34s !important; }
+    .tk-delay-4 { transition-delay: 0.46s !important; }
+
+    /* ── Typewriter cursor ── */
+    .tk-typewriter {
+      display: inline;
+      border-right: 3px solid rgba(255,255,255,0.8);
+      animation: tk-blink 0.75s step-end infinite;
+    }
+    @keyframes tk-blink {
+      50% { border-color: transparent; }
+    }
+
+    /* ── Animated progress fill ── */
+    .progress-fill {
+      width: 0 !important;
+      transition: width 1.4s cubic-bezier(.4,0,.2,1);
+    }
+    .progress-fill.animated {
+      width: var(--target-width) !important;
+    }
+
+    /* ── Alur icon pulse on hover ── */
+    .alur-icon-circle {
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1),
+                  box-shadow 0.3s ease;
+    }
+    .alur-icon-circle:hover {
+      transform: scale(1.15) rotate(-6deg);
+      box-shadow: 0 8px 24px rgba(33,163,255,0.35);
+    }
+
+    /* ── Tim card tilt on hover ── */
+    .tim-card {
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1),
+                  box-shadow 0.35s ease;
+      will-change: transform;
+    }
+    .tim-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(33,163,255,0.18);
+    }
+
+    /* ── Glass banner subtle zoom on load ── */
+    .hero-banner-card {
+      animation: tk-zoom-in 1s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes tk-zoom-in {
+      from { transform: scale(0.95); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    /* ── Kepercayaan number counter ── */
+    .dana-percent {
+      display: inline-block;
+      transition: transform 0.4s ease;
+    }
+    .dana-item:hover .dana-percent {
+      transform: scale(1.15);
+    }
+
+    /* ── Section header underline sweep ── */
+    .section-title { position: relative; display: inline-block; }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0;
+      height: 3px;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue-main), #97CCF2);
+      border-radius: 2px;
+      transition: width 0.8s cubic-bezier(.4,0,.2,1);
+    }
+    .tk-reveal.visible .section-title::after,
+    .section-title.underline-active::after {
+      width: 100%;
+    }
+
+    /* ══════════════════════════════════════════
+       TENTANG KAMI — FLEXBOX LAYOUT OVERRIDES
+    ══════════════════════════════════════════ */
+
+    /* ── Page wrapper: semua section punya max-width konsisten ── */
+    .tk-page-wrapper {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* ── HERO: flex row, teks kiri + gambar kanan ── */
+    #hero {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      min-height: 100vh;
+      padding: 120px 56px 60px;
+    }
+    #hero .hero-content {
+      flex: 1 1 480px;
+      max-width: 580px;
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+    #hero .hero-image-wrap {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #hero .hero-image-wrap img {
+      width: min(460px, 40vw);
+      height: auto;
+      margin-top: 0;
+    }
+    #hero .hero-eyebrow {
+      margin-bottom: 14px;
+    }
+    #hero .hero-title {
+      white-space: normal;
+      margin-bottom: 18px;
+    }
+    #hero .hero-sub {
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+    #hero .hero-actions {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    #hero .btn-hero {
+      margin-left: 0;
+    }
+    #hero .hero-social-proof {
+      margin-left: 0;
+    }
+
+    /* ── BANNER GLASSMORPHISM: lebar penuh, centered ── */
+    .hero-banner-card {
+      max-width: 100%;
+      width: calc(100% - 96px);
+      margin: 0 48px 0;
+      border-radius: 28px;
+    }
+
+    /* ── ALUR KEBAIKAN: flex row sejajar, gap merata ── */
+    .alur-kebaikan {
+      padding: 80px 48px;
+    }
+    .alur-kebaikan .section-header {
+      margin-bottom: 60px;
+    }
+    .alur-flow {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: center;
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .alur-item {
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .alur-card-desc {
+      flex: 1;
+    }
+
+    /* ── TIM KAMI: flex row wrap, kartu proporsional ── */
+    .tim-kami {
+      padding: 80px 48px;
+    }
+    .tim-grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 64px 28px;
+      max-width: 1100px;
+      margin: 60px auto 0;
+    }
+    .tim-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tim-photo-wrap {
+      /* override: posisi absolute sudah benar di global, pastikan jarak konsisten */
+      top: -36px;
+    }
+
+    /* ── KEPERCAYAAN: flex row teks + kartu ── */
+    .kepercayaan {
+      padding: 90px 48px;
+    }
+    .kepercayaan-flex {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 60px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .kepercayaan-text {
+      flex: 1 1 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .kepercayaan-card {
+      flex: 1 1 420px;
+      max-width: 500px;
+    }
+    .dana-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .dana-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .dana-top {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE BREAKPOINTS
+    ════════════════════════════════════════ */
+
+    /* Tablet: ≤ 900px */
+    @media (max-width: 900px) {
+      #hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 120px 24px 48px;
+        gap: 28px;
+      }
+      #hero .hero-content {
+        align-items: center;
+        max-width: 100%;
+      }
+      #hero .hero-sub { max-width: 100%; }
+      #hero .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      #hero .hero-image-wrap img {
+        width: min(320px, 80vw);
+      }
+      .hero-banner-card {
+        width: calc(100% - 48px);
+        margin: 0 24px;
+        border-radius: 20px;
+      }
+      .alur-kebaikan { padding: 60px 24px; }
+      .alur-flow {
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+      }
+      .alur-item { max-width: 420px; width: 100%; }
+      .alur-line { display: none; }
+      .tim-kami { padding: 60px 24px; }
+      .tim-grid {
+        gap: 56px 20px;
+        margin-top: 56px;
+      }
+      .tim-card { flex: 1 1 180px; max-width: 240px; }
+      .kepercayaan { padding: 60px 24px; }
+      .kepercayaan-flex {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 40px;
+        text-align: center;
+      }
+      .kepercayaan-text { align-items: center; }
+      .kepercayaan-card { max-width: 100%; }
+      .kepercayaan-desc { max-width: 100%; margin: 0 auto; }
+      .dana-top { justify-content: flex-start; }
+    }
+
+    /* Mobile: ≤ 600px */
+    @media (max-width: 600px) {
+      #hero {
+        padding: 100px 16px 40px;
+        gap: 20px;
+      }
+      #hero .hero-image-wrap img {
+        width: min(260px, 85vw);
+      }
+      .hero-banner-card {
+        width: calc(100% - 32px);
+        margin: 0 16px;
+        border-radius: 16px;
+        min-height: auto;
+      }
+      .glass-overlay-box {
+        padding: 28px 18px;
+      }
+      .alur-kebaikan { padding: 48px 16px; }
+      .alur-item { padding: 44px 18px 24px; }
+      .tim-kami { padding: 48px 16px; }
+      .tim-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 56px;
+      }
+      .tim-card { max-width: 320px; width: 100%; }
+      .kepercayaan { padding: 48px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="authModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+    <div class="modal-content">
+      <div class="modal-icon">👋</div>
+      <h3>Yuk, Gabung Bersama Kami!</h3>
+      <p>Kamu perlu memiliki akun terlebih dahulu untuk berdonasi atau mengikuti program keren di KindlyJAR.</p>
+      <div class="modal-actions">
+        <a href="../sign-up/signup.html" class="modal-btn btn-primary">Daftar Sekarang</a>
+        <a href="../sign-in/signin.html" class="modal-btn btn-secondary">Sudah Punya Akun</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ── MOBILE NAV ── -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html" onclick="closeMobileNav()">Home</a>
+    <a href="#program-donasi" onclick="closeMobileNav()">Program Donasi</a>
+    <a href="katalog-produk.html" onclick="closeMobileNav()">Katalog Produk</a>
+    <a href="tentang-kami.html" onclick="closeMobileNav()">Tentang Kami</a>
+    <div class="mobile-nav-divider"></div>
+    <a href="../sign-in/signin.html">Sign In</a>
+    <a href="../sign-up/signup.html" class="btn-signup-mobile">Galang Dana</a>
+  </div>
+
+  <!-- ── NAVBAR ── -->
+  <header>
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <img src="../assets/logo_putih.png" alt="KindlyJAR toples" />
+      </div>
+      <span class="logo-name">KindlyJAR</span>
+    </a>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="#program-donasi">Program Donasi</a>
+      <a href="katalog-produk.html">Katalog Produk</a>
+      <a href="tentang-kami.html">Tentang Kami</a>
+      <div class="nav-divider"></div>
+      <a href="../sign-in/signin.html">Sign In</a>
+      <a href="../sign-up/signup.html" class="btn-signup">Galang Dana</a>
+    </nav>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <!-- Floating Particles -->
+    <div id="tk-particles"></div>
+
+    <div class="hero-content">
+      <span class="hero-eyebrow tk-reveal tk-reveal-left">Bersama KindlyJAR</span>
+      <h1 class="hero-title tk-reveal" style="transition-delay:0.15s">
+        Cerita di Balik<br>
+        <span class="hero-title-accent" id="tk-typewriter-target"></span><span class="tk-typewriter" id="tk-cursor">|</span>
+      </h1>
+      <p class="hero-sub tk-reveal" style="transition-delay:0.3s">
+        Mewujudkan kesempatan dan kepedulian dalam satu gerakan yang setara.
+      </p>
+      <div class="hero-actions tk-reveal" style="transition-delay:0.45s">
+        <button class="btn-hero">Ikuti Program sebagai Hero!</button>
+        <p class="hero-social-proof">
+          Join <strong><span id="counter-users">0</span>+</strong> Users yang sudah ikut membangun negeri.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-image-wrap tk-reveal tk-reveal-right" style="transition-delay:0.2s">
+      <img src="../assets/mask-group.png" alt="KindlyJAR toples" />
+    </div>
+  </section>
+ <!-- ── PROGRAM DONASI ── -->
+  <section class="hero-banner-card">
+    <div class="glass-overlay-box">
+      <p class="glass-eyebrow"><strong>Bersama KindlyJAR</strong></p>
+ 
+      <h1 class="glass-title">Di Tanganmu Ada Harapan Mereka</h1>
+ 
+      <p class="glass-desc">
+        Kami memulai KindlyJAR setelah melihat dua realitas yang kontras: anak-anak di pelosok yang
+        berjuang demi sekolah, dan para kreator digital berbakat yang mencari ruang untuk berkarya.
+        Kami memutuskan untuk menjembatani keduanya. Melalui KindlyJAR, setiap produk digital yang
+        kamu miliki adalah kontribusi langsung untuk membangun jembatan, mengalirkan air bersih, dan
+        membuka ruang belajar yang setara. Ini adalah cara baru dalam berbagi kebaikan secara
+        transparan, kreatif, dan berdampak langsung.
+      </p>
+ 
+      <a href="#program-donasi" class="btn-glass-cta">Lihat program donasi</a>
+    </div>
+  </section>
+
+<!-- ── ALUR KEBAIKAN ── -->
+  <section id="alur-kebaikan" class="alur-kebaikan">
+    <div class="section-header tk-reveal">
+      <h2 class="section-title">Aliran Kebaikan KindlyJAR</h2>
+      <p class="section-sub">Dari kreativitas, kebaikan hati, lalu berakhir pada dampak nyata bagi mereka yang membutuhkan</p>
+    </div>
+ 
+    <div class="alur-flow">
+      <div class="alur-line" aria-hidden="true"></div>
+ 
+      <div class="alur-item tk-reveal tk-delay-1">
+        <div class="alur-icon-circle">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg>
+        </div>
+        <h3 class="alur-card-title">Para Hero</h3>
+        <p class="alur-card-tag">Kreator Digital</p>
+        <p class="alur-card-desc">Ilustrator, desainer, photographer, copywriter, para developer, dan lainnya menyumbangkan karya ke katalog kebaikan KindlyJAR.</p>
+      </div>
+ 
+      <div class="alur-item tk-reveal tk-delay-2">
+        <div class="alur-icon-circle">
+          <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.5-8.5C1 8 2 4.5 5.5 4c2-.3 3.8.8 4.5 2.5C10.7 4.8 12.5 3.7 14.5 4 18 4.5 19 8 17.5 11.5 15 15.65 12 20 12 20z"></path></svg>
+        </div>
+        <h3 class="alur-card-title">Para Saviors</h3>
+        <p class="alur-card-tag">Kebaikan Donatur</p>
+        <p class="alur-card-desc">Donatur membeli karya dari katalog, dana yang terkumpul menjadi kontribusi untuk program donasi.</p>
+      </div>
+ 
+      <div class="alur-item tk-reveal tk-delay-3">
+        <div class="alur-icon-circle">
+          <svg viewBox="0 0 24 24"><path d="M12 22s7-7.5 7-13a7 7 0 1 0-14 0c0 5.5 7 13 7 13z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+        </div>
+        <h3 class="alur-card-title">Jejak Kebaikan</h3>
+        <p class="alur-card-tag">Penyaluran Dampak</p>
+        <p class="alur-card-desc">Dana disalurkan untuk membantu kebutuhan masyarakat yang kurang mampu, hasil dilaporkan secara transparan.</p>
+      </div>
+    </div>
+  </section>
+ 
+   <!-- ── TIM KAMI ── -->
+  <section id="tim-kami" class="tim-kami">
+    <div class="section-header tk-reveal">
+      <h2 class="section-title">Tim di Balik Layar</h2>
+      <p class="section-sub">Lima hati, satu misi: memastikan setiap karya berubah menjadi kebaikan nyata</p>
+    </div>
+ 
+    <div class="tim-grid">
+      <div class="tim-card tk-reveal tk-reveal-scale tk-delay-1">
+        <div class="tim-photo-wrap">
+          <img src="https://ui-avatars.com/api/?name=Renna+Sahda&background=21A3FF&color=fff&size=128" alt="Renna Sahda P.">
+        </div>
+        <h3 class="tim-name">Renna Sahda P.</h3>
+        <p class="tim-role">Founder &amp; CEO</p>
+        <p class="tim-desc">Merancang arah misi dan kemitraan strategis KindlyJAR.</p>
+      </div>
+ 
+      <div class="tim-card tk-reveal tk-reveal-scale tk-delay-2">
+        <div class="tim-photo-wrap">
+          <img src="https://ui-avatars.com/api/?name=Fastu+Nadya&background=21A3FF&color=fff&size=128" alt="Fastu Nadya P.I">
+        </div>
+        <h3 class="tim-name">Fastu Nadya P.I</h3>
+        <p class="tim-role">Co-Founder &amp; CTO</p>
+        <p class="tim-desc">Membangun infrastruktur transparan berbasis data.</p>
+      </div>
+ 
+      <div class="tim-card tk-reveal tk-reveal-scale tk-delay-3">
+        <div class="tim-photo-wrap">
+          <img src="https://ui-avatars.com/api/?name=Anggra+Raina&background=21A3FF&color=fff&size=128" alt="Anggra Raina S">
+        </div>
+        <h3 class="tim-name">Anggra Raina S</h3>
+        <p class="tim-role">Head of Creative</p>
+        <p class="tim-desc">Mengelola karya Hero dan pengesah visual katalog.</p>
+      </div>
+ 
+      <div class="tim-card tk-reveal tk-reveal-scale tk-delay-4">
+        <div class="tim-photo-wrap">
+          <img src="https://ui-avatars.com/api/?name=Chasnaunisai+K&background=21A3FF&color=fff&size=128" alt="Chasnaunisai K">
+        </div>
+        <h3 class="tim-name">Chasnaunisai K</h3>
+        <p class="tim-role">Campaign &amp; Community Lead</p>
+        <p class="tim-desc">Mengatur kampanye donasi, menjaring komunitas Hero dan Saviors.</p>
+      </div>
+    </div>
+  </section>
+
+<!-- ── KEPERCAYAAN ── -->
+<section id="kepercayaan" class="kepercayaan">
+    <div class="kepercayaan-flex">
+      <div class="kepercayaan-text tk-reveal tk-reveal-left">
+        <h2 class="kepercayaan-title">Kepercayaanmu adalah <span class="text-accent">amanah</span> terbesar kami</h2>
+        <p class="kepercayaan-desc">Kami berkomitmen menjaga setiap rupiah mengalir dengan jujur. Berikut adalah komitmen alokasi dana yang terkumpul melalui platform KindlyJAR.</p>
+      </div>
+ 
+      <div class="kepercayaan-card tk-reveal tk-reveal-right" style="transition-delay:0.2s">
+        <h3 class="kepercayaan-card-title">Pembaruan Penyaluran Dana Terkini</h3>
+ 
+        <div class="dana-list">
+          <div class="dana-item">
+            <div class="dana-top">
+              <span class="dana-percent">85%</span>
+              <span class="dana-label">Dialokasikan langsung untuk program donasi</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="--target-width: 85%;"></div>
+            </div>
+          </div>
+ 
+          <div class="dana-item">
+            <div class="dana-top">
+              <span class="dana-percent">10%</span>
+              <span class="dana-label">Untuk pemeliharaan sistem web dan operasional kreator</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="--target-width: 10%;"></div>
+            </div>
+          </div>
+ 
+          <div class="dana-item">
+            <div class="dana-top">
+              <span class="dana-percent">5%</span>
+              <span class="dana-label">Untuk biaya transaksi payment gateway dan administrasi</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="--target-width: 5%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="footer-top">
+
+    <div class="footer-brand">
+      <a class="logo footer-logo" href="#hero">
+        <div class="logo-icon">
+          <img src="../assets/logo_putih.png" alt="KindlyJAR toples" />
+        </div>
+        <span class="logo-name">KindlyJAR</span>
+      </a>
+      <p class="footer-tagline">
+        Mengubah setiap transaksi menjadi jembatan akses, air bersih, dan ruang tumbuh yang setara di ujung negeri.
+      </p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.7 0 3 0 4.1.06 1.1.05 1.8.24 2.4.5.6.24 1.1.56 1.6 1.06.5.5.82 1 .96 1.6.26.6.45 1.3.5 2.4.06 1.1.06 1.4.06 4.1s0 3-.06 4.1c-.05 1.1-.24 1.8-.5 2.4-.24.6-.56 1.1-1.06 1.6-.5.5-1 .82-1.6.96-.6.26-1.3.45-2.4.5-1.1.06-1.4.06-4.1.06s-3 0-4.1-.06c-1.1-.05-1.8-.24-2.4-.5a4.3 4.3 0 0 1-1.6-1.06 4.3 4.3 0 0 1-.96-1.6c-.26-.6-.45-1.3-.5-2.4C2 15 2 14.7 2 12s0-3 .06-4.1c.05-1.1.24-1.8.5-2.4.24-.6.56-1.1 1.06-1.6.5-.5 1-.82 1.6-.96.6-.26 1.3-.45 2.4-.5C9 2 9.3 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm5.3-.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2z"/></svg>
+        </a>
+        <a href="#" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23 22h-6.6l-5.2-6.8L5.3 22H2.2l7.6-8.7L1.6 2h6.8l4.7 6.2zm-1.2 18h1.8L7.4 3.8H5.5z"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.87.24-1.46 1.5-1.46H16V5.1c-.28-.04-1.2-.12-2.28-.12-2.26 0-3.8 1.38-3.8 3.9V11H7.3v3H9.9v8z"/></svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2 1.6 3.4 3.5 3.6V9c-1.3 0-2.5-.4-3.5-1v6.5a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v2.6a2.9 2.9 0 1 0 2 2.7V3z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h4>Navigasi</h4>
+      <a href="#hero">Home</a>
+      <a href="#program-donasi">Program Donasi</a>
+      <a href="#katalog-produk">Katalog Produk</a>
+      <a href="#para-hero">Para Hero</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Perusahaan</h4>
+      <a href="#">Tentang Kami</a>
+      <a href="#">Cara Kerja</a>
+      <a href="#">Laporan Dana</a>
+      <a href="#">Karier</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Bantuan</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Hubungi Kami</a>
+      <a href="#">Syarat &amp; Ketentuan</a>
+      <a href="#">Kebijakan Privasi</a>
+    </div>
+
+    <div class="footer-newsletter">
+      <h4>Ikuti Kabar Baik</h4>
+      <p>Dapatkan cerita dampak &amp; program terbaru langsung ke emailmu.</p>
+      <form class="footer-subscribe" onsubmit="return false;">
+        <input type="email" placeholder="Email kamu" aria-label="Email langganan" />
+        <button type="submit" aria-label="Langganan">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 KindlyJAR. Dibuat dengan ❤️ untuk Nusantara.</p>
+    <div class="footer-bottom-links">
+      <a href="#">Privasi</a>
+      <a href="#">Ketentuan</a>
+      <a href="#">Cookie</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../global/script.js"></script>
+<script>
+  // ── HAMBURGER MENU ──
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileNav = document.getElementById('mobileNav');
+
+  function closeMobileNav() {
+    hamburgerBtn.classList.remove('open');
+    mobileNav.classList.remove('open');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = hamburgerBtn.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Tutup saat klik di luar nav
+  mobileNav.addEventListener('click', (e) => {
+    if (e.target === mobileNav) closeMobileNav();
+  });
+
+  // Tutup saat ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
+
+  // ══════════════════════════════════════════
+  //  TENTANG KAMI — ANIMATION SCRIPTS
+  // ══════════════════════════════════════════
+
+  // ── 1. Floating Particles ──
+  (function spawnParticles() {
+    const container = document.getElementById('tk-particles');
+    if (!container) return;
+    const count = 22;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.className = 'tk-particle';
+      const size = Math.random() * 14 + 5;          // 5–19px
+      const left = Math.random() * 100;             // 0–100%
+      const dur  = Math.random() * 12 + 8;          // 8–20s
+      const del  = Math.random() * 15;              // 0–15s delay
+      const opacity = (Math.random() * 0.3 + 0.1); // 0.1–0.4
+      p.style.cssText = [
+        `width:${size}px`, `height:${size}px`,
+        `left:${left}%`, `bottom:-${size}px`,
+        `animation-duration:${dur}s`,
+        `animation-delay:${del}s`,
+        `opacity:${opacity}`,
+        `background:rgba(255,255,255,${opacity + 0.1})`
+      ].join(';');
+      container.appendChild(p);
+    }
+  })();
+
+  // ── 2. Typewriter effect on hero accent ──
+  (function typewriter() {
+    const target = document.getElementById('tk-typewriter-target');
+    const cursor = document.getElementById('tk-cursor');
+    if (!target) return;
+    const text = 'KindlyJAR';
+    let i = 0;
+    // Start after a short delay
+    setTimeout(function type() {
+      if (i <= text.length) {
+        target.textContent = text.slice(0, i);
+        i++;
+        setTimeout(type, 95);
+      } else {
+        // Hide cursor after typing finishes
+        setTimeout(() => {
+          if (cursor) cursor.style.display = 'none';
+        }, 1200);
+      }
+    }, 600);
+  })();
+
+  // ── 3. Scroll Reveal (IntersectionObserver) ──
+  (function scrollReveal() {
+    const items = document.querySelectorAll('.tk-reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Trigger underline on section titles inside
+          const title = entry.target.querySelector('.section-title');
+          if (title) title.classList.add('underline-active');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(el => obs.observe(el));
+
+    // Immediately show hero elements (already in view)
+    document.querySelectorAll('#hero .tk-reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 150 + 100);
+    });
+  })();
+
+  // ── 4. Animated Progress Bars ──
+  (function animateBars() {
+    const bars = document.querySelectorAll('#kepercayaan .progress-fill');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Small delay for visual polish
+          setTimeout(() => entry.target.classList.add('animated'), 300);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    bars.forEach(bar => obs.observe(bar));
+  })();
+</script>
+</body>
+</html>

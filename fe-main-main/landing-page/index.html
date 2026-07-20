@@ -28,7 +28,8 @@
   <div class="mobile-nav" id="mobileNav">
     <a href="#" onclick="closeMobileNav()">Home</a>
     <a href="#program-donasi" onclick="closeMobileNav()">Program Donasi</a>
-    <a href="#katalog-produk" onclick="closeMobileNav()">Katalog Produk</a>
+    <a href="katalog-produk.html" onclick="closeMobileNav()">Katalog Produk</a>
+    <a href="tentang-kami.html" onclick="closeMobileNav()">Tentang Kami</a>
     <div class="mobile-nav-divider"></div>
     <a href="../sign-in/signin.html">Sign In</a>
     <a href="../sign-up/signup.html" class="btn-signup-mobile">Galang Dana</a>
@@ -46,7 +47,8 @@
     <nav>
       <a href="#">Home</a>
       <a href="#program-donasi">Program Donasi</a>
-      <a href="#katalog-produk">Katalog Produk</a>
+      <a href="katalog-produk.html">Katalog Produk</a>
+      <a href="tentang-kami.html">Tentang Kami</a>
       <div class="nav-divider"></div>
       <a href="../sign-in/signin.html">Sign In</a>
       <a href="../sign-up/signup.html" class="btn-signup">Galang Dana</a>
@@ -61,23 +63,33 @@
 
   <!-- ── HERO ── -->
   <section id="hero">
+    <!-- Background foto (mobile only) -->
+    <div class="hero-bg">
+      <img src="../assets/hero-people.jpg" alt="Komunitas KindlyJAR" />
+      <div class="hero-overlay"></div>
+    </div>
+
+    <!-- Konten teks -->
     <div class="hero-content">
-      <h1 class="hero-title">Menyalakan Lentera<br> di Ujung Negeri</h1>
+      <h1 class="hero-title">Menyalakan Lentera di<br>Ujung Negeri</h1>
       <p class="hero-sub">
-        Rekam jejak kepedulian yang mengubah setiap transaksi menjadi jembatan akses, air bersih, dan ruang tumbuh yang setara.
+        Rekam jejak kepedulian yang mengubah setiap transaksi menjadi
+        jembatan akses, air bersih, dan ruang tumbuh yang setara.
       </p>
       <div class="hero-actions">
-        <button class="btn-hero">Ikuti Program sebagai Hero!</button>
+        <button class="btn-hero" id="btn-donasi-hero" onclick="showAuthModal()">Donasi Sekarang!</button>
         <p class="hero-social-proof">
-          Join <strong><span id="counter-users">0</span>+</strong> Users yang sudah ikut membangun negeri.
+          Join <strong><a href="#" class="proof-link"><span id="counter-users">0</span>+</a></strong> Users yang sudah ikut membangun negeri.
         </p>
       </div>
     </div>
 
+    <!-- Foto kanan (desktop only) -->
     <div class="hero-image-wrap">
-      <img src="../assets/toples.png" alt="KindlyJAR toples" />
+      <img src="../assets/hero-people.jpg" alt="Komunitas KindlyJAR" />
     </div>
   </section>
+
  <!-- ── PROGRAM DONASI ── -->
   <section id="program-donasi">
     <div class="section-header">
@@ -164,130 +176,206 @@
 
 <!-- ── KATALOG PRODUK ── -->
   <section id="katalog-produk">
-    <div class="section-header">
-      <h2 class="section-title">Katalog Produk Digital</h2>
-      <p class="section-sub">Aset kreatif premium pilihan dari Hero untuk mendukung pemerataan Nusantara.</p>
+
+    <!-- Header -->
+    <div class="katalog-section-header">
+      <h2 class="katalog-main-title">PRODUK POPULER PILIHAN PARA SAVIOUR</h2>
+      <p class="katalog-main-sub">Produk yang Banyak Dipilih oleh Para Saviour</p>
     </div>
- 
-    <div class="katalog-masonry">
- 
-      <div class="katalog-item tall">
-        <img src="../assets/kata1.jpg" alt="Produk 1" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Poster</span>
+
+    <!-- 4 Produk Populer Teratas -->
+    <div class="katalog-popular-grid">
+
+      <div class="katalog-popular-card">
+        <div class="kp-img-wrap">
+          <img src="../assets/kata6.jpg" alt="Diorama 3D Isometric" />
+          <span class="kp-badge badge-3d">Aset 3D</span>
         </div>
+        <p class="kp-title">Diorama 3D Isometric "Hasta Malang"</p>
+        <a href="katalog-produk.html" class="kp-link">Lihat Detail →</a>
       </div>
 
-            <div class="katalog-item">
-        <img src="../assets/kata16.jpg" alt="Produk 16" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Illustrasi Digital</span>
+      <div class="katalog-popular-card">
+        <div class="kp-img-wrap">
+          <img src="../assets/kata2.jpg" alt="Ilustrasi Digital Potret" />
+          <span class="kp-badge badge-ilustrasi">Ilustrasi</span>
         </div>
-      </div>
- 
-      <div class="katalog-item">
-        <img src="../assets/kata2.jpg" alt="Produk 2" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Poster</span>
-        </div>
-      </div>
- 
-      <div class="katalog-item">
-        <img src="../assets/kata3.jpg" alt="Produk 3" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Poster</span>
-        </div>
-      </div>
- 
-      <div class="katalog-item tall">
-        <img src="../assets/kata4.jpg" alt="Produk 4" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Web</span>
-        </div>
-      </div>
- 
-      <div class="katalog-item">
-        <img src="../assets/kata5.jpg" alt="Produk 5" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Web</span>
-        </div>
-      </div>
- 
-      <div class="katalog-item">
-        <img src="../assets/kata6.jpg" alt="Produk 6" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Aset 3D</span>
-        </div>
+        <p class="kp-title">Ilustrasi Digital Potret "Crimson Veil"</p>
+        <a href="katalog-produk.html" class="kp-link">Lihat Detail →</a>
       </div>
 
-            <div class="katalog-item">
-        <img src="../assets/kata15.jpg" alt="Produk 14" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Aset 3D</span>
+      <div class="katalog-popular-card">
+        <div class="kp-img-wrap">
+          <img src="../assets/kata12.jpg" alt="Foto Stok Skateboard" />
+          <span class="kp-badge badge-foto">Stok Foto</span>
         </div>
-      </div>
- 
-      <div class="katalog-item tall">
-        <img src="../assets/kata7.jpg" alt="Produk 7" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Aset 3D</span>
-        </div>
-      </div>
- 
-      <div class="katalog-item">
-        <img src="../assets/kata8.jpg" alt="Produk 8" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Logo</span>
-        </div>
-      </div>
-      <div class="katalog-item">
-        <img src="../assets/kata9.jpg" alt="Produk 9" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Logo</span>
-        </div>
-      </div>
-      <div class="katalog-item">
-        <img src="../assets/kata10.jpg" alt="Produk 10" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Ilustrasi Digital</span>
-        </div>
-      </div>
-      <div class="katalog-item">
-        <img src="../assets/kata11.jpg" alt="Produk 11" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Ilustrasi Digital</span>
-        </div>
+        <p class="kp-title">Foto Stok "Aksi Skateboard"</p>
+        <a href="katalog-produk.html" class="kp-link">Lihat Detail →</a>
       </div>
 
-      <div class="katalog-item">
-        <img src="../assets/kata14.jpg" alt="Produk 14" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Aset 3D</span>
+      <div class="katalog-popular-card">
+        <div class="kp-img-wrap">
+          <img src="../assets/kata5.jpg" alt="Brand Identity Kit" />
+          <span class="kp-badge badge-web">Desain Web</span>
         </div>
-      </div> 
-
-      <div class="katalog-item">
-        <img src="../assets/kata12.jpg" alt="Produk 12" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Stok Foto</span>
-        </div>
-      </div>
-      <div class="katalog-item">
-        <img src="../assets/kata13.jpg" alt="Produk 13" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Stok Foto</span>
-        </div>
+        <p class="kp-title">Brand Identity Kit "LINE" Ice Cream, Tea & Coffee</p>
+        <a href="katalog-produk.html" class="kp-link">Lihat Detail →</a>
       </div>
 
-       <div class="katalog-item">
-        <img src="../assets/kata17.jpg" alt="Produk 17" />
-        <div class="katalog-overlay">
-          <span class="katalog-label">Desain Logo</span>
-        </div>
-      </div>
- 
     </div>
+
+    <!-- Search Bar -->
+    <div class="katalog-search-wrap">
+      <div class="katalog-search-box">
+        <svg class="katalog-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="katalogSearch" placeholder="Jelajahi Katalog" oninput="filterKatalog()" />
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="katalog-filter-tabs">
+      <button class="kfilter-btn active" onclick="setFilter('semua', this)">Semua</button>
+      <button class="kfilter-btn" onclick="setFilter('Desain Logo', this)">Desain Logo ▾</button>
+      <button class="kfilter-btn" onclick="setFilter('Desain Poster', this)">Desain Poster ▾</button>
+      <button class="kfilter-btn" onclick="setFilter('Ilustrasi', this)">Ilustrasi ▾</button>
+      <button class="kfilter-btn" onclick="setFilter('Aset 3D', this)">Aset 3D ▾</button>
+    </div>
+
+    <!-- Grid Produk -->
+    <div class="katalog-product-grid" id="katalogGrid">
+
+      <div class="kprod-card" data-kategori="Desain Poster">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata1.jpg" alt="Poster Retro Yuli Staff" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Poster</span>
+        </div>
+        <p class="kprod-title">Poster Retro "Yuli Staff Penggemar"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Ilustrasi">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata2.jpg" alt="Ilustrasi Digital Potret" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Ilustrasi</span>
+        </div>
+        <p class="kprod-title">Ilustrasi Digital Potret "Crimson Veil"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Ilustrasi">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata3.jpg" alt="Ilustrasi Patent Lily" />
+          <span class="kprod-status status-terjual">Terjual</span>
+          <span class="kprod-kategori">Ilustrasi</span>
+        </div>
+        <p class="kprod-title">Ilustrasi Patent "Lily & Senja"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Desain Poster">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata16.jpg" alt="Poster Infografic Hardect" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Poster</span>
+        </div>
+        <p class="kprod-title">Poster Infografic "Hardect Records to Rock"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Desain Web">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata4.jpg" alt="Desain Web Crumb Theory" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Web</span>
+        </div>
+        <p class="kprod-title">Desain Web "Crumb Theory" Bakery Landing Page</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Desain Logo">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata5.jpg" alt="Brand Identity Kit LINE" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Logo</span>
+        </div>
+        <p class="kprod-title">Brand Identity Kit "LINE" Ice Cream, Tea & Coffee</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Stok Foto">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata12.jpg" alt="Foto Stok Skateboard" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Stok Foto</span>
+        </div>
+        <p class="kprod-title">Foto Stok "Aksi Skateboard"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Aset 3D">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata7.jpg" alt="Diorama 3D Ruang Baca" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Aset 3D</span>
+        </div>
+        <p class="kprod-title">Diorama 3D Isometric "Ruang Baca Cozy"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Aset 3D">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata6.jpg" alt="Diorama 3D Kodai House" />
+          <span class="kprod-status status-terjual">Terjual</span>
+          <span class="kprod-kategori">Aset 3D</span>
+        </div>
+        <p class="kprod-title">Diorama 3D Isometric "Kodai House Ayan"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Desain Logo">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata9.jpg" alt="Logo Maskot Moji Matcha" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Logo</span>
+        </div>
+        <p class="kprod-title">Logo Maskot "Moji Matcha"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Desain Logo">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata8.jpg" alt="Logo & Badge Midnight Raven" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Desain Logo</span>
+        </div>
+        <p class="kprod-title">Logo & Badge "Midnight Raven Coffee House"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+      <div class="kprod-card" data-kategori="Ilustrasi">
+        <div class="kprod-img-wrap">
+          <img src="../assets/kata11.jpg" alt="Ilustrasi Karakter Gadis" />
+          <span class="kprod-status status-tersedia">Tersedia</span>
+          <span class="kprod-kategori">Ilustrasi</span>
+        </div>
+        <p class="kprod-title">Ilustrasi Karakter "Gadis dan Kucing Peri"</p>
+        <a href="katalog-produk.html" class="kprod-link">Lihat Detail →</a>
+      </div>
+
+    </div>
+
+    <!-- Tombol Lihat Semua -->
+    <div class="katalog-cta-wrap">
+      <a href="katalog-produk.html" class="btn-katalog-all">Lihat Semua Produk →</a>
+    </div>
+
   </section>
+ 
+
  
    <!-- ── JEJAK KEBAIKAN ── -->
   <section id="jejak-kebaikan">

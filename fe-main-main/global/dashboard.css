@@ -230,8 +230,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 28px;              
-  margin: 14px 36px 0;             
+  padding: 18px 32px;              
+  margin: 16px 36px 0;             
   background: rgba(255, 255, 255, 0.7); 
   backdrop-filter: blur(12px);      
   -webkit-backdrop-filter: blur(12px);
@@ -242,6 +242,7 @@
   z-index: 10;
   will-change: transform, opacity;
   animation: dashFadeDown 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s both;
+  gap: 20px;
 }
 
 .dash-scroll {
@@ -594,6 +595,206 @@
   overflow-x: auto;
 }
 
+/* ══════════════════════════════════════════════
+   DOWNLOAD MANAGER TABLE (Halaman Riwayat)
+   ══════════════════════════════════════════════ */
+
+/* Control bar: search + info */
+.download-manager-container {
+  margin-top: 8px;
+}
+
+.dm-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.dm-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f7fbff;
+  border: 1.5px solid rgba(33, 163, 255, 0.15);
+  border-radius: 10px;
+  padding: 8px 14px;
+  flex: 1 1 200px;
+  max-width: 320px;
+}
+
+.dm-search-input {
+  border: none;
+  background: transparent;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #3D3D4E;
+  outline: none;
+  width: 100%;
+}
+
+.dm-total-info {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #21A3FF;
+  white-space: nowrap;
+}
+
+/* Table wrapper: horizontal scroll */
+.dm-table-wrapper {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(33, 163, 255, 0.08);
+  -webkit-overflow-scrolling: touch;
+}
+
+.dm-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px; /* tabel scroll jika layar < ini */
+  font-family: 'Open Sans', sans-serif;
+}
+
+.dm-table thead th {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #6b7a8d;
+  text-align: left;
+  padding: 12px 14px;
+  background: #f7fbff;
+  border-bottom: 1.5px solid rgba(33, 163, 255, 0.1);
+  white-space: nowrap;
+}
+
+.dm-table tbody td {
+  font-size: 0.82rem;
+  color: #3D3D4E;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(33, 163, 255, 0.05);
+  vertical-align: middle;
+}
+
+.dm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dm-table tbody tr:hover td {
+  background: rgba(33, 163, 255, 0.03);
+}
+
+.text-center { text-align: center; }
+
+/* File info cell */
+.dm-file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dm-file-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dm-file-icon.ppt  { background: rgba(234, 88,  12,  0.1); color: #ea580c; }
+.dm-file-icon.zip  { background: rgba(234, 179, 8,   0.1); color: #ca8a04; }
+.dm-file-icon.img  { background: rgba(33,  163, 255, 0.1); color: #21A3FF; }
+.dm-file-icon.blank{ background: rgba(107, 122, 141, 0.1); color: #6b7a8d; }
+
+.dm-file-name-container {
+  min-width: 0;
+  flex: 1;
+}
+
+.dm-file-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: #1A1A2E;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+/* Badge status */
+.dm-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.74rem;
+  white-space: nowrap;
+}
+
+.dm-badge.success { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+.dm-badge.pending { background: rgba(234, 179, 8, 0.12);  color: #b45309; }
+.dm-badge.failed  { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+
+/* Aksi button */
+.btn-dm-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(33, 163, 255, 0.2);
+  background: #f7fbff;
+  color: #21A3FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.btn-dm-action:hover:not(:disabled) {
+  background: #21A3FF;
+  color: #fff;
+  border-color: #21A3FF;
+  box-shadow: 0 4px 12px rgba(33, 163, 255, 0.3);
+}
+
+.btn-dm-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── MOBILE: Sembunyikan kolom kurang penting, min-width lebih kecil ── */
+@media (max-width: 600px) {
+  .dm-table {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Sembunyikan kolom Ukuran & Tanggal Beli di mobile kecil */
+  .dm-table th:nth-child(3),
+  .dm-table td:nth-child(3),
+  .dm-table th:nth-child(5),
+  .dm-table td:nth-child(5) {
+    display: none;
+  }
+
+  .dm-file-name {
+    max-width: 140px;
+  }
+
+  .dm-table thead th,
+  .dm-table tbody td {
+    padding: 10px 8px;
+  }
+}
+
 .activity-table {
   width: 100%;
   border-collapse: collapse;
@@ -708,13 +909,15 @@
 }
 
 .trending-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
 }
 
 .trending-card {
+  flex: 1 1 calc(25% - 12px);
+  min-width: 200px;
   background: #f7fbff;
   border-radius: 16px;
   overflow: hidden;
@@ -843,7 +1046,7 @@
 
 .dash-search-input {
   width: 100%;
-  padding: 10px 16px 10px 42px; 
+  padding: 12px 20px 12px 46px; 
   font-family: 'Open Sans', sans-serif;
   font-size: 0.95rem;
   color: #4a5568;
@@ -1170,13 +1373,16 @@
 
 /* ── COMPONENT: KINDLYSHOP PRODUCT GRID (ala e-Bay) ── */
 .shop-product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
 }
 
 .product-card {
+  flex: 1 1 calc(25% - 12px); /* 4 kolom di desktop */
+  min-width: 170px;
+  max-width: calc(25% - 12px);
   background: #f7fbff;
   border-radius: 16px;
   overflow: hidden;
@@ -1362,13 +1568,15 @@
 
 /* Why grid */
 .inisiasi-why-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
 }
 
 .inisiasi-why-card {
+  flex: 1 1 calc(25% - 12px);
+  min-width: 180px;
   background: #f7fbff;
   border: 1px solid rgba(33, 163, 255, 0.12);
   border-radius: 16px;
@@ -1576,7 +1784,7 @@
   transform: translateY(-50%);
   z-index: 2;
   transition: width 0.3s ease;
-  width: 25%;
+  width: 0;
 }
 
 .step-node {
@@ -1639,15 +1847,20 @@
 }
 
 .form-grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 24px;
 }
 
+.form-grid-2 > .form-group {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 0;
+}
+
 @media (max-width: 768px) {
-  .form-grid-2 {
-    grid-template-columns: 1fr;
+  .form-grid-2 > .form-group {
+    flex: 1 1 100%;
   }
 }
 
@@ -2577,12 +2790,14 @@ select.form-input-style {
 
 /* Galeri */
 .detail-galeri {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .detail-galeri img {
+  flex: 1 1 calc(25% - 8px);
+  min-width: 80px;
   width: 100%;
   height: 100px;
   object-fit: cover;
@@ -2705,8 +2920,10 @@ select.form-input-style {
 .donasi-modal-header h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.2rem; color: #1A1A2E; line-height: 1.3; }
 .donasi-modal-section { margin-bottom: 18px; }
 .donasi-modal-label { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; color: #1A1A2E; margin-bottom: 10px; }
-.donasi-nominal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+.donasi-nominal-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
 .donasi-nominal-btn {
+  flex: 1 1 calc(50% - 5px);
+  min-width: 0;
   font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.88rem; color: #21A3FF;
   background: #f7fbff; border: 1.5px solid rgba(33, 163, 255, 0.2); border-radius: 12px;
   padding: 10px; cursor: pointer; transition: all 0.18s ease;
@@ -2845,6 +3062,98 @@ select.form-input-style {
 }
 
 /* ══════════════════════════════════════════════
+   MOBILE ACCOUNT TABS (Profil & Pengaturan pages)
+   ══════════════════════════════════════════════ */
+
+/* Disembunyikan di desktop, muncul di mobile sebagai tab strip horizontal */
+.mobile-account-tabs {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-account-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-shadow: 0 2px 10px rgba(33, 163, 255, 0.08);
+  }
+
+  .mobile-account-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Separator garis antara back-link dan tab items */
+  .mobile-account-tabs .mobile-account-back {
+    border-right: 1.5px solid rgba(33, 163, 255, 0.15);
+    padding-right: 8px;
+    margin-right: 2px;
+    flex-shrink: 0;
+    /* Sembunyikan teks "Dashboard", tampilkan hanya ikon panah */
+    font-size: 0;
+    gap: 0;
+    padding-left: 4px;
+  }
+
+  .mobile-account-tabs .mobile-account-back svg {
+    width: 18px;
+    height: 18px;
+    font-size: initial;
+  }
+
+  .mobile-account-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 11px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7a8d;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mobile-account-tab svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  .mobile-account-tab:hover {
+    background: rgba(33, 163, 255, 0.07);
+    color: #21A3FF;
+  }
+
+  .mobile-account-tab.active {
+    background: rgba(33, 163, 255, 0.12);
+    color: #21A3FF;
+  }
+
+  .mobile-account-tab.danger {
+    color: #ef4444;
+  }
+
+  .mobile-account-tab.danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+  }
+}
+
+/* ══════════════════════════════════════════════
    DASHBOARD BOTTOM NAVIGATION (Mobile)
    ══════════════════════════════════════════════ */
 
@@ -2943,6 +3252,22 @@ select.form-input-style {
   .dash-bnav-item.bnav-center.active .bnav-icon-wrap {
     background: #1a8fe0;
   }
+
+  /* ── Jadi Hero item: warna emas/bintang ── */
+  .dash-bnav-item.bnav-hero {
+    color: #f59e0b;
+  }
+
+  .dash-bnav-item.bnav-hero svg {
+    stroke: #f59e0b;
+  }
+
+  .dash-bnav-item.bnav-hero:hover,
+  .dash-bnav-item.bnav-hero.active {
+    color: #d97706;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 12px;
+  }
 }
 
 /* ── MOBILE HERO FLOATING BUTTON ── */
@@ -3017,14 +3342,20 @@ select.form-input-style {
     flex: 1 1 100%;
   }
 
-  /* Trending grid: 2 kolom */
-  .trending-grid {
-    grid-template-columns: repeat(2, 1fr);
+  /* Trending grid: 2 kolom di tablet */
+  .trending-grid > .trending-card {
+    flex: 1 1 calc(50% - 8px);
   }
 
-  /* Inisiasi why grid: 2 kolom */
-  .inisiasi-why-grid {
-    grid-template-columns: repeat(2, 1fr);
+  /* Shop: 2 kolom di tablet */
+  .product-card {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
+  }
+
+  /* Inisiasi why grid: 2 kolom di tablet */
+  .inisiasi-why-grid > .inisiasi-why-card {
+    flex: 1 1 calc(50% - 8px);
   }
 
   /* Settings layout: tumpuk vertikal */
@@ -3060,9 +3391,9 @@ select.form-input-style {
     flex-wrap: wrap;
   }
 
-  /* Detail galeri: 3 kolom */
-  .detail-galeri {
-    grid-template-columns: repeat(3, 1fr);
+  /* Detail galeri: 3 kolom di tablet */
+  .detail-galeri > img {
+    flex: 1 1 calc(33.333% - 7px);
   }
 }
 
@@ -3158,55 +3489,41 @@ select.form-input-style {
     mask-image: linear-gradient(to bottom, transparent 0%, black 30%);
   }
 
-  /* Trending: 1 kolom di mobile */
-  .trending-grid {
-    grid-template-columns: 1fr 1fr;
+  /* Trending: 2 kolom di mobile */
+  .trending-grid > .trending-card {
+    flex: 1 1 calc(50% - 6px);
     gap: 12px;
   }
 
-  /* Card horizontal donasi */
-  .donation-card-horizontal {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .card-horizontal-img {
-    width: 100%;
-    min-width: 0;
-    height: 180px;
-  }
-
-  .card-horizontal-body {
-    padding: 14px;
+  /* Shop: 2 kolom di mobile */
+  .product-card {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
   }
 
   /* Inisiasi */
-  .inisiasi-why-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .inisiasi-why-grid > .inisiasi-why-card {
+    flex: 1 1 calc(50% - 6px);
     gap: 12px;
   }
 
-  .inisiasi-siapkan-row {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .inisiasi-siapkan-img {
-    height: 180px;
-  }
-
-  /* Form grid */
-  .form-grid-2 {
-    grid-template-columns: 1fr;
+  /* Form grid: 1 kolom penuh di mobile */
+  .form-grid-2 > .form-group {
+    flex: 1 1 100%;
   }
 
   .form-group.full-width {
-    grid-column: span 1;
+    width: 100%;
   }
 
-  /* Detail */
-  .detail-galeri {
-    grid-template-columns: repeat(2, 1fr);
+  /* Detail galeri: 2 kolom di mobile */
+  .detail-galeri > img {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  /* Donasi nominal grid: 2 kolom */
+  .donasi-nominal-grid > .donasi-nominal-btn {
+    flex: 1 1 calc(50% - 5px);
   }
 
   .detail-progress-stats {
@@ -3253,9 +3570,9 @@ select.form-input-style {
     gap: 16px;
   }
 
-  /* Donasi nominal grid */
-  .donasi-nominal-grid {
-    grid-template-columns: repeat(2, 1fr);
+  /* Donasi nominal grid: 2 kolom */
+  .donasi-nominal-grid > .donasi-nominal-btn {
+    flex: 1 1 calc(50% - 5px);
   }
 
   /* Search bar */
@@ -3267,22 +3584,29 @@ select.form-input-style {
 /* ── Mobile portrait: 480px ke bawah ── */
 @media (max-width: 480px) {
   .dash-topbar {
-    margin: 8px 8px 0;
-    padding: 10px 12px;
+    margin: 10px 10px 0;
+    padding: 14px 16px;
+    gap: 12px;
   }
 
   .dash-scroll {
     padding: 12px 12px 40px;
   }
 
-  /* Trending: 1 kolom penuh */
-  .trending-grid {
-    grid-template-columns: 1fr;
+  /* Trending: 1 kolom penuh di 480px */
+  .trending-grid > .trending-card {
+    flex: 1 1 100%;
+  }
+
+  /* Shop: tetap 2 kolom di 480px */
+  .product-card {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
   }
 
   /* Inisiasi: 1 kolom */
-  .inisiasi-why-grid {
-    grid-template-columns: 1fr;
+  .inisiasi-why-grid > .inisiasi-why-card {
+    flex: 1 1 100%;
   }
 
   /* Hero success actions */
@@ -3297,8 +3621,8 @@ select.form-input-style {
   }
 
   /* Detail galeri: 2 kolom */
-  .detail-galeri {
-    grid-template-columns: repeat(2, 1fr);
+  .detail-galeri > img {
+    flex: 1 1 calc(50% - 5px);
   }
 
   .detail-meta-row {
@@ -3351,5 +3675,16 @@ select.form-input-style {
 
   .btn-request-otp {
     padding: 12px;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   OVERRIDE: Hanya sembunyikan floating hero btn
+   Bottom nav aktif untuk semua halaman kecuali profil/akun
+   ══════════════════════════════════════════════ */
+/* Padding bawah untuk bottom nav + floating hero btn di mobile */
+@media (max-width: 768px) {
+  .dash-scroll {
+    padding-bottom: 90px;
   }
 }
