@@ -20,7 +20,9 @@ class CampaignSeeder extends Seeder
                 'category'         => 'Lainnya',
                 'target_amount'    => 20000000,
                 'collected_amount' => 13280000,
+                'withdrawn_amount' => 2000000,
                 'created_at'       => Carbon::now()->subDays(45),
+                'end_date'         => Carbon::now()->addDays(15),
             ],
             [
                 'title'            => 'Perbaikan Akses Jalan Desa Terisolir Flores Timur',
@@ -29,6 +31,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 12000000,
                 'collected_amount' => 9750000,
                 'created_at'       => Carbon::now()->subDays(30),
+                'end_date'         => Carbon::now()->addDays(30),
             ],
             [
                 'title'            => 'Instalasi Air Bersih untuk Pesisir Rote Ndao',
@@ -37,6 +40,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 7000000,
                 'collected_amount' => 5600000,
                 'created_at'       => Carbon::now()->subDays(25),
+                'end_date'         => Carbon::now()->addDays(35),
             ],
             [
                 'title'            => 'Alat Bantu Dengar untuk Anak Difabel Nias',
@@ -45,6 +49,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 2500000,
                 'collected_amount' => 1800000,
                 'created_at'       => Carbon::now()->subDays(20),
+                'end_date'         => Carbon::now()->addDays(40),
             ],
             [
                 'title'            => 'Renovasi Ruang Kelas SD Pedalaman Mentawai',
@@ -53,6 +58,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 10000000,
                 'collected_amount' => 8100000,
                 'created_at'       => Carbon::now()->subDays(15),
+                'end_date'         => Carbon::now()->addDays(45),
             ],
             [
                 'title'            => 'Sumur Bor untuk Dusun Kering Waingapu',
@@ -61,6 +67,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 8000000,
                 'collected_amount' => 450000,
                 'created_at'       => Carbon::now()->subDays(5),
+                'end_date'         => Carbon::now()->addDays(55),
             ],
             [
                 'title'            => 'Perpustakaan Mini untuk Anak Pedalaman Kalimantan',
@@ -69,6 +76,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 5000000,
                 'collected_amount' => 120000,
                 'created_at'       => Carbon::now()->subDays(3),
+                'end_date'         => Carbon::now()->addDays(57),
             ],
             [
                 'title'            => 'Penanaman Mangrove Pesisir Pantai Selatan',
@@ -77,6 +85,7 @@ class CampaignSeeder extends Seeder
                 'target_amount'    => 6000000,
                 'collected_amount' => 2100000,
                 'created_at'       => Carbon::now()->subDays(1),
+                'end_date'         => Carbon::now()->addDays(59),
             ],
         ];
 
