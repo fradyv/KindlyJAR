@@ -353,22 +353,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-window.addEventListener('DOMContentLoaded', () => {
-  const name  = localStorage.getItem('userName');
-  const email = localStorage.getItem('userEmail');
-
-  const nameEls  = [
-    document.getElementById('dashProfileName'),
-    document.getElementById('profileDdName'),
-    document.getElementById('dashUsername')
-  ];
-  const emailEls = [document.getElementById('dashProfileEmail'), document.getElementById('profileDdEmail')];
-
-  if (name)  nameEls.forEach(el => el && (el.textContent = name));
-  if (email) emailEls.forEach(el => el && (el.textContent = email));
-  document.addEventListener("DOMContentLoaded", function () {
-  // Membaca baris data asli dari HTML kamu secara dinamis
+document.addEventListener('DOMContentLoaded', () => {
   const tableBody = document.getElementById('historyTableBody');
+  if (!tableBody) return;
   const rows = Array.from(tableBody.querySelectorAll('tr'));
   
   const prevBtn = document.getElementById('prevBtn');
@@ -415,7 +402,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // Inisialisasi tampilan pertama
   updatePagination();
 });
-});
 
 const cartBtn      = document.getElementById('cartBtn');
 const cartDropdown = document.getElementById('cartDropdown');
@@ -449,32 +435,16 @@ document.addEventListener('click', () => {
   notifDropdown?.classList.remove('open');
   profileDropdown?.classList.remove('open');
 });
-/* ── INISIASI STATUS ── */
+/* ── INISIASI: tombol CTA menuju halaman verifikasi ── */
 window.addEventListener('DOMContentLoaded', () => {
-  const status = localStorage.getItem('inisiasiStatus'); // 'pending' | 'ditolak' | 'verified' | null
-
-  if (status === 'verified') {
-    window.location.href = '/inisiasi';
-    return;
-  }
-
-  if (status === 'pending') {
-    document.getElementById('statusDefault').style.display = 'none';
-    document.getElementById('statusPending').style.display = 'flex';
-  }
-
-  if (status === 'ditolak') {
-    document.getElementById('statusDefault').style.display = 'none';
-    document.getElementById('statusDitolak').style.display = 'flex';
-  }
-});
-
-  // tombol CTA → set status pending lalu ke halaman verifikasi
   ['btnMulaiPengajuan', 'btnMulaiPengajuan2', 'btnAjukanUlang'].forEach(id => {
     document.getElementById(id)?.addEventListener('click', () => {
       window.location.href = '/verify';
     });
-  });document.addEventListener('DOMContentLoaded', () => {
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 1;
   const totalSteps = 4;
 
@@ -575,11 +545,10 @@ window.addEventListener('DOMContentLoaded', () => {
   if (currentStep < totalSteps) {
     currentStep++;
     updateFormProgress();
-  } else {
-    alert('Data verifikasi berhasil disimpan. Tim KindlyJAR akan meninjau dalam 1-2 hari kerja.');
-    if (formElement) formElement.reset();
-    currentStep = 1;
-    updateFormProgress();
+  } else if (formElement) {
+    btnNext.textContent = 'Mengirim...';
+    btnNext.disabled = true;
+    formElement.submit();
   }
 });
 
@@ -650,118 +619,5 @@ document.getElementById('btnBackDetail')?.addEventListener('click', (e) => {
   } else {
     // fallback kalau user buka halaman ini langsung (misal dari bookmark/refresh)
     window.location.href = '/dashboard';
-  }
-});
-/* ── DONASI MODAL (POPUP PAYMENT) ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const donasiModal = document.getElementById('donasiModal');
-  if (!donasiModal) return; // halaman ini gak punya modal donasi
-
-  const closeBtn      = document.getElementById('closeDonasiModal');
-  const judulEl        = document.getElementById('donasiJudul');
-  const kategoriEl      = document.getElementById('donasiKategori');
-  const nominalBtns    = donasiModal.querySelectorAll('.donasi-nominal-btn');
-  const customInput     = document.getElementById('donasiNominalCustom');
-  const totalEl         = document.getElementById('donasiTotal');
-  const btnKonfirmasi   = document.getElementById('btnKonfirmasiDonasi');
-
-  let selectedNominal   = 0;
-  let activeProgramId    = null;
-  let activeProgramTarget = null;
-  let activeCard         = null;
-
-  function formatRupiah(num) {
-    return 'Rp ' + Number(num).toLocaleString('id-ID');
-  }
-
-  function updateTotal() {
-    totalEl.textContent = formatRupiah(selectedNominal);
-  }
-
-  function resetModal() {
-    selectedNominal = 0;
-    customInput.value = '';
-    nominalBtns.forEach(b => b.classList.remove('active'));
-    updateTotal();
-    document.getElementById('donasiSembunyikan').checked = false;
-    document.getElementById('donasiAnonim').checked = false;
-    document.getElementById('donasiUcapan').value = '';
-  }
-
-  // buka modal saat tombol donasi diklik
-  document.querySelectorAll('.btn-t-donasi, .btn-horizontal-donasi, .btn-donasi-besar').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const card = btn.closest('[data-donasi-id]');
-activeProgramId = card?.dataset.donasiId || 'default';
-activeProgramTarget = parseInt(card?.dataset.donasiTarget || '0', 10);
-judulEl.textContent = 'Donasi untuk ' + (card?.dataset.donasiNama || 'Program Ini');
-      kategoriEl.textContent = card?.dataset.donasiKategori || 'Donasi';
-
-      resetModal();
-      donasiModal.classList.add('show');
-    });
-  });
-
-  nominalBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      nominalBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedNominal = parseInt(btn.dataset.nominal, 10);
-      customInput.value = '';
-      updateTotal();
-    });
-  });
-
-  customInput.addEventListener('input', () => {
-    nominalBtns.forEach(b => b.classList.remove('active'));
-    selectedNominal = parseInt(customInput.value, 10) || 0;
-    updateTotal();
-  });
-
-  closeBtn.addEventListener('click', () => donasiModal.classList.remove('show'));
-  donasiModal.addEventListener('click', (e) => {
-    if (e.target === donasiModal) donasiModal.classList.remove('show');
-  });
-
-  btnKonfirmasi.addEventListener('click', () => {
-    if (selectedNominal < 1000) {
-      alert('Masukkan nominal donasi minimal Rp 1.000');
-      return;
-    }
-
-    const key = 'donasiTerkumpul:' + activeProgramId;
-    const prev = parseInt(localStorage.getItem(key) || '0', 10);
-    const updated = prev + selectedNominal;
-    localStorage.setItem(key, updated);
-
-    if (activeCard && activeProgramTarget > 0) {
-      const pct = Math.min(100, Math.round((updated / activeProgramTarget) * 100));
-      const fill  = activeCard.querySelector('.progress-fill, .t-fill, .progress-bar-fill, .detail-progress-fill');
-      const label = activeCard.querySelector('.progress-label, .t-pct, .progress-target, .detail-pct');
-      if (fill)  fill.style.width = pct + '%';
-      if (label) label.textContent = pct + '% Terpenuhi';
-    }
-
-    donasiModal.classList.remove('show');
-    setTimeout(() => {
-      alert('Terima kasih, donasimu sebesar ' + formatRupiah(selectedNominal) + ' berhasil! 🎉');
-    }, 300);
-  });
-});
-
-/* ── SIDEBAR: CTA "Gabung Jadi Hero" vs "Menu Hero" ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const heroCta  = document.getElementById('sidebarHeroCta');
-  const heroMenu = document.getElementById('sidebarHeroMenu');
-  if (!heroCta && !heroMenu) return;
-
-  const isHero = localStorage.getItem('isHero') === '1';
-
-  if (isHero) {
-    if (heroCta)  heroCta.style.display  = 'none';
-    if (heroMenu) heroMenu.style.display = '';
-  } else {
-    if (heroMenu) heroMenu.style.display = 'none';
   }
 });

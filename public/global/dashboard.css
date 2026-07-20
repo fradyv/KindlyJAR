@@ -2252,6 +2252,38 @@ select.form-input-style {
   background: #dc2626;
 }
 
+.btn-success-outline,
+.btn-success-solid {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-radius: 50px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-success-outline {
+  background: #ffffff;
+  color: #1a7d43;
+  border: 1.5px solid #1a7d43;
+}
+
+.btn-success-outline:hover {
+  background: rgba(26, 125, 67, 0.08);
+}
+
+.btn-success-solid {
+  background: #1a7d43;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(26, 125, 67, 0.25);
+}
+
+.btn-success-solid:hover {
+  background: #146536;
+}
+
 @media (max-width: 640px) {
   .toggle-row,
   .notif-pref-row {

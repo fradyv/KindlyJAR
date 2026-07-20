@@ -62,11 +62,51 @@
           </svg>
           Inisiasi Donasi
         </a>
+        @unless (auth()->user()->shop)
+        <div class="sidebar-cta">
+          <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
+        </div>
+        @endunless
       </nav>
 
-      <div class="sidebar-cta">
-        <button class="btn-join-hero">Gabung menjadi Hero!</button>
+      @if (auth()->user()->shop)
+      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu">
+        <p class="sidebar-label">Menu Hero</p>
+        <nav class="sidebar-nav">
+          <a href="{{ route('toko-saya') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Toko Saya
+          </a>
+          <a href="{{ route('tambah-produk') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            Tambah Produk
+          </a>
+          <a href="{{ route('produk-terjual') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            Produk yang Terjual
+          </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
+        </nav>
       </div>
+      @endif
     </div>
   </aside>
 
@@ -76,7 +116,7 @@
     <!-- Topbar: selalu terlihat, tidak ikut scroll -->
     <div class="dash-topbar">
       <h1 class="dash-greeting">
-        Giliranmu Membawa Perubahan, <span class="dash-username" id="dashUsername">Joseph Herlambang</span>
+        Giliranmu Membawa Perubahan, <span class="dash-username" id="dashUsername">{{ auth()->user()->display_name }}</span>
       </h1>
       <div class="dash-topbar-right">
         <div class="notif-wrap">
@@ -87,20 +127,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -112,10 +139,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -125,17 +152,21 @@
       </div>
     </div>
 
-    <!-- Banner Warning Tetap Muncul -->
-    <div class="verification-banner" id="verifyBanner">
-      <div class="banner-content">
-        <span class="banner-icon">⚠️</span>
-        <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
+    @if ($errors->any())
+      <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;">
+        <div class="banner-content">
+          <span class="banner-icon">⚠️</span>
+          <div>
+            <strong>Ada data yang belum lengkap/valid:</strong>
+            <ul style="margin:4px 0 0 18px;">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="banner-actions">
-        <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
-        <button class="banner-close" id="closeBannerBtn">&times;</button>
-      </div>
-    </div>
+    @endif
 
     <!-- AREA SCROLL BOX UTAMA -->
     <main class="dash-scroll">
@@ -166,31 +197,33 @@
 </div>
 
 <!-- ── MAIN FORM BLOCK ── -->
-<form id="verificationForm" autocomplete="off">
-  
+<form id="verificationForm" action="{{ route('verify.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+  @csrf
+
   <!-- BAGIAN 1 — INFORMASI DASAR (25%) -->
   <div class="verify-step-panel active" id="stepPanel1">
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label">Jenis Akun</label>
-        <select class="form-input-style" required>
-          <option value="" disabled selected>Pilih jenis akun...</option>
-          <option value="individu">Individu</option>
-          <option value="yayasan">Yayasan</option>
-          <option value="yayasan">Organisasi Mahasiswa</option>
+        <select name="account_type" class="form-input-style" required>
+          <option value="" disabled {{ old('account_type', optional($verification)->account_type) ? '' : 'selected' }}>Pilih jenis akun...</option>
+          <option value="individu" @selected(old('account_type', optional($verification)->account_type) === 'individu')>Individu</option>
+          <option value="yayasan" @selected(old('account_type', optional($verification)->account_type) === 'yayasan')>Yayasan</option>
+          <option value="komunitas" @selected(old('account_type', optional($verification)->account_type) === 'komunitas')>Komunitas</option>
+          <option value="organisasi_mahasiswa" @selected(old('account_type', optional($verification)->account_type) === 'organisasi_mahasiswa')>Organisasi Mahasiswa</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Nama Lengkap / Organisasi</label>
-        <input type="text" class="form-input-style" placeholder="Sesuai KTP / Nama Resmi Organisasi" required />
+        <input type="text" class="form-input-style" value="{{ auth()->user()->legal_name }}" disabled />
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input type="email" class="form-input-style" placeholder="contoh@domain.com" required />
+        <input type="email" class="form-input-style" value="{{ auth()->user()->email }}" disabled />
       </div>
       <div class="form-group">
         <label class="form-label">Alamat Lengkap</label>
-        <input type="text" class="form-input-style" placeholder="Jalan, No. Rumah, RT/RW, Kecamatan" required />
+        <input type="text" name="address" class="form-input-style" value="{{ old('address', auth()->user()->address) }}" placeholder="Jalan, No. Rumah, RT/RW, Kecamatan" required />
       </div>
     </div>
   </div>
@@ -200,11 +233,11 @@
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label">Nomor HP (WhatsApp) Aktif</label>
-        <input type="tel" class="form-input-style" placeholder="Contoh: 081234567xxx" required />
+        <input type="tel" name="phone_number" class="form-input-style" value="{{ old('phone_number', auth()->user()->phone_number) }}" placeholder="Contoh: 081234567xxx" required />
       </div>
       <div class="form-group">
         <label class="form-label">Nomor KIK / KTP</label>
-        <input type="text" class="form-input-style" placeholder="16 Digit Nomor Induk Kependudukan" required />
+        <input type="text" name="ktp_number" class="form-input-style" value="{{ old('ktp_number', optional($verification)->ktp_number) }}" placeholder="16 Digit Nomor Induk Kependudukan" required />
       </div>
       
       <!-- Upload Dropzones -->
@@ -214,7 +247,7 @@
           <span class="upload-icon-style">🪪</span>
           <span class="upload-text-main">Pilih file Foto KTP</span>
           <span class="upload-text-sub">Format: JPG, PNG max 5MB</span>
-          <input type="file" accept="image/*" required />
+          <input type="file" name="ktp_photo" accept="image/*" required />
         </div>
       </div>
       <div class="form-group">
@@ -223,7 +256,7 @@
           <span class="upload-icon-style">📸</span>
           <span class="upload-text-main">Ambil / Pilih Foto Selfie</span>
           <span class="upload-text-sub">Pastikan KTP terbaca jelas</span>
-          <input type="file" accept="image/*" required />
+          <input type="file" name="selfie_ktp_photo" accept="image/*" required />
         </div>
       </div>
       <div class="form-group full-width">
@@ -232,7 +265,7 @@
           <span class="upload-icon-style">👤</span>
           <span class="upload-text-main">Pilih Foto Profil Anda</span>
           <span class="upload-text-sub">Rasio Disarankan 1:1</span>
-          <input type="file" accept="image/*" />
+          <input type="file" name="profile_photo" accept="image/*" />
         </div>
       </div>
     </div>
@@ -243,29 +276,29 @@
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label">Pilih Bank</label>
-        <select class="form-input-style" required>
-          <option value="" disabled selected>Pilih Rekening Bank Utama...</option>
-          <option value="bca">Bank Central Asia (BCA)</option>
-          <option value="bri">Bank Rakyat Indonesia (BRI)</option>
-          <option value="mandiri">Bank Mandiri</option>
-          <option value="bni">Bank Negara Indonesia (BNI)</option>
-          <option value="bsi">Bank Syariah Indonesia (BSI)</option>
+        <select name="bank_name" class="form-input-style" required>
+          <option value="" disabled {{ old('bank_name', optional($verification)->bank_name) ? '' : 'selected' }}>Pilih Rekening Bank Utama...</option>
+          <option value="BCA" @selected(old('bank_name', optional($verification)->bank_name) === 'BCA')>Bank Central Asia (BCA)</option>
+          <option value="BRI" @selected(old('bank_name', optional($verification)->bank_name) === 'BRI')>Bank Rakyat Indonesia (BRI)</option>
+          <option value="Mandiri" @selected(old('bank_name', optional($verification)->bank_name) === 'Mandiri')>Bank Mandiri</option>
+          <option value="BNI" @selected(old('bank_name', optional($verification)->bank_name) === 'BNI')>Bank Negara Indonesia (BNI)</option>
+          <option value="BSI" @selected(old('bank_name', optional($verification)->bank_name) === 'BSI')>Bank Syariah Indonesia (BSI)</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Nomor Rekening Bank</label>
-        <input type="text" class="form-input-style" placeholder="Masukkan nomor rekening tanpa spasi" required />
+        <input type="text" name="bank_account_number" inputmode="numeric" class="form-input-style" value="{{ old('bank_account_number', optional($verification)->bank_account_number) }}" placeholder="Masukkan nomor rekening tanpa spasi" required />
       </div>
       <div class="form-group">
         <label class="form-label">Nama Pemilik Rekening</label>
-        <input type="text" class="form-input-style" placeholder="Harus sesuai dengan nama pemilik buku tabungan" required />
+        <input type="text" name="bank_account_name" class="form-input-style" value="{{ old('bank_account_name', optional($verification)->bank_account_name) }}" placeholder="Harus sesuai dengan nama pemilik buku tabungan" required />
       </div>
       <div class="form-group">
         <label class="form-label">Upload Scan/Foto Buku Tabungan</label>
         <div class="custom-file-upload">
           <span class="upload-text-main">Unggah Foto Halaman Depan Buku Tabungan</span>
           <span class="upload-text-sub">Menampilkan Nama & No Rekening</span>
-          <input type="file" accept="image/*" required />
+          <input type="file" name="passbook_photo" accept="image/*" required />
         </div>
       </div>
     </div>
@@ -285,7 +318,7 @@
           <span class="upload-icon-style">📄</span>
           <span class="upload-text-main">Pilih File Surat Pernyataan</span>
           <span class="upload-text-sub">Format: PDF/JPG hasil tanda tangan</span>
-          <input type="file" accept=".pdf, image/*" required />
+          <input type="file" name="statement_letter" accept=".pdf, image/*" required />
         </div>
       </div>
       <div class="form-group">
@@ -295,15 +328,15 @@
           <span class="upload-icon-style">📂</span>
           <span class="upload-text-main">Pilih Berkas Legalitas / Sertifikat</span>
           <span class="upload-text-sub">Format: PDF/ZIP jika ada</span>
-          <input type="file" accept=".pdf, .zip, .rar, image/*" />
+          <input type="file" name="supporting_docs" accept=".pdf, .zip, .rar, image/*" />
         </div>
       </div>
       
-      <!-- OTP Area -->
+      <!-- OTP Area (simulasi, belum terhubung ke sistem SMS/WhatsApp) -->
       <div class="form-group full-width" style="margin-top: 10px;">
-        <label class="form-label">Kode Verifikasi OTP</label>
+        <label class="form-label">Kode Verifikasi OTP <span style="color: #b0b7c3; font-weight: 500;">(Simulasi)</span></label>
         <div class="otp-input-group">
-          <input type="text" class="form-input-style" maxlength="6" placeholder="Masukkan 6 digit kode" style="flex: 1; letter-spacing: 4px; text-align: center; font-weight: 700;" required />
+          <input type="text" maxlength="6" placeholder="Masukkan 6 digit kode" style="flex: 1; letter-spacing: 4px; text-align: center; font-weight: 700;" class="form-input-style" />
           <button type="button" class="btn-request-otp" id="btnReqOtp">Minta OTP</button>
         </div>
       </div>

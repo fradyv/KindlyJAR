@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Program Donasi · KindlyJAR</title>
+  <title>{{ $campaign->title }} · KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
@@ -45,7 +45,7 @@
           </svg>
           KindlyShop
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('riwayat') }}" class="sidebar-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -53,13 +53,7 @@
           </svg>
           Riwayat Pembelian
         </a>
-        <a href="#" class="sidebar-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          Jejak Kebaikan
-        </a>
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('inisiasi') }}" class="sidebar-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
             <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
@@ -68,13 +62,15 @@
           </svg>
           Inisiasi Donasi
         </a>
+        @unless(auth()->user()->shop)
         <div class="sidebar-cta">
-        <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
-      </div>
+          <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
+        </div>
+        @endunless
       </nav>
 
-
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
+      @if(auth()->user()->shop)
+      <div class="sidebar-hero-menu-wrap">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
           <a href="{{ route('toko-saya') }}" class="sidebar-link">
@@ -101,100 +97,18 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
+      @endif
     </div>
   </aside>
-
-  <!-- ── MODAL DONASI & PAYMENT (disamakan dengan dashboard beranda) ── -->
-  <div class="modal-overlay" id="donasiModal">
-  <div class="modal-box donasi-modal-box">
-    <button class="modal-close-btn" id="closeDonasiModal">&times;</button>
-
-    <div class="donasi-modal-header">
-      <span class="donasi-modal-badge" id="donasiKategori">Kategori</span>
-      <h3 id="donasiJudul">Donasi untuk Program</h3>
-    </div>
-
-    <div class="donasi-modal-section">
-      <p class="donasi-modal-label">Pilih Nominal</p>
-      <div class="donasi-nominal-grid">
-        <button type="button" class="donasi-nominal-btn" data-nominal="25000">Rp 25.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="50000">Rp 50.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="100000">Rp 100.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="250000">Rp 250.000</button>
-      </div>
-      <input type="number" id="donasiNominalCustom" class="donasi-input-custom" placeholder="Atau masukkan nominal lain" min="1000" />
-    </div>
-
-    <div class="donasi-modal-section">
-      <label class="donasi-checkbox-row">
-        <input type="checkbox" id="donasiSembunyikan" />
-        Sembunyikan nominal donasi saya
-      </label>
-      <label class="donasi-checkbox-row">
-        <input type="checkbox" id="donasiAnonim" />
-        Donasi sebagai anonim / Hamba Allah
-      </label>
-      <textarea id="donasiUcapan" class="donasi-textarea" placeholder="Tulis doa/ucapan untuk penerima manfaat (opsional)"></textarea>
-    </div>
-
-    <div class="donasi-modal-section">
-      <p class="donasi-modal-label">Metode Pembayaran</p>
-      <div class="donasi-metode-list">
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="Transfer Bank" checked />
-          <span>🏦 Transfer Bank</span>
-        </label>
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="E-Wallet" />
-          <span>📱 E-Wallet</span>
-        </label>
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="Kartu Kredit" />
-          <span>💳 Kartu Kredit</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="donasi-modal-summary">
-      <span>Total Donasi</span>
-      <strong id="donasiTotal">Rp 0</strong>
-    </div>
-
-    <button class="modal-btn btn-primary donasi-confirm-btn" id="btnKonfirmasiDonasi">Konfirmasi Donasi</button>
-  </div>
-</div>
-
-    <!-- ── MODAL PAYMENT ── -->
-  <div class="modal-overlay" id="paymentModal">
-    <div class="modal-box donasi-modal-box">
-      <button class="modal-close-btn" id="closePaymentModal">&times;</button>
-
-      <div class="donasi-modal-header">
-        <span class="donasi-modal-badge">Pembayaran</span>
-        <h3>Selesaikan Donasi Anda</h3>
-      </div>
-
-      <div class="donasi-modal-section">
-        <p class="donasi-modal-label">Ringkasan</p>
-        <div class="donasi-metode-item" style="flex-direction:column;align-items:flex-start;gap:6px;">
-          <span><strong id="payProgramNama">Program</strong></span>
-          <span style="font-size:.85rem;color:#6b7a8d;">Metode: <strong id="payMetode">-</strong></span>
-          <span style="font-size:.85rem;color:#6b7a8d;">Total: <strong id="payTotal" style="color:#21A3FF;">Rp 0</strong></span>
-        </div>
-      </div>
-
-      <div class="donasi-modal-section">
-        <p class="donasi-modal-label">Instruksi Pembayaran</p>
-        <div id="payInstruksi" class="donasi-metode-item" style="display:block;line-height:1.55;font-size:.9rem;color:#3D3D4E;">
-          Silakan pilih metode pembayaran terlebih dahulu.
-        </div>
-      </div>
-
-      <button class="modal-btn btn-primary donasi-confirm-btn" id="btnBayarSekarang">Bayar Sekarang</button>
-    </div>
-  </div>
 
   <!-- ── KANAN: topbar (tidak scroll) + konten (scroll) ── -->
   <div class="dash-right">
@@ -202,7 +116,7 @@
     <!-- Topbar: selalu terlihat, tidak ikut scroll -->
     <div class="dash-topbar">
       <h1 class="dash-greeting">
-        Program Donasi · <span class="dash-username" id="dashUsername">Joseph Herlambang</span>
+        Program Donasi · <span class="dash-username" id="dashUsername">{{ auth()->user()->display_name }}</span>
       </h1>
       <div class="dash-topbar-right">
         <div class="notif-wrap">
@@ -215,10 +129,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -228,17 +142,27 @@
       </div>
     </div>
 
-    <!-- Banner Warning Tetap Muncul -->
-    <div class="verification-banner" id="verifyBanner">
-      <div class="banner-content">
-        <span class="banner-icon">⚠️</span>
-        <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
+    @if (session('success'))
+      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
+        <div class="banner-content">
+          <span class="banner-icon">✅</span>
+          <p>{{ session('success') }}</p>
+        </div>
       </div>
-      <div class="banner-actions">
-        <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
-        <button class="banner-close" id="closeBannerBtn">&times;</button>
+    @endif
+
+    @if (auth()->user()->kyc_status !== 'verified')
+      <div class="verification-banner" id="verifyBanner">
+        <div class="banner-content">
+          <span class="banner-icon">⚠️</span>
+          <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
+        </div>
+        <div class="banner-actions">
+          <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
+          <button class="banner-close" id="closeBannerBtn">&times;</button>
+        </div>
       </div>
-    </div>
+    @endif
 
     <!-- AREA SCROLL BOX UTAMA -->
     <main class="dash-scroll">
@@ -254,199 +178,181 @@
         Kembali
         </a>
 
+        @php
+          $preview = optional($campaign->products->first())->product_preview;
+          $campaignImage = $preview ? asset($preview) : asset('assets/kata15.jpg');
+          $percentage = $campaign->target_amount > 0
+            ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100))
+            : 0;
+          $sisaHari = $campaign->end_date ? max(0, now()->diffInDays($campaign->end_date, false)) : null;
+        @endphp
+
         <!-- 1. HERO BANNER -->
         <div class="detail-hero">
-        <img src="{{ asset('assets/program1.jpg') }}" alt="Banner Program" class="detail-hero-img" />
+        <img src="{{ $campaignImage }}" alt="{{ $campaign->title }}" class="detail-hero-img" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" />
         <div class="detail-hero-overlay">
-            <span class="detail-badge">Pendidikan</span>
-            <h1 class="detail-judul">Renovasi Laboratorium Komputer SMK TI Papua</h1>
-            <p class="detail-penyelenggara">oleh <strong>Yayasan Nusantara Maju</strong></p>
+            <span class="detail-badge">{{ $campaign->category ?? 'Lainnya' }}</span>
+            <h1 class="detail-judul">{{ $campaign->title }}</h1>
+            <p class="detail-penyelenggara">oleh <strong>{{ optional($campaign->fundraiser)->display_name ?? 'KindlyJAR' }}</strong></p>
         </div>
         </div>
 
         <!-- 2. PROGRESS DONASI -->
         <div class="detail-progress-box">
         <div class="detail-progress-bar-wrap">
-            <div class="detail-progress-fill" style="width: 63%"></div>
+            <div class="detail-progress-fill" style="width: {{ $percentage }}%"></div>
         </div>
         <div class="detail-progress-stats">
             <div>
-            <p class="detail-stat-value">Rp 63.000.000</p>
-            <p class="detail-stat-label">Terkumpul dari Rp 100.000.000</p>
+            <p class="detail-stat-value">Rp {{ number_format($campaign->collected_amount, 0, ',', '.') }}</p>
+            <p class="detail-stat-label">Terkumpul dari Rp {{ number_format($campaign->target_amount, 0, ',', '.') }}</p>
             </div>
             <div class="detail-stat-right">
-            <span class="detail-pct">63%</span>
+            <span class="detail-pct">{{ $percentage }}%</span>
             </div>
         </div>
         <div class="detail-meta-row">
-            <span>👥 128 donatur</span>
-            <span>⏳ 12 hari lagi</span>
+            <span>👥 {{ number_format($campaign->transactions_count) }} donatur</span>
+            @if($sisaHari !== null)
+            <span>⏳ {{ $sisaHari }} hari lagi</span>
+            @endif
         </div>
         </div>
 
-        <!-- 3. TOMBOL AKSI (sticky) -->
-        <div class="detail-sticky-cta">
-        <button class="btn-donasi-besar btn-donasi">Donasi Sekarang</button>
-        <div class="detail-share-row">
-            <span class="detail-share-label">Bagikan:</span>
-            <button class="btn-share">WhatsApp</button>
-            <button class="btn-share">Twitter/X</button>
-            <button class="btn-share">Salin Link</button>
-        </div>
+        <!-- 3. FORM DONASI -->
+        <div class="detail-section" id="donasiForm">
+        <h2 class="detail-section-title">Donasi untuk Program Ini</h2>
+
+        @if ($errors->any())
+          <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+            <div class="banner-content">
+              <span class="banner-icon">⚠️</span>
+              <p>{{ $errors->first() }}</p>
+            </div>
+          </div>
+        @endif
+
+        <form method="POST" action="{{ route('donasi.store', $campaign) }}">
+            @csrf
+            <div class="donasi-modal-section">
+              <p class="donasi-modal-label">Pilih Nominal</p>
+              <div class="donasi-nominal-grid">
+                <button type="button" class="donasi-nominal-btn" data-nominal="25000">Rp 25.000</button>
+                <button type="button" class="donasi-nominal-btn" data-nominal="50000">Rp 50.000</button>
+                <button type="button" class="donasi-nominal-btn" data-nominal="100000">Rp 100.000</button>
+                <button type="button" class="donasi-nominal-btn" data-nominal="250000">Rp 250.000</button>
+              </div>
+              <input type="number" name="nominal" id="donasiNominalInput" class="donasi-input-custom" placeholder="Atau masukkan nominal lain" min="1000" required />
+            </div>
+
+            <div class="donasi-modal-section">
+              <label class="donasi-checkbox-row">
+                <input type="checkbox" name="is_anonymous" value="1" />
+                Donasi sebagai anonim / Hamba Allah
+              </label>
+            </div>
+
+            <div class="donasi-modal-section">
+              <p class="donasi-modal-label">Metode Pembayaran</p>
+              <div class="donasi-metode-list">
+                <label class="donasi-metode-item">
+                  <input type="radio" name="bank_name" value="Transfer Bank" checked />
+                  <span>🏦 Transfer Bank</span>
+                </label>
+                <label class="donasi-metode-item">
+                  <input type="radio" name="bank_name" value="E-Wallet" />
+                  <span>📱 E-Wallet</span>
+                </label>
+                <label class="donasi-metode-item">
+                  <input type="radio" name="bank_name" value="Kartu Kredit" />
+                  <span>💳 Kartu Kredit</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-donasi-besar btn-form-next" style="width:100%;">Donasi Sekarang</button>
+        </form>
         </div>
 
         <!-- 4. DESKRIPSI PROGRAM -->
         <div class="detail-section">
         <h2 class="detail-section-title">Latar Belakang</h2>
-        <p class="detail-text">SMK TI Papua memiliki 200 siswa jurusan teknologi informasi namun laboratorium komputer mereka sudah tidak layak pakai sejak 2019. Sebagian besar komputer rusak dan tidak bisa diperbaiki...</p>
+        <p class="detail-text">{{ $campaign->description }}</p>
         </div>
 
+        <!-- 5. PRODUK DIGITAL TERKAIT -->
+        @if($campaign->products->isNotEmpty())
         <div class="detail-section">
-        <h2 class="detail-section-title">Tujuan & Dampak</h2>
-        <p class="detail-text">Dengan renovasi ini, 200 siswa akan mendapat akses belajar praktik yang layak, meningkatkan kelulusan uji kompetensi nasional, dan membuka peluang kerja di sektor digital.</p>
+        <h2 class="detail-section-title">Produk Digital Pendukung Program Ini</h2>
+        <div class="trending-grid">
+          @foreach($campaign->products as $product)
+            <div class="product-card">
+              <div class="product-img"><img src="{{ $product->product_preview ? asset($product->product_preview) : asset('assets/kata15.jpg') }}" alt="{{ $product->title }}" /></div>
+              <div class="product-body">
+                <span class="product-tag">{{ $product->category ?? 'Digital Product' }}</span>
+                <h3 class="product-title">{{ $product->title }}</h3>
+                <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                <div class="product-actions">
+                  <a href="{{ route('kindlyshop') }}" class="product-detail-link">Beli di KindlyShop</a>
+                </div>
+              </div>
+            </div>
+          @endforeach
         </div>
+        </div>
+        @endif
 
-        <!-- 5. RINCIAN PENGGUNAAN DANA -->
-        <div class="detail-section">
-        <h2 class="detail-section-title">Rencana Penggunaan Dana</h2>
-        <div class="detail-dana-list">
-            <div class="detail-dana-item">
-            <div class="detail-dana-info">
-                <span class="detail-dana-label">Perangkat Komputer (20 unit)</span>
-                <span class="detail-dana-pct">40%</span>
-            </div>
-            <div class="detail-dana-bar"><div style="width:40%"></div></div>
-            <span class="detail-dana-nominal">Rp 40.000.000</span>
-            </div>
-            <div class="detail-dana-item">
-            <div class="detail-dana-info">
-                <span class="detail-dana-label">Renovasi Ruangan</span>
-                <span class="detail-dana-pct">30%</span>
-            </div>
-            <div class="detail-dana-bar"><div style="width:30%"></div></div>
-            <span class="detail-dana-nominal">Rp 30.000.000</span>
-            </div>
-            <div class="detail-dana-item">
-            <div class="detail-dana-info">
-                <span class="detail-dana-label">Instalasi Jaringan & Listrik</span>
-                <span class="detail-dana-pct">20%</span>
-            </div>
-            <div class="detail-dana-bar"><div style="width:20%"></div></div>
-            <span class="detail-dana-nominal">Rp 20.000.000</span>
-            </div>
-            <div class="detail-dana-item">
-            <div class="detail-dana-info">
-                <span class="detail-dana-label">Operasional & Administrasi</span>
-                <span class="detail-dana-pct">10%</span>
-            </div>
-            <div class="detail-dana-bar"><div style="width:10%"></div></div>
-            <span class="detail-dana-nominal">Rp 10.000.000</span>
-            </div>
-        </div>
-        </div>
-
-        <!-- 6. GALERI -->
-        <div class="detail-section">
-        <h2 class="detail-section-title">Dokumentasi</h2>
-        <div class="detail-galeri">
-            <img src="{{ asset('assets/program1.jpg') }}" alt="Foto 1" />
-            <img src="{{ asset('assets/program2.jpg') }}" alt="Foto 2" />
-            <img src="{{ asset('assets/program3.jpg') }}" alt="Foto 3" />
-            <img src="{{ asset('assets/program4.jpg') }}" alt="Foto 4" />
-        </div>
-        </div>
-
-        <!-- 7. DONATUR TERBARU -->
+        <!-- 6. DONATUR TERBARU -->
         <div class="detail-section">
         <h2 class="detail-section-title">Donatur Terbaru</h2>
         <div class="detail-donatur-list">
-            <div class="detail-donatur-item">
-            <div class="detail-donatur-avatar">A</div>
-            <div>
-                <p class="detail-donatur-name">Anonim</p>
-                <p class="detail-donatur-time">2 jam lalu</p>
-            </div>
-            <span class="detail-donatur-nominal">Rp 100.000</span>
-            </div>
-            <div class="detail-donatur-item">
-            <div class="detail-donatur-avatar">B</div>
-            <div>
-                <p class="detail-donatur-name">Budi S.</p>
-                <p class="detail-donatur-time">5 jam lalu</p>
-            </div>
-            <span class="detail-donatur-nominal">Rp 50.000</span>
-            </div>
-            <div class="detail-donatur-item">
-            <div class="detail-donatur-avatar">H</div>
-            <div>
-                <p class="detail-donatur-name">Hamba Allah</p>
-                <p class="detail-donatur-time">1 hari lalu</p>
-            </div>
-            <span class="detail-donatur-nominal">Rp 500.000</span>
-            </div>
+            @forelse($donaturTerbaru as $donasi)
+              @php
+                $namaDonatur = $donasi->is_anonymous ? 'Hamba Allah' : optional($donasi->buyer)->display_name;
+                $namaDonatur = $namaDonatur ?: 'Anonim';
+              @endphp
+              <div class="detail-donatur-item">
+              <div class="detail-donatur-avatar">{{ Str::upper(Str::substr($namaDonatur, 0, 1)) }}</div>
+              <div>
+                  <p class="detail-donatur-name">{{ $namaDonatur }}</p>
+                  <p class="detail-donatur-time">{{ optional($donasi->created_at)->diffForHumans() }}</p>
+              </div>
+              <span class="detail-donatur-nominal">Rp {{ number_format($donasi->total_paid, 0, ',', '.') }}</span>
+              </div>
+            @empty
+              <p class="shop-empty-state">Belum ada donatur. Jadilah yang pertama!</p>
+            @endforelse
         </div>
         </div>
 
-        <!-- 8. UPDATE BERKALA -->
-        <div class="detail-section">
-        <h2 class="detail-section-title">Update Program</h2>
-        <div class="detail-update-list">
-            <div class="detail-update-item">
-            <div class="detail-update-dot"></div>
-            <div>
-                <p class="detail-update-date">12 Juni 2026</p>
-                <p class="detail-update-text">Dana sudah 50% terkumpul. Tim mulai survei lokasi renovasi.</p>
-            </div>
-            </div>
-            <div class="detail-update-item">
-            <div class="detail-update-dot"></div>
-            <div>
-                <p class="detail-update-date">1 Juni 2026</p>
-                <p class="detail-update-text">Program resmi diluncurkan. Terima kasih atas dukungan awal dari 30 donatur pertama!</p>
-            </div>
-            </div>
-        </div>
-        </div>
-
-        <!-- 9. PROGRAM SERUPA -->
+        <!-- 7. PROGRAM SERUPA -->
+        @if($programSerupa->isNotEmpty())
         <div class="detail-section">
         <h2 class="detail-section-title">Program Serupa</h2>
         <div class="trending-grid">
+            @foreach($programSerupa as $serupa)
+            @php
+              $pctSerupa = $serupa->target_amount > 0
+                ? min(100, round(($serupa->collected_amount / $serupa->target_amount) * 100))
+                : 0;
+              $previewSerupa = optional($serupa->products->first())->product_preview;
+              $imgSerupa = $previewSerupa ? asset($previewSerupa) : asset('assets/kata15.jpg');
+            @endphp
             <div class="trending-card">
-            <div class="trending-img"><img src="{{ asset('assets/program2.jpg') }}" alt="" /></div>
+            <div class="trending-img"><img src="{{ $imgSerupa }}" alt="{{ $serupa->title }}" /></div>
             <div class="trending-body">
-                <div class="trending-title">Pengadaan Buku Gambar Sekolah Alam Flores</div>
+                <div class="trending-title">{{ $serupa->title }}</div>
                 <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:87%"></div></div>
-                <span class="t-pct">87% Terpenuhi</span>
+                <div class="t-bar"><div class="t-fill" style="width:{{ $pctSerupa }}%"></div></div>
+                <span class="t-pct">{{ $pctSerupa }}% Terpenuhi</span>
                 </div>
-                <button class="btn-t-donasi btn-donasi">Donasi!</button>
+                <a href="{{ route('detail-program', $serupa) }}" class="btn-t-donasi btn-donasi" style="display:inline-block;text-align:center;text-decoration:none;">Lihat Program</a>
             </div>
             </div>
-            <div class="trending-card">
-            <div class="trending-img"><img src="{{ asset('assets/program3.jpg') }}" alt="" /></div>
-            <div class="trending-body">
-                <div class="trending-title">Alat Musik Kreatif untuk Difabel Yogyakarta</div>
-                <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:63%"></div></div>
-                <span class="t-pct">63% Terpenuhi</span>
-                </div>
-                <button class="btn-t-donasi btn-donasi">Donasi!</button>
-            </div>
-            </div>
-            <div class="trending-card">
-            <div class="trending-img"><img src="{{ asset('assets/program4.jpg') }}" alt="" /></div>
-            <div class="trending-body">
-                <div class="trending-title">Panel Surya Sekolah Pelosok Mentawai</div>
-                <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:45%"></div></div>
-                <span class="t-pct">45% Terpenuhi</span>
-                </div>
-                <button class="btn-t-donasi btn-donasi">Donasi!</button>
-            </div>
-            </div>
+            @endforeach
         </div>
         </div>
+        @endif
 
       </div><!-- /.dash-main-card -->
     </main>
@@ -501,7 +407,6 @@
 
   <script src="{{ asset('global/script.js') }}"></script>
   <script>
-    // Logic Dropdown bawaan template agar fungsionalitas topbar tidak rusak
     const notifBtn      = document.getElementById('notifBtn');
     const notifDropdown = document.getElementById('notifDropdown');
     const profileBtn    = document.getElementById('profileBtn');
@@ -545,57 +450,12 @@
       profileDropdown.classList.remove('open');
     });
 
-    
-  </script>
-    <script>
-    /* script.js global sudah handle: modal donasi, notif, profile, cart.
-       Di sini kita hanya menambahkan flow PAYMENT setelah "Konfirmasi Donasi". */
-    document.addEventListener('DOMContentLoaded', () => {
-      const paymentModal     = document.getElementById('paymentModal');
-      const closePaymentBtn  = document.getElementById('closePaymentModal');
-      const payProgramNama   = document.getElementById('payProgramNama');
-      const payMetodeEl      = document.getElementById('payMetode');
-      const payTotalEl       = document.getElementById('payTotal');
-      const payInstruksiEl   = document.getElementById('payInstruksi');
-      const btnBayarSekarang = document.getElementById('btnBayarSekarang');
-      const btnKonfirmasi    = document.getElementById('btnKonfirmasiDonasi');
-      const donasiModal      = document.getElementById('donasiModal');
-      const donasiJudulEl    = document.getElementById('donasiJudul');
-      const donasiTotalEl    = document.getElementById('donasiTotal');
-      if (!paymentModal || !btnKonfirmasi) return;
-
-      const instruksiMap = {
-        'Transfer Bank': '🏦 Transfer ke <strong>BCA 1234567890</strong> a.n. KindlyJAR. Gunakan nominal tepat sesuai total di atas.',
-        'E-Wallet':      '📱 Scan QRIS via GoPay / OVO / DANA / ShopeePay pada halaman berikutnya.',
-        'Kartu Kredit':  '💳 Anda akan diarahkan ke gateway pembayaran kartu yang aman.'
-      };
-
-      function openPaymentModal() {
-        const metode = document.querySelector('input[name="donasiMetode"]:checked')?.value || 'Transfer Bank';
-        payProgramNama.textContent = donasiJudulEl.textContent;
-        payMetodeEl.textContent    = metode;
-        payTotalEl.textContent     = donasiTotalEl.textContent;
-        payInstruksiEl.innerHTML   = instruksiMap[metode] || '';
-        paymentModal.classList.add('show');
-      }
-      function closePaymentModal() { paymentModal.classList.remove('show'); }
-
-      // Intercept sebelum handler script.js jalan (capture phase)
-      btnKonfirmasi.addEventListener('click', (e) => {
-        const nominal = parseInt((donasiTotalEl.textContent || '').replace(/\D/g, ''), 10) || 0;
-        if (nominal < 1000) return; // biarkan handler asli munculin alert
-        e.stopImmediatePropagation();
-        donasiModal.classList.remove('show');
-        setTimeout(openPaymentModal, 220);
-      }, true);
-
-      closePaymentBtn.addEventListener('click', closePaymentModal);
-      paymentModal.addEventListener('click', (e) => {
-        if (e.target === paymentModal) closePaymentModal();
-      });
-      btnBayarSekarang.addEventListener('click', () => {
-        alert('Terima kasih! Pembayaran ' + payTotalEl.textContent + ' via ' + payMetodeEl.textContent + ' sedang diproses.');
-        closePaymentModal();
+    // ── Isi nominal donasi dari tombol pilihan ──
+    document.querySelectorAll('.donasi-nominal-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.donasi-nominal-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('donasiNominalInput').value = btn.dataset.nominal;
       });
     });
   </script>

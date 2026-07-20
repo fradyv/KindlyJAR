@@ -126,130 +126,46 @@
     <div class="modal-box donasi-modal-box">
       <button class="modal-close-btn" id="closeAddPaymentModal" type="button">&times;</button>
 
-      <!-- STEP 1: Pilih Tipe -->
-      <div class="pm-step" id="pmStep1">
-        <div class="donasi-modal-header">
-          <span class="donasi-modal-badge">Langkah 1 dari 2</span>
-          <h3>Pilih Tipe Metode Pembayaran</h3>
-        </div>
+      <div class="donasi-modal-header">
+        <h3>Tambah Metode Pembayaran</h3>
+      </div>
 
-        <div class="donasi-modal-section">
-          <div class="pm-type-grid">
-            <button type="button" class="pm-type-card" data-type="bank">
-              <span class="pm-type-icon">🏦</span>
-              <span>Transfer Bank</span>
-            </button>
-            <button type="button" class="pm-type-card" data-type="ewallet">
-              <span class="pm-type-icon">📱</span>
-              <span>E-Wallet</span>
-            </button>
-            <button type="button" class="pm-type-card" data-type="card">
-              <span class="pm-type-icon">💳</span>
-              <span>Kartu Kredit/Debit</span>
-            </button>
-          </div>
+      <form action="{{ route('pengaturan-akun.metode-pembayaran.store') }}" method="POST">
+        @csrf
+        <div class="pm-form-group">
+          <label>Penyedia (Bank / E-Wallet)</label>
+          <select name="provider" required>
+            <option value="" disabled selected>Pilih penyedia...</option>
+            <option value="BCA">BCA</option>
+            <option value="BNI">BNI</option>
+            <option value="BRI">BRI</option>
+            <option value="Mandiri">Mandiri</option>
+            <option value="CIMB Niaga">CIMB Niaga</option>
+            <option value="GoPay">GoPay</option>
+            <option value="OVO">OVO</option>
+            <option value="DANA">DANA</option>
+            <option value="ShopeePay">ShopeePay</option>
+            <option value="LinkAja">LinkAja</option>
+          </select>
+        </div>
+        <div class="pm-form-group">
+          <label>Nomor Rekening / HP</label>
+          <input type="text" name="account_number" inputmode="numeric" maxlength="30" placeholder="Contoh: 1234567890" required />
+        </div>
+        <div class="pm-form-group">
+          <label>Nama Pemilik</label>
+          <input type="text" name="account_name" maxlength="100" placeholder="Sesuai buku tabungan / akun" required />
         </div>
 
         <div class="pm-disclaimer">
-          🔒 <span>Data pembayaran Anda aman &amp; terenkripsi. Kami tidak akan pernah membagikannya tanpa izin.</span>
-        </div>
-      </div>
-
-      <!-- STEP 2: Form -->
-      <div class="pm-step" id="pmStep2" style="display:none;">
-        <button type="button" class="pm-back-link" id="pmBackBtn">&larr; Ganti tipe metode</button>
-
-        <div class="donasi-modal-header">
-          <span class="donasi-modal-badge" id="pmStep2Badge">Langkah 2 dari 2</span>
-          <h3 id="pmStep2Title">Detail Metode</h3>
+          🔒 <span>Data pembayaran Anda aman &amp; terenkripsi. Nomor sensitif akan otomatis di-mask di daftar.</span>
         </div>
 
-        <form id="pmForm" autocomplete="off" novalidate>
-          <!-- FORM: BANK -->
-          <div class="pm-form-fields" data-fields="bank" style="display:none;">
-            <div class="pm-form-group">
-              <label>Nama Bank</label>
-              <select name="bankName" required>
-                <option value="" disabled selected>Pilih bank...</option>
-                <option value="BCA">BCA</option>
-                <option value="BNI">BNI</option>
-                <option value="BRI">BRI</option>
-                <option value="Mandiri">Mandiri</option>
-                <option value="CIMB Niaga">CIMB Niaga</option>
-                <option value="Permata">Permata</option>
-                <option value="Danamon">Danamon</option>
-              </select>
-            </div>
-            <div class="pm-form-group">
-              <label>Nomor Rekening</label>
-              <input type="text" name="bankAccount" inputmode="numeric" maxlength="20" placeholder="Contoh: 1234567890" />
-            </div>
-            <div class="pm-form-group">
-              <label>Nama Pemilik Rekening</label>
-              <input type="text" name="bankHolder" maxlength="100" placeholder="Sesuai buku tabungan" />
-            </div>
-          </div>
-
-          <!-- FORM: EWALLET -->
-          <div class="pm-form-fields" data-fields="ewallet" style="display:none;">
-            <div class="pm-form-group">
-              <label>Penyedia E-Wallet</label>
-              <select name="ewProvider" required>
-                <option value="" disabled selected>Pilih penyedia...</option>
-                <option value="GoPay">GoPay</option>
-                <option value="OVO">OVO</option>
-                <option value="DANA">DANA</option>
-                <option value="ShopeePay">ShopeePay</option>
-                <option value="LinkAja">LinkAja</option>
-              </select>
-            </div>
-            <div class="pm-form-group">
-              <label>Nomor HP Terdaftar</label>
-              <input type="tel" name="ewPhone" inputmode="numeric" maxlength="15" placeholder="08xxxxxxxxxx" />
-            </div>
-            <div class="pm-form-group">
-              <label>Nama Pemilik Akun</label>
-              <input type="text" name="ewHolder" maxlength="100" placeholder="Sesuai akun e-wallet" />
-            </div>
-          </div>
-
-          <!-- FORM: CARD -->
-          <div class="pm-form-fields" data-fields="card" style="display:none;">
-            <div class="pm-form-group">
-              <label>Nomor Kartu</label>
-              <input type="text" name="cardNumber" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" />
-            </div>
-            <div class="pm-form-group">
-              <label>Nama di Kartu</label>
-              <input type="text" name="cardHolder" maxlength="100" placeholder="Sesuai kartu" />
-            </div>
-            <div class="pm-form-row">
-              <div class="pm-form-group">
-                <label>Kadaluarsa (MM/YY)</label>
-                <input type="text" name="cardExpiry" maxlength="5" placeholder="MM/YY" />
-              </div>
-              <div class="pm-form-group">
-                <label>CVV</label>
-                <input type="password" name="cardCvv" inputmode="numeric" maxlength="4" placeholder="•••" />
-              </div>
-            </div>
-          </div>
-
-          <label class="donasi-checkbox-row" style="margin-bottom:12px;">
-            <input type="checkbox" id="pmMakePrimary" />
-            Jadikan metode utama/default
-          </label>
-
-          <div class="pm-disclaimer">
-            🔒 <span>Data pembayaran Anda aman &amp; terenkripsi. Nomor sensitif akan otomatis di-mask di daftar.</span>
-          </div>
-
-          <div class="pm-modal-actions">
-            <button type="button" class="modal-btn pm-btn-secondary" id="pmCancelBtn">Batal</button>
-            <button type="submit" class="modal-btn btn-primary" id="pmSaveBtn">Simpan</button>
-          </div>
-        </form>
-      </div>
+        <div class="pm-modal-actions">
+          <button type="button" class="modal-btn pm-btn-secondary" id="pmCancelBtn">Batal</button>
+          <button type="submit" class="modal-btn btn-primary">Simpan</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -318,20 +234,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -343,10 +246,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -356,6 +259,7 @@
       </div>
     </div>
 
+    @if (auth()->user()->kyc_status === 'unverified')
     <div class="verification-banner" id="verifyBanner">
       <div class="banner-content">
         <span class="banner-icon">⚠️</span>
@@ -366,6 +270,16 @@
         <button class="banner-close" id="closeBannerBtn">&times;</button>
       </div>
     </div>
+    @endif
+
+    @if (session('success'))
+      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
+        <div class="banner-content">
+          <span class="banner-icon">✅</span>
+          <p>{{ session('success') }}</p>
+        </div>
+      </div>
+    @endif
 
     <main class="dash-scroll">
       <div class="dash-main-card settings-layout">
@@ -381,178 +295,39 @@
         <!-- ── INFORMASI PRIBADI (KYC) ── -->
         <section class="dash-section" id="informasi-pribadi">
           <h2 class="dash-card-title">Informasi Pribadi</h2>
-          <p class="dash-card-sub">Isi dan unggah data verifikasi identitas (KYC) agar akun Anda terverifikasi penuh.</p>
+          <p class="dash-card-sub">Status verifikasi identitas (KYC) akun Anda.</p>
 
-          <div style="margin-bottom: 28px;">
-      </div>
+          @php
+            $kycBadge = match(auth()->user()->kyc_status) {
+              'verified' => ['✅', 'Terverifikasi', '#ecfdf5', '#a7f3d0'],
+              'pending'  => ['🕓', 'Sedang Ditinjau', '#fffbeb', '#fde68a'],
+              'rejected' => ['⚠️', 'Ditolak', '#fef2f2', '#fecaca'],
+              default    => ['ℹ️', 'Belum Terverifikasi', '#f0f9ff', '#bae6fd'],
+            };
+          @endphp
 
-      <!-- ── COMPONENT: TRACK BAR PROGRES KATEGORI (25% - 100%) ── -->
-      <div class="form-progress-container">
-        <div class="form-steps-track">
-          <div class="form-progress-bar-fill" id="progressBarFill"></div>
-          <div class="step-node active" id="node1">1</div>
-          <div class="step-node" id="node2">2</div>
-          <div class="step-node" id="node3">3</div>
-          <div class="step-node" id="node4">4</div>
-        </div>
-        <div class="step-labels-row">
-          <div class="step-label-text active" id="labelText1">Info Akun</div>
-          <div class="step-label-text" id="labelText2">Identitas</div>
-          <div class="step-label-text" id="labelText3">Rekening</div>
-          <div class="step-label-text" id="labelText4">Verifikasi</div>
-        </div>
-      </div>
-
-      <!-- ── MAIN FORM BLOCK ── -->
-      <form id="verificationForm" autocomplete="off">
-        
-        <!-- BAGIAN 1 — INFORMASI DASAR (25%) -->
-        <div class="verify-step-panel active" id="stepPanel1">
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Jenis Akun</label>
-              <select class="form-input-style" required>
-                <option value="" disabled selected>Pilih jenis akun...</option>
-                <option value="individu">Individu</option>
-                <option value="yayasan">Yayasan</option>
-                <option value="yayasan">Organisasi Mahasiswa</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Lengkap / Organisasi</label>
-              <input type="text" class="form-input-style" placeholder="Sesuai KTP / Nama Resmi Organisasi" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-input-style" placeholder="contoh@domain.com" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Alamat Lengkap</label>
-              <input type="text" class="form-input-style" placeholder="Jalan, No. Rumah, RT/RW, Kecamatan" required />
-            </div>
-          </div>
-        </div>
-
-        <!-- BAGIAN 2 — IDENTITAS PEMEGANG AKUN (50%) -->
-        <div class="verify-step-panel" id="stepPanel2">
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Nomor HP (WhatsApp) Aktif</label>
-              <input type="tel" class="form-input-style" placeholder="Contoh: 081234567xxx" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nomor KIK / KTP</label>
-              <input type="text" class="form-input-style" placeholder="16 Digit Nomor Induk Kependudukan" required />
-            </div>
-            
-            <!-- Upload Dropzones -->
-            <div class="form-group">
-              <label class="form-label">Upload Foto KTP</label>
-              <div class="custom-file-upload">
-                <span class="upload-text-main">Pilih file Foto KTP</span>
-                <span class="upload-text-sub">Format: JPG, PNG max 5MB</span>
-                <input type="file" accept="image/*" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Upload Foto Selfie dengan KTP</label>
-              <div class="custom-file-upload">
-                
-                <span class="upload-text-main">Ambil / Pilih Foto Selfie</span>
-                <span class="upload-text-sub">Pastikan KTP terbaca jelas</span>
-                <input type="file" accept="image/*" required />
-              </div>
-            </div>
-            <div class="form-group full-width">
-              <label class="form-label">Upload Foto Profil <span style="color: #b0b7c3; font-weight: 500;">(Opsional)</span></label>
-              <div class="custom-file-upload">
-                
-                <span class="upload-text-main">Pilih Foto Profil Anda</span>
-                <span class="upload-text-sub">Rasio Disarankan 1:1</span>
-                <input type="file" accept="image/*" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BAGIAN 3 — INFORMASI PENCAIRAN DANA (75%) -->
-        <div class="verify-step-panel" id="stepPanel3">
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Pilih Bank</label>
-              <select class="form-input-style" required>
-                <option value="" disabled selected>Pilih Rekening Bank Utama...</option>
-                <option value="bca">Bank Central Asia (BCA)</option>
-                <option value="bri">Bank Rakyat Indonesia (BRI)</option>
-                <option value="mandiri">Bank Mandiri</option>
-                <option value="bni">Bank Negara Indonesia (BNI)</option>
-                <option value="bsi">Bank Syariah Indonesia (BSI)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nomor Rekening Bank</label>
-              <input type="text" class="form-input-style" placeholder="Masukkan nomor rekening tanpa spasi" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Pemilik Rekening</label>
-              <input type="text" class="form-input-style" placeholder="Harus sesuai dengan nama pemilik buku tabungan" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Upload Scan/Foto Buku Tabungan</label>
-              <div class="custom-file-upload">
-                <span class="upload-text-main">Unggah Foto Halaman Depan Buku Tabungan</span>
-                <span class="upload-text-sub">Menampilkan Nama & No Rekening</span>
-                <input type="file" accept="image/*" required />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BAGIAN 4 — DOKUMEN PELENGKAP (100%) -->
-        <div class="verify-step-panel" id="stepPanel4">
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Upload Surat Pernyataan</label>
-              <div style="margin-bottom: 8px;">
-                <a href="#" class="template-download-link">
-                  <span></span> Download Template Surat Pernyataan Resmi.docx
+          <div class="inisiasi-status-banner" style="background:{{ $kycBadge[2] }};border-color:{{ $kycBadge[3] }};">
+            <span>{{ $kycBadge[0] }}</span>
+            <div>
+              <strong>Status: {{ $kycBadge[1] }}</strong>
+              <p>
+                @if (auth()->user()->kyc_status === 'verified')
+                  Akunmu sudah terverifikasi penuh dan bisa membuat program donasi sendiri.
+                @elseif (auth()->user()->kyc_status === 'pending')
+                  Data verifikasimu sedang ditinjau oleh tim kami. Prosesnya biasanya 1-2 hari kerja.
+                @elseif (auth()->user()->kyc_status === 'rejected')
+                  Pengajuan sebelumnya belum bisa disetujui. Silakan ajukan ulang datamu.
+                @else
+                  Lengkapi verifikasi identitas untuk membuka akses penggalangan dana.
+                @endif
+              </p>
+              @if (in_array(auth()->user()->kyc_status, ['unverified', 'rejected']))
+                <a href="{{ route('verify') }}" class="btn-hero inisiasi-cta-btn" style="display:inline-block;text-decoration:none;margin-top:10px;">
+                  {{ auth()->user()->kyc_status === 'rejected' ? 'Ajukan Ulang' : 'Mulai Verifikasi' }}
                 </a>
-              </div>
-              <div class="custom-file-upload">
-                
-                <span class="upload-text-main">Pilih File Surat Pernyataan</span>
-                <span class="upload-text-sub">Format: PDF/JPG hasil tanda tangan</span>
-                <input type="file" accept=".pdf, image/*" required />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Upload Berkas Pendukung <span style="color: #b0b7c3; font-weight: 500;">(Opsional)</span></label>
-              <div style="margin-bottom: 8px; height: 18px;"></div> <!-- Spacer alignment -->
-              <div class="custom-file-upload">
-                
-                <span class="upload-text-main">Pilih Berkas Legalitas / Sertifikat</span>
-                <span class="upload-text-sub">Format: PDF/ZIP jika ada</span>
-                <input type="file" accept=".pdf, .zip, .rar, image/*" />
-              </div>
-            </div>
-            
-            <!-- OTP Area -->
-            <div class="form-group full-width" style="margin-top: 10px;">
-              <label class="form-label">Kode Verifikasi OTP</label>
-              <div class="otp-input-group">
-                <input type="text" class="form-input-style" maxlength="6" placeholder="Masukkan 6 digit kode" style="flex: 1; letter-spacing: 4px; text-align: center; font-weight: 700;" required />
-                <button type="button" class="btn-request-otp" id="btnReqOtp">Minta OTP</button>
-              </div>
+              @endif
             </div>
           </div>
-        </div>
-
-        <!-- FORM NAVIGASI BAWAH -->
-        <div class="form-action-footer">
-          <button type="button" class="btn-form-back" id="btnFormBack" style="visibility: hidden;">Kembali</button>
-          <button type="button" class="btn-form-next" id="btnFormNext">Lanjut</button>
-        </div>
-      </form>
         </section>
 
         <!-- ── KEAMANAN ── -->
@@ -560,19 +335,29 @@
           <h2 class="dash-card-title">Keamanan</h2>
           <p class="dash-card-sub">Ganti password akun dan aktifkan lapisan keamanan tambahan.</p>
 
-          <form id="passwordForm" autocomplete="off">
+          @if ($errors->has('current_password') || $errors->has('password'))
+            <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+              <div class="banner-content">
+                <span class="banner-icon">⚠️</span>
+                <p>{{ $errors->first('current_password') ?: $errors->first('password') }}</p>
+              </div>
+            </div>
+          @endif
+
+          <form action="{{ route('pengaturan-akun.password') }}" method="POST" autocomplete="off">
+            @csrf
             <div class="form-grid-2">
               <div class="form-group full-width">
                 <label class="form-label">Password Saat Ini</label>
-                <input type="password" class="form-input-style" placeholder="Masukkan password saat ini" />
+                <input type="password" name="current_password" class="form-input-style" placeholder="Masukkan password saat ini" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Password Baru</label>
-                <input type="password" class="form-input-style" placeholder="Minimal 8 karakter" />
+                <input type="password" name="password" class="form-input-style" placeholder="Minimal 8 karakter" required minlength="8" />
               </div>
               <div class="form-group">
                 <label class="form-label">Konfirmasi Password Baru</label>
-                <input type="password" class="form-input-style" placeholder="Ulangi password baru" />
+                <input type="password" name="password_confirmation" class="form-input-style" placeholder="Ulangi password baru" required minlength="8" />
               </div>
             </div>
             <div class="section-save-row">
@@ -580,16 +365,19 @@
             </div>
           </form>
 
-          <div class="toggle-row">
-            <div>
-              <p class="toggle-row-title">Autentikasi Dua Faktor (2FA)</p>
-              <p class="toggle-row-desc">Tambahkan lapisan keamanan berupa kode OTP setiap kali login dari perangkat baru.</p>
+          <form action="{{ route('pengaturan-akun.2fa') }}" method="POST">
+            @csrf
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-row-title">Autentikasi Dua Faktor (2FA)</p>
+                <p class="toggle-row-desc">Tambahkan lapisan keamanan berupa kode OTP setiap kali login dari perangkat baru.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="enable_2fa" value="1" id="twoFaToggle" onchange="this.form.requestSubmit()" @checked($settings->enable_2fa) />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" id="twoFaToggle" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
+          </form>
         </section>
 
         <!-- ── NOTIFIKASI ── -->
@@ -597,50 +385,55 @@
           <h2 class="dash-card-title">Notifikasi</h2>
           <p class="dash-card-sub">Atur notifikasi email dan push untuk update program, donasi, dan lainnya.</p>
 
-          <div class="notif-pref-table">
-            <div class="notif-pref-row">
-              <p class="notif-pref-label">Update Program Donasi</p>
-              <div class="notif-pref-channels">
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-                  <span>Email</span>
+          @php $notif = $settings->notification_preferences ?? []; @endphp
+
+          <form action="{{ route('pengaturan-akun.notifikasi') }}" method="POST">
+            @csrf
+            <div class="notif-pref-table">
+              <div class="notif-pref-row">
+                <p class="notif-pref-label">Update Program Donasi</p>
+                <div class="notif-pref-channels">
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[program_email]" value="1" @checked($notif['program_email'] ?? true) /><span class="toggle-slider"></span></label>
+                    <span>Email</span>
+                  </div>
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[program_push]" value="1" @checked($notif['program_push'] ?? true) /><span class="toggle-slider"></span></label>
+                    <span>Push</span>
+                  </div>
                 </div>
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-                  <span>Push</span>
+              </div>
+              <div class="notif-pref-row">
+                <p class="notif-pref-label">Donasi & Riwayat Transaksi</p>
+                <div class="notif-pref-channels">
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[transaksi_email]" value="1" @checked($notif['transaksi_email'] ?? true) /><span class="toggle-slider"></span></label>
+                    <span>Email</span>
+                  </div>
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[transaksi_push]" value="1" @checked($notif['transaksi_push'] ?? true) /><span class="toggle-slider"></span></label>
+                    <span>Push</span>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-pref-row">
+                <p class="notif-pref-label">Promo & Info KindlyShop</p>
+                <div class="notif-pref-channels">
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[promo_email]" value="1" @checked($notif['promo_email'] ?? false) /><span class="toggle-slider"></span></label>
+                    <span>Email</span>
+                  </div>
+                  <div class="notif-pref-channel">
+                    <label class="toggle-switch small"><input type="checkbox" name="notif[promo_push]" value="1" @checked($notif['promo_push'] ?? false) /><span class="toggle-slider"></span></label>
+                    <span>Push</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="notif-pref-row">
-              <p class="notif-pref-label">Donasi & Riwayat Transaksi</p>
-              <div class="notif-pref-channels">
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-                  <span>Email</span>
-                </div>
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-                  <span>Push</span>
-                </div>
-              </div>
+            <div class="section-save-row">
+              <button type="submit" class="btn-form-next">Simpan Preferensi</button>
             </div>
-            <div class="notif-pref-row">
-              <p class="notif-pref-label">Promo & Info KindlyShop</p>
-              <div class="notif-pref-channels">
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" /><span class="toggle-slider"></span></label>
-                  <span>Email</span>
-                </div>
-                <div class="notif-pref-channel">
-                  <label class="toggle-switch small"><input type="checkbox" /><span class="toggle-slider"></span></label>
-                  <span>Push</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="section-save-row">
-            <button type="button" class="btn-form-next" id="btnSaveNotif">Simpan Preferensi</button>
-          </div>
+          </form>
         </section>
 
         <!-- ── PRIVASI ── -->
@@ -648,50 +441,80 @@
           <h2 class="dash-card-title">Privasi</h2>
           <p class="dash-card-sub">Atur izin penggunaan data pribadi dan preferensi privasi akun Anda.</p>
 
-          <div class="toggle-row" style="border-top:none; padding-top:0;">
-            <div>
-              <p class="toggle-row-title">Tampilkan Profil ke Publik</p>
-              <p class="toggle-row-desc">Profil dan riwayat kontribusi Anda dapat dilihat oleh pengguna lain di KindlyJAR.</p>
+          @php $privacy = $settings->privacy_permissions ?? []; @endphp
+
+          <form action="{{ route('pengaturan-akun.privasi') }}" method="POST">
+            @csrf
+            <div class="toggle-row" style="border-top:none; padding-top:0;">
+              <div>
+                <p class="toggle-row-title">Tampilkan Profil ke Publik</p>
+                <p class="toggle-row-desc">Profil dan riwayat kontribusi Anda dapat dilihat oleh pengguna lain di KindlyJAR.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="privacy[profil_publik]" value="1" @checked($privacy['profil_publik'] ?? true) />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-row">
-            <div>
-              <p class="toggle-row-title">Izinkan Penggunaan Data untuk Rekomendasi Program</p>
-              <p class="toggle-row-desc">Data aktivitas donasi Anda digunakan untuk merekomendasikan program yang relevan.</p>
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-row-title">Izinkan Penggunaan Data untuk Rekomendasi Program</p>
+                <p class="toggle-row-desc">Data aktivitas donasi Anda digunakan untuk merekomendasikan program yang relevan.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="privacy[rekomendasi]" value="1" @checked($privacy['rekomendasi'] ?? true) />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-row">
-            <div>
-              <p class="toggle-row-title">Bagikan Data ke Mitra Donasi Terverifikasi</p>
-              <p class="toggle-row-desc">Mitra penggalang dana terverifikasi dapat melihat ringkasan kontribusi Anda untuk keperluan pelaporan.</p>
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-row-title">Bagikan Data ke Mitra Donasi Terverifikasi</p>
+                <p class="toggle-row-desc">Mitra penggalang dana terverifikasi dapat melihat ringkasan kontribusi Anda untuk keperluan pelaporan.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" name="privacy[bagikan_mitra]" value="1" @checked($privacy['bagikan_mitra'] ?? false) />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="section-save-row">
-            <button type="button" class="btn-form-next" id="btnSavePrivasi">Simpan Preferensi Privasi</button>
-          </div>
+            <div class="section-save-row">
+              <button type="submit" class="btn-form-next">Simpan Preferensi Privasi</button>
+            </div>
+          </form>
         </section>
 
         <!-- ── METODE PEMBAYARAN ── -->
         <section class="dash-section" id="pembayaran" style="display:none">
           <h2 class="dash-card-title">Metode Pembayaran</h2>
-          <p class="dash-card-sub">Simpan kartu atau e-wallet yang sering Anda gunakan untuk donasi dan belanja.</p>
+          <p class="dash-card-sub">Simpan rekening atau e-wallet yang sering Anda gunakan untuk donasi dan belanja.</p>
 
           <div class="payment-method-list" id="paymentMethodList">
-            <!-- diisi via JS -->
+            @foreach ($paymentMethods as $method)
+              <div class="payment-method-row">
+                <div>
+                  <strong>{{ $method->provider }}</strong>
+                  @if ($method->is_default)
+                    <span class="payment-method-badge">Utama</span>
+                  @endif
+                  <p style="margin:2px 0 0;color:#6b7a8d;font-size:.85rem;">
+                    {{ Str::mask($method->account_number, '•', 3, -3) }} &middot; {{ $method->account_name }}
+                  </p>
+                </div>
+                <div class="payment-method-actions">
+                  @unless ($method->is_default)
+                    <form action="{{ route('pengaturan-akun.metode-pembayaran.utama', $method) }}" method="POST">
+                      @csrf
+                      <button type="submit" class="btn-make-primary">Jadikan Utama</button>
+                    </form>
+                  @endunless
+                  <form action="{{ route('pengaturan-akun.metode-pembayaran.destroy', $method) }}" method="POST" onsubmit="return confirm('Hapus metode pembayaran ini?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-danger-outline" style="padding:6px 10px;font-size:.75rem;">Hapus</button>
+                  </form>
+                </div>
+              </div>
+            @endforeach
           </div>
-          <p class="payment-empty-state" id="paymentEmptyState" style="display:none;color:#6b7a8d;font-size:.9rem;margin:8px 0 0;">
+          <p class="payment-empty-state" id="paymentEmptyState" style="{{ $paymentMethods->isEmpty() ? '' : 'display:none;' }}color:#6b7a8d;font-size:.9rem;margin:8px 0 0;">
             Belum ada metode pembayaran. Klik tombol di bawah untuk menambahkan.
           </p>
 
@@ -705,7 +528,10 @@
             <p class="danger-zone-title">Zona Berbahaya</p>
             <p class="danger-zone-desc">Tindakan berikut bersifat sensitif. Menonaktifkan akun akan menyembunyikan profil dan riwayat Anda untuk sementara waktu, sedangkan menghapus akun bersifat permanen dan tidak dapat dibatalkan.</p>
             <div class="danger-zone-actions">
-              <button type="button" class="btn-danger-outline" id="btnDeactivate">Nonaktifkan Akun</button>
+              <form action="{{ route('pengaturan-akun.nonaktifkan') }}" method="POST" onsubmit="return confirm('Yakin ingin menonaktifkan akunmu? Kamu bisa mengaktifkannya lagi dengan login ulang.');">
+                @csrf
+                <button type="submit" class="btn-danger-outline">Nonaktifkan Akun</button>
+              </form>
               <button type="button" class="btn-danger-solid" id="btnDeleteAccount">Hapus Akun Permanen</button>
             </div>
           </div>
@@ -807,289 +633,23 @@
       profileDropdown2.classList.remove('open');
     });
 
-    // ── Handler nama file pada dropzone upload KYC ──
-    document.querySelectorAll('.custom-file-upload input[type="file"]').forEach((input) => {
-      input.addEventListener('change', (e) => {
-        const fileName = e.target.files[0]?.name;
-        if (!fileName) return;
-        const textMain = input.parentElement.querySelector('.upload-text-main');
-        if (textMain) {
-          textMain.textContent = 'Terpilih: ' + fileName;
-          textMain.style.color = '#22c55e';
-        }
-      });
+    /* ── MODAL TAMBAH METODE PEMBAYARAN (open/close saja, submit ke backend) ── */
+    const addPaymentModal = document.getElementById('addPaymentModal');
+    document.getElementById('btnAddPayment')?.addEventListener('click', () => {
+      addPaymentModal.classList.add('show');
+    });
+    document.getElementById('closeAddPaymentModal')?.addEventListener('click', () => {
+      addPaymentModal.classList.remove('show');
+    });
+    document.getElementById('pmCancelBtn')?.addEventListener('click', () => {
+      addPaymentModal.classList.remove('show');
+    });
+    addPaymentModal?.addEventListener('click', (e) => {
+      if (e.target === addPaymentModal) addPaymentModal.classList.remove('show');
     });
 
-    // ── Semua aksi simpan di bawah ini dummy, belum terhubung backend ──
-    // ── Step navigasi form verifikasi KYC + progress bar ──
-let currentStep = 1;
-const totalSteps = 4;
-
-function goToStep(step) {
-  // sembunyikan semua panel, tampilkan yang aktif
-  for (let i = 1; i <= totalSteps; i++) {
-    document.getElementById('stepPanel' + i).classList.toggle('active', i === step);
-    document.getElementById('node' + i).classList.toggle('active', i <= step);
-    document.getElementById('labelText' + i).classList.toggle('active', i <= step);
-  }
-
-  // update lebar progress bar (25% per step)
-  const percent = (step / totalSteps) * 100;
-  document.getElementById('progressBarFill').style.width = percent + '%';
-
-  // tombol "Kembali" disembunyikan cuma di step 1
-  document.getElementById('btnFormBack').style.visibility = step === 1 ? 'hidden' : 'visible';
-
-  // ganti teks tombol "Lanjut" jadi "Kirim" di step terakhir
-  document.getElementById('btnFormNext').textContent = step === totalSteps ? 'Kirim Verifikasi' : 'Lanjut';
-
-  currentStep = step;
-}
-
-document.getElementById('btnFormNext').addEventListener('click', () => {
-  if (currentStep < totalSteps) {
-    goToStep(currentStep + 1);
-  } else {
-    // submit di step terakhir
-    document.getElementById('verificationForm').requestSubmit();
-  }
-});
-
-document.getElementById('btnFormBack').addEventListener('click', () => {
-  if (currentStep > 1) goToStep(currentStep - 1);
-});
-
-document.getElementById('verificationForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Data verifikasi KYC berhasil dikirim. Tim KindlyJAR akan meninjau dalam 1-2 hari kerja.');
-});
-
-    document.getElementById('passwordForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Password berhasil diperbarui.');
-      e.target.reset();
-    });
-
-    document.getElementById('btnSaveNotif').addEventListener('click', () => {
-      alert('Preferensi notifikasi berhasil disimpan.');
-    });
-
-    document.getElementById('btnSavePrivasi').addEventListener('click', () => {
-      alert('Preferensi privasi berhasil disimpan.');
-    });
-
-    /* ── TAMBAH METODE PEMBAYARAN ── */
-    (function initPaymentMethods() {
-      const STORAGE_KEY = 'kj_payment_methods';
-      const listEl        = document.getElementById('paymentMethodList');
-      const emptyEl       = document.getElementById('paymentEmptyState');
-      const btnAdd        = document.getElementById('btnAddPayment');
-      const modal         = document.getElementById('addPaymentModal');
-      const closeBtn      = document.getElementById('closeAddPaymentModal');
-      const step1         = document.getElementById('pmStep1');
-      const step2         = document.getElementById('pmStep2');
-      const step2Title    = document.getElementById('pmStep2Title');
-      const backBtn       = document.getElementById('pmBackBtn');
-      const form          = document.getElementById('pmForm');
-      const cancelBtn     = document.getElementById('pmCancelBtn');
-      const makePrimaryCb = document.getElementById('pmMakePrimary');
-      const typeCards     = modal.querySelectorAll('.pm-type-card');
-      const fieldGroups   = modal.querySelectorAll('.pm-form-fields');
-
-      const TYPE_META = {
-        bank:    { icon: '🏦', title: 'Detail Rekening Bank',   label: 'Kartu Debit / Bank' },
-        ewallet: { icon: '📱', title: 'Detail Akun E-Wallet',   label: 'E-Wallet' },
-        card:    { icon: '💳', title: 'Detail Kartu Kredit/Debit', label: 'Kartu Kredit/Debit' }
-      };
-
-      let selectedType = null;
-
-      // Seed data awal (mirror data lama biar list tidak kosong)
-      const SEED = [
-        { id: 'seed-1', type: 'bank',    icon: '🏦', name: 'BCA', number: '1234567800004821', holder: 'Joseph Herlambang', primary: true  },
-        { id: 'seed-2', type: 'ewallet', icon: '📱', name: 'GoPay', number: '081234561092',    holder: 'Joseph Herlambang', primary: false }
-      ];
-
-      function load() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) return JSON.parse(raw);
-        } catch (_) {}
-        return SEED.slice();
-      }
-      function save(list) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (_) {}
-      }
-      function maskNumber(num) {
-        const digits = String(num || '').replace(/\D/g, '');
-        if (digits.length <= 4) return '•••• ' + digits;
-        return '•••• ' + digits.slice(-4);
-      }
-      function render() {
-        const list = load();
-        listEl.innerHTML = '';
-        if (!list.length) {
-          emptyEl.style.display = 'block';
-          return;
-        }
-        emptyEl.style.display = 'none';
-        list.forEach((m) => {
-          const row = document.createElement('div');
-          row.className = 'payment-method-row';
-          row.innerHTML = `
-            <div class="payment-method-icon">${m.icon}</div>
-            <div class="payment-method-info">
-              <p class="payment-method-name">${escapeHtml(m.name)} ${maskNumber(m.number)}${m.primary ? '<span class="payment-method-badge">Utama</span>' : ''}</p>
-              <p class="payment-method-number">${TYPE_META[m.type]?.label || ''}${m.holder ? ' · ' + escapeHtml(m.holder) : ''}</p>
-            </div>
-            <div class="payment-method-actions">
-              ${m.primary ? '' : `<button type="button" class="btn-make-primary" data-action="primary" data-id="${m.id}">Jadikan Utama</button>`}
-              <button type="button" class="payment-method-remove" data-action="remove" data-id="${m.id}">Hapus</button>
-            </div>
-          `;
-          listEl.appendChild(row);
-        });
-      }
-      function escapeHtml(s) {
-        return String(s ?? '').replace(/[&<>"']/g, (c) => ({
-          '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-        }[c]));
-      }
-
-      // List actions (event delegation)
-      listEl.addEventListener('click', (e) => {
-        const btn = e.target.closest('button[data-action]');
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const list = load();
-        if (btn.dataset.action === 'remove') {
-          if (!confirm('Hapus metode pembayaran ini?')) return;
-          const idx = list.findIndex(m => m.id === id);
-          if (idx === -1) return;
-          const wasPrimary = list[idx].primary;
-          list.splice(idx, 1);
-          if (wasPrimary && list.length) list[0].primary = true;
-          save(list); render();
-        } else if (btn.dataset.action === 'primary') {
-          list.forEach(m => m.primary = (m.id === id));
-          save(list); render();
-        }
-      });
-
-      // ── Modal open/close ──
-      function openModal() {
-        resetToStep1();
-        modal.classList.add('show');
-      }
-      function closeModal() { modal.classList.remove('show'); }
-      function resetToStep1() {
-        selectedType = null;
-        typeCards.forEach(c => c.classList.remove('selected'));
-        fieldGroups.forEach(g => g.style.display = 'none');
-        form.reset();
-        makePrimaryCb.checked = false;
-        step1.style.display = 'block';
-        step2.style.display = 'none';
-      }
-
-      btnAdd.addEventListener('click', openModal);
-      closeBtn.addEventListener('click', closeModal);
-      cancelBtn.addEventListener('click', closeModal);
-      backBtn.addEventListener('click', resetToStep1);
-      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-      // Pilih tipe → tampilkan form
-      typeCards.forEach(card => {
-        card.addEventListener('click', () => {
-          selectedType = card.dataset.type;
-          typeCards.forEach(c => c.classList.toggle('selected', c === card));
-          fieldGroups.forEach(g => {
-            g.style.display = (g.dataset.fields === selectedType) ? 'block' : 'none';
-          });
-          step2Title.textContent = TYPE_META[selectedType].title;
-          setTimeout(() => {
-            step1.style.display = 'none';
-            step2.style.display = 'block';
-          }, 120);
-        });
-      });
-
-      // Submit form
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!selectedType) return;
-        const fd = new FormData(form);
-        let entry = { id: 'pm-' + Date.now(), type: selectedType, icon: TYPE_META[selectedType].icon, primary: makePrimaryCb.checked };
-
-        if (selectedType === 'bank') {
-          const name = (fd.get('bankName') || '').toString().trim();
-          const number = (fd.get('bankAccount') || '').toString().replace(/\s+/g,'');
-          const holder = (fd.get('bankHolder') || '').toString().trim();
-          if (!name)  return alert('Pilih nama bank terlebih dahulu.');
-          if (!/^\d{6,20}$/.test(number)) return alert('Nomor rekening harus 6-20 digit angka.');
-          if (!holder || holder.length > 100) return alert('Nama pemilik rekening wajib diisi (maks 100 karakter).');
-          entry.name = name; entry.number = number; entry.holder = holder;
-        } else if (selectedType === 'ewallet') {
-          const name = (fd.get('ewProvider') || '').toString().trim();
-          const number = (fd.get('ewPhone') || '').toString().replace(/\s+/g,'');
-          const holder = (fd.get('ewHolder') || '').toString().trim();
-          if (!name) return alert('Pilih penyedia e-wallet.');
-          if (!/^\d{8,15}$/.test(number)) return alert('Nomor HP harus 8-15 digit angka.');
-          if (!holder || holder.length > 100) return alert('Nama pemilik akun wajib diisi (maks 100 karakter).');
-          entry.name = name; entry.number = number; entry.holder = holder;
-        } else if (selectedType === 'card') {
-          const number = (fd.get('cardNumber') || '').toString().replace(/\s+/g,'');
-          const holder = (fd.get('cardHolder') || '').toString().trim();
-          const expiry = (fd.get('cardExpiry') || '').toString().trim();
-          const cvv    = (fd.get('cardCvv') || '').toString().trim();
-          if (!/^\d{12,19}$/.test(number)) return alert('Nomor kartu harus 12-19 digit angka.');
-          if (!holder || holder.length > 100) return alert('Nama di kartu wajib diisi.');
-          if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) return alert('Tanggal kadaluarsa harus format MM/YY.');
-          if (!/^\d{3,4}$/.test(cvv)) return alert('CVV harus 3-4 digit.');
-          // Deteksi brand sederhana
-          const brand = number.startsWith('4') ? 'Visa'
-                      : /^(5[1-5]|2[2-7])/.test(number) ? 'Mastercard'
-                      : number.startsWith('3') ? 'AmEx'
-                      : 'Kartu';
-          entry.name = brand; entry.number = number; entry.holder = holder;
-        }
-
-        const list = load();
-        if (entry.primary) list.forEach(m => m.primary = false);
-        else if (list.length === 0) entry.primary = true; // auto-primary untuk yang pertama
-        list.push(entry);
-        save(list);
-        render();
-        closeModal();
-      });
-
-      // Format helper: MM/YY auto slash
-      const expiryInput = form.querySelector('input[name="cardExpiry"]');
-      expiryInput.addEventListener('input', (e) => {
-        let v = e.target.value.replace(/\D/g, '').slice(0, 4);
-        if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
-        e.target.value = v;
-      });
-      // Format kartu: spasi tiap 4 digit
-      const cardNumInput = form.querySelector('input[name="cardNumber"]');
-      cardNumInput.addEventListener('input', (e) => {
-        const v = e.target.value.replace(/\D/g, '').slice(0, 19);
-        e.target.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
-      });
-
-      render();
-    })();
-
-    document.getElementById('btnDeactivate').addEventListener('click', () => {
-      if (confirm('Apakah Anda yakin ingin menonaktifkan akun untuk sementara? Anda dapat mengaktifkannya kembali dengan login ulang.')) {
-        alert('Akun berhasil dinonaktifkan untuk sementara waktu.');
-      }
-    });
-
-    document.getElementById('btnDeleteAccount').addEventListener('click', () => {
-      if (confirm('Tindakan ini akan menghapus akun secara permanen dan tidak dapat dibatalkan. Apakah Anda ingin melanjutkan?')) {
-        alert('Permintaan penghapusan akun telah dikirim.');
-      }
+    document.getElementById('btnDeleteAccount')?.addEventListener('click', () => {
+      alert('Fitur hapus akun permanen belum tersedia. Silakan hubungi tim KindlyJAR untuk permintaan ini.');
     });
   </script>
 </body>

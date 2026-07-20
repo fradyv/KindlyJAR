@@ -18,7 +18,9 @@ class UserSettings extends Model
     protected function casts(): array
     {
         return [
-            'enable_2fa' => 'boolean',
+            'enable_2fa'                => 'boolean',
+            'notification_preferences'  => 'array',
+            'privacy_permissions'       => 'array',
         ];
     }
 

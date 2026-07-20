@@ -1,17 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Profil Saya · KindlyJAR</title>
+  <title>Edit Produk · KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
 </head>
 <body class="dashboard-body">
 
-  <!-- ── SIDEBAR (khusus Profil & Pengaturan) ── -->
-  <aside class="sidebar"> 
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
     <div class="sidebar-top">
       <a class="logo sidebar-logo" href="{{ route('home') }}">
         <div class="logo-icon">
@@ -20,43 +20,88 @@
         <span class="logo-name">KindlyJAR</span>
       </a>
 
-      <a href="{{ route('dashboard') }}" class="sidebar-back-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="19" y1="12" x2="5" y2="12"/>
-          <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Kembali ke Dashboard
-      </a>
-
-      <p class="sidebar-label">Akun</p>
+      <p class="sidebar-label">Menu</p>
 
       <nav class="sidebar-nav">
-        <a href="{{ route('profil') }}" class="sidebar-link active">
+        <a href="{{ route('dashboard') }}" class="sidebar-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
-          Lihat Profil
+          Beranda
         </a>
-        <a href="{{ route('pengaturan-akun') }}" class="sidebar-link">
+        <a href="{{ route('program-donasi') }}" class="sidebar-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
           </svg>
-          Pengaturan
+          Program Donasi
         </a>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="sidebar-link sidebar-link-danger" style="border:none;background:none;width:100%;text-align:left;cursor:pointer;font:inherit;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Keluar
-          </button>
-        </form>
+        <a href="{{ route('kindlyshop') }}" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          KindlyShop
+        </a>
+        <a href="{{ route('riwayat') }}" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Riwayat Pembelian
+        </a>
+        <a href="{{ route('inisiasi') }}" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+          </svg>
+          Inisiasi Donasi
+        </a>
       </nav>
+
+      @if($shop)
+      <div class="sidebar-hero-menu-wrap">
+        <p class="sidebar-label">Menu Hero</p>
+        <nav class="sidebar-nav">
+          <a href="{{ route('toko-saya') }}" class="sidebar-link active">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Toko Saya
+          </a>
+          <a href="{{ route('tambah-produk') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            Tambah Produk
+          </a>
+          <a href="{{ route('produk-terjual') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            Produk yang Terjual
+          </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
+        </nav>
+      </div>
+      @endif
     </div>
   </aside>
 
@@ -64,7 +109,7 @@
   <div class="dash-right">
 
     <div class="dash-topbar">
-      <h1 class="dash-greeting">Profil Saya</h1>
+      <h1 class="dash-greeting">Edit Produk</h1>
       <div class="dash-topbar-right">
         <div class="notif-wrap">
           <button class="notif-btn" id="cartBtn" aria-label="Keranjang">
@@ -86,7 +131,7 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" id="dashUserAvatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
               <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
               <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
@@ -99,88 +144,77 @@
       </div>
     </div>
 
-    @if (auth()->user()->kyc_status !== 'verified')
-    <div class="verification-banner" id="verifyBanner">
-      <div class="banner-content">
-        <span class="banner-icon">⚠️</span>
-        <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
-      </div>
-      <div class="banner-actions">
-        <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
-        <button class="banner-close" id="closeBannerBtn">&times;</button>
-      </div>
-    </div>
-    @endif
-
-    @if (session('success'))
-      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
-        <div class="banner-content">
-          <span class="banner-icon">✅</span>
-          <p>{{ session('success') }}</p>
-        </div>
-      </div>
-    @endif
-
     <main class="dash-scroll">
       <div class="dash-main-card">
 
         <section class="dash-section">
-          <h2 class="dash-card-title">Profil Saya</h2>
-          <p class="dash-card-sub">Kelola informasi profil dan preferensi tampilan publik Anda di KindlyJAR.</p>
+          <h2 class="dash-card-title">Edit Produk</h2>
+          <p class="dash-card-sub">Perbarui detail produk "{{ $product->title }}".</p>
 
-          <form id="profilSayaForm" action="{{ route('profil.update') }}" method="POST" autocomplete="off">
+          @if ($errors->any())
+            <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+              <div class="banner-content">
+                <span class="banner-icon">⚠️</span>
+                <p>{{ $errors->first() }}</p>
+              </div>
+            </div>
+          @endif
+
+          <form method="POST" action="{{ route('produk.update', $product) }}" enctype="multipart/form-data" autocomplete="off">
             @csrf
-
-            <div class="profile-photo-row">
-              <label class="profile-photo-edit" for="profilPhotoInput" aria-label="Ganti foto profil">
-                <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Foto profil" class="profile-photo-preview" id="profilPhotoPreview" />
-                <span class="profile-photo-btn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>
-                  </svg>
-                </span>
-                <input type="file" id="profilPhotoInput" accept="image/*" hidden />
-              </label>
-              <div>
-                <p class="profile-photo-name">Ganti Foto Profil</p>
-                <p class="profile-photo-hint">Format JPG atau PNG, maksimal 2MB. (Segera hadir)</p>
-              </div>
-            </div>
-
-            <div class="form-grid-2" style="margin-top:24px;">
+            @method('PUT')
+            <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label">Display Name</label>
-                <input type="text" name="display_name" class="form-input-style" id="displayNameInput" value="{{ old('display_name', auth()->user()->display_name) }}" placeholder="Nama yang tampil di publik" required />
-                <span class="form-hint">Nama ini yang akan tampil di publik dan riwayat donasi.</span>
+                <label class="form-label">Nama Produk</label>
+                <input type="text" name="title" class="form-input-style" value="{{ old('title', $product->title) }}" required />
               </div>
               <div class="form-group">
-                <label class="form-label">Nama Legal</label>
-                <input type="text" class="form-input-style" value="{{ auth()->user()->legal_name ?? '-' }}" disabled />
-                <span class="form-hint">Sesuai KTP saat verifikasi, tidak bisa diubah.</span>
+                <label class="form-label">Harga (Rp)</label>
+                <input type="number" name="price" class="form-input-style" min="0" value="{{ old('price', $product->price) }}" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kategori Produk</label>
+                <select name="category" class="form-input-style" required>
+                  <option value="" disabled>Pilih kategori produk...</option>
+                  @foreach (['Desain Poster', 'Ilustrasi Digital', 'Desain Web', 'Aset 3D', 'Desain Logo', 'Stok Foto'] as $cat)
+                    <option value="{{ $cat }}" @selected(old('category', $product->category) === $cat)>{{ $cat }}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Stok</label>
+                <input type="number" name="stock" class="form-input-style" min="0" value="{{ old('stock', $product->stock) }}" />
               </div>
               <div class="form-group full-width">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input-style" value="{{ auth()->user()->email }}" disabled />
-                <span class="form-hint">Email bersifat read-only dan tidak dapat diubah secara langsung. Untuk mengganti email, silakan <a href="{{ route('verify') }}" class="form-hint-link">lakukan verifikasi ulang identitas Anda</a>.</span>
+                <label class="form-label">Program Donasi yang Didukung</label>
+                <select name="campaign_id" class="form-input-style" required>
+                  <option value="" disabled>Pilih program donasi...</option>
+                  @foreach($campaigns as $campaign)
+                    <option value="{{ $campaign->id }}" @selected(old('campaign_id', $product->campaign_id) == $campaign->id)>{{ $campaign->title }}</option>
+                  @endforeach
+                </select>
+                <span class="form-hint">Hasil penjualan produk ini akan tercatat mendukung program yang kamu pilih.</span>
               </div>
               <div class="form-group full-width">
-                <label class="form-label">Bio <span class="form-label-optional">(opsional)</span></label>
-                <textarea name="bio" class="form-input-style" rows="3" placeholder="Ceritakan sedikit tentang diri Anda...">{{ old('bio', auth()->user()->bio) }}</textarea>
+                <label class="form-label">Deskripsi Produk</label>
+                <textarea name="description" class="form-input-style" rows="3" required>{{ old('description', $product->description) }}</textarea>
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label">Ganti Foto Produk</label>
+                @if ($product->product_preview)
+                  <img src="{{ asset($product->product_preview) }}" alt="{{ $product->title }}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;" />
+                @endif
+                <div class="custom-file-upload">
+                  <span class="upload-icon-style">🖼️</span>
+                  <span class="upload-text-main" id="produkFotoLabel">Pilih Foto Baru (opsional)</span>
+                  <span class="upload-text-sub">Format: JPG, PNG max 5MB. Biarkan kosong jika tidak diganti.</span>
+                  <input type="file" name="photo" id="produkFotoInput" accept="image/*" />
+                </div>
               </div>
             </div>
 
-            <div class="toggle-row">
-              <div>
-                <p class="toggle-row-title">Donasi sebagai Anonim</p>
-                <p class="toggle-row-desc">Jika diaktifkan, nama yang ditampilkan di publik dan riwayat donasi akan diganti menjadi "Hero Anonim". Data asli Anda tetap tersimpan dengan aman di sistem.</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" name="is_anonymous_donation" value="1" id="anonToggle" @checked(auth()->user()->is_anonymous_donation) />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-
-            <div class="form-action-footer" style="justify-content:flex-end;">
+            <div class="form-action-footer">
+              <a href="{{ route('toko-saya') }}" class="btn-form-back">Batal</a>
               <button type="submit" class="btn-form-next">Simpan Perubahan</button>
             </div>
           </form>
@@ -282,35 +316,11 @@
       profileDropdown2.classList.remove('open');
     });
 
-    // ── Ganti foto profil (preview lokal, dummy — belum terhubung upload API) ──
-    const profilPhotoInput   = document.getElementById('profilPhotoInput');
-    const profilPhotoPreview = document.getElementById('profilPhotoPreview');
-    const dashUserAvatar     = document.getElementById('dashUserAvatar');
-
-    profilPhotoInput.addEventListener('change', (e) => {
+    const produkFotoInput = document.getElementById('produkFotoInput');
+    produkFotoInput?.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        profilPhotoPreview.src = ev.target.result;
-        if (dashUserAvatar) dashUserAvatar.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // ── Prefill toggle anonim dari localStorage ──
-    const anonToggle = document.getElementById('anonToggle');
-    anonToggle.checked = localStorage.getItem('donasiAnonim') === '1';
-
-    // ── Simpan Perubahan (dummy — belum terhubung backend) ──
-    document.getElementById('profilSayaForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const displayName = document.getElementById('displayNameInput').value.trim();
-      if (displayName) localStorage.setItem('userName', displayName);
-      localStorage.setItem('donasiAnonim', anonToggle.checked ? '1' : '0');
-
-      alert('Perubahan profil berhasil disimpan.');
+      document.getElementById('produkFotoLabel').textContent = 'Terpilih: ' + file.name;
     });
   </script>
 </body>

@@ -64,13 +64,16 @@
         </a>
       </nav>
 
-      <div class="sidebar-cta" id="sidebarHeroCta" style="display:none;">
+      @unless($shop)
+      <div class="sidebar-cta">
         <a href="{{ route('gabung-hero') }}">
           <button class="btn-join-hero">Gabung menjadi Hero!</button>
         </a>
       </div>
+      @endunless
 
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
+      @if($shop)
+      <div class="sidebar-hero-menu-wrap">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
           <a href="{{ route('toko-saya') }}" class="sidebar-link">
@@ -97,8 +100,16 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
+      @endif
     </div>
   </aside>
 
@@ -116,20 +127,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -141,10 +139,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -157,43 +155,66 @@
     <main class="dash-scroll">
       <div class="dash-main-card">
 
-        <!-- Belum jadi Hero -->
-        <section class="dash-section" id="belumHeroNotice" style="display:none;">
+        @unless($shop)
+        <section class="dash-section">
           <h2 class="dash-card-title">Kamu Belum Punya Toko</h2>
           <p class="dash-card-sub">Daftar jadi Hero dulu buat bisa nambah produk jualan di KindlyShop.</p>
           <a href="{{ route('gabung-hero') }}" class="btn-hero inisiasi-cta-btn">Gabung Jadi Hero</a>
         </section>
-
-        <!-- Sudah jadi Hero -->
-        <section class="dash-section" id="tambahProdukContent" style="display:none;">
+        @else
+        <section class="dash-section">
           <h2 class="dash-card-title">Tambah Produk Baru</h2>
           <p class="dash-card-sub">Isi detail produk yang mau kamu jual di KindlyShop.</p>
 
-          <form id="tambahProdukForm" autocomplete="off">
+          @if ($errors->any())
+            <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+              <div class="banner-content">
+                <span class="banner-icon">⚠️</span>
+                <p>{{ $errors->first() }}</p>
+              </div>
+            </div>
+          @endif
+
+          <form method="POST" action="{{ route('tambah-produk.store') }}" enctype="multipart/form-data" autocomplete="off">
+            @csrf
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label">Nama Produk</label>
-                <input type="text" class="form-input-style" id="produkNamaInput" placeholder="Contoh: Poster Ilustrasi Senja" required />
+                <input type="text" name="title" class="form-input-style" placeholder="Contoh: Poster Ilustrasi Senja" value="{{ old('title') }}" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Harga (Rp)</label>
-                <input type="number" class="form-input-style" id="produkHargaInput" placeholder="Contoh: 25000" min="0" required />
+                <input type="number" name="price" class="form-input-style" placeholder="Contoh: 25000" min="0" value="{{ old('price') }}" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kategori Produk</label>
+                <select name="category" class="form-input-style" required>
+                  <option value="" disabled selected>Pilih kategori produk...</option>
+                  <option value="Desain Poster">Desain Poster</option>
+                  <option value="Ilustrasi Digital">Ilustrasi Digital</option>
+                  <option value="Desain Web">Desain Web</option>
+                  <option value="Aset 3D">Aset 3D</option>
+                  <option value="Desain Logo">Desain Logo</option>
+                  <option value="Stok Foto">Stok Foto</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Stok</label>
+                <input type="number" name="stock" class="form-input-style" placeholder="Contoh: 100" min="0" value="{{ old('stock', 0) }}" />
               </div>
               <div class="form-group full-width">
-                <label class="form-label">Kategori Produk</label>
-                <select class="form-input-style" id="produkKategoriInput" required>
-                  <option value="" disabled selected>Pilih kategori produk...</option>
-                  <option value="desain-poster">Desain Poster</option>
-                  <option value="ilustrasi-digital">Ilustrasi Digital</option>
-                  <option value="desain-web">Desain Web</option>
-                  <option value="aset-3d">Aset 3D</option>
-                  <option value="desain-logo">Desain Logo</option>
-                  <option value="stok-foto">Stok Foto</option>
+                <label class="form-label">Program Donasi yang Didukung</label>
+                <select name="campaign_id" class="form-input-style" required>
+                  <option value="" disabled selected>Pilih program donasi...</option>
+                  @foreach($campaigns as $campaign)
+                    <option value="{{ $campaign->id }}">{{ $campaign->title }}</option>
+                  @endforeach
                 </select>
+                <span class="form-hint">Hasil penjualan produk ini akan tercatat mendukung program yang kamu pilih.</span>
               </div>
               <div class="form-group full-width">
                 <label class="form-label">Deskripsi Produk</label>
-                <textarea class="form-input-style" id="produkDeskripsiInput" rows="3" placeholder="Ceritain produk kamu..." required></textarea>
+                <textarea name="description" class="form-input-style" rows="3" placeholder="Ceritain produk kamu..." required>{{ old('description') }}</textarea>
               </div>
               <div class="form-group full-width">
                 <label class="form-label">Upload Foto Produk</label>
@@ -201,7 +222,7 @@
                   <span class="upload-icon-style">🖼️</span>
                   <span class="upload-text-main" id="produkFotoLabel">Pilih Foto Produk</span>
                   <span class="upload-text-sub">Format: JPG, PNG max 5MB</span>
-                  <input type="file" id="produkFotoInput" accept="image/*" />
+                  <input type="file" name="photo" id="produkFotoInput" accept="image/*" />
                 </div>
               </div>
             </div>
@@ -212,6 +233,7 @@
             </div>
           </form>
         </section>
+        @endunless
 
       </div><!-- /.dash-main-card -->
     </main>
@@ -309,61 +331,12 @@
       profileDropdown2.classList.remove('open');
     });
 
-    // ── Guard: cuma Hero yang boleh nambah produk ──
-    const isHero = localStorage.getItem('isHero') === '1';
-    document.getElementById(isHero ? 'tambahProdukContent' : 'belumHeroNotice').style.display = 'block';
-
     // ── Preview nama file foto produk ──
-    let produkFotoDataUrl = '';
     const produkFotoInput = document.getElementById('produkFotoInput');
-    produkFotoInput.addEventListener('change', (e) => {
+    produkFotoInput?.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       document.getElementById('produkFotoLabel').textContent = 'Terpilih: ' + file.name;
-      const reader = new FileReader();
-      reader.onload = (ev) => { produkFotoDataUrl = ev.target.result; };
-      reader.readAsDataURL(file);
-    });
-
-    // ── Validasi field wajib (border merah + reset otomatis saat diisi) ──
-    function validateRequiredFields(form) {
-      let isValid = true;
-      form.querySelectorAll('input[required], select[required], textarea[required]').forEach((field) => {
-        const isEmpty = field.type === 'checkbox' ? !field.checked : !field.value.trim();
-        if (isEmpty) {
-          isValid = false;
-          field.style.border = '1.5px solid #ef4444';
-          const resetBorder = () => { field.style.border = '1.5px solid rgba(33, 163, 255, 0.15)'; };
-          field.addEventListener('input', resetBorder, { once: true });
-          field.addEventListener('change', resetBorder, { once: true });
-        }
-      });
-      return isValid;
-    }
-
-    // ── Simpan produk ke localStorage (dummy — belum terhubung backend) ──
-    document.getElementById('tambahProdukForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      if (!validateRequiredFields(e.target)) {
-        alert('Mohon lengkapi semua kolom wajib yang bertanda merah sebelum menyimpan produk.');
-        return;
-      }
-
-      const produkBaru = {
-        nama: document.getElementById('produkNamaInput').value.trim(),
-        harga: document.getElementById('produkHargaInput').value,
-        kategori: document.getElementById('produkKategoriInput').value,
-        deskripsi: document.getElementById('produkDeskripsiInput').value.trim(),
-        foto: produkFotoDataUrl,
-      };
-
-      const produkList = JSON.parse(localStorage.getItem('tokoProduk') || '[]');
-      produkList.push(produkBaru);
-      localStorage.setItem('tokoProduk', JSON.stringify(produkList));
-
-      alert('Produk "' + produkBaru.nama + '" berhasil ditambahkan ke toko kamu!');
-      window.location.href = '/toko-saya';
     });
   </script>
 </body>

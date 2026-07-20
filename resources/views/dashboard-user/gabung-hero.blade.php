@@ -62,41 +62,7 @@
           </svg>
           Inisiasi Donasi
         </a>
-        <div class="sidebar-cta">
-        <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
-      </div>
       </nav>
-
-
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
-        <p class="sidebar-label">Menu Hero</p>
-        <nav class="sidebar-nav">
-          <a href="{{ route('toko-saya') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            Toko Saya
-          </a>
-          <a href="{{ route('tambah-produk') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-            Tambah Produk
-          </a>
-          <a href="{{ route('produk-terjual') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-            Produk yang Terjual
-          </a>
-        </nav>
-      </div>
     </div>
   </aside>
 
@@ -114,20 +80,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -139,10 +92,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -199,18 +152,28 @@
             <h3 class="dash-card-title">Form Pendaftaran Toko</h3>
             <p class="dash-card-sub">Lengkapi data toko kamu, prosesnya cepat kok.</p>
 
-            <form id="gabungHeroForm" autocomplete="off">
+            @if ($errors->any())
+              <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+                <div class="banner-content">
+                  <span class="banner-icon">⚠️</span>
+                  <p>{{ $errors->first() }}</p>
+                </div>
+              </div>
+            @endif
+
+            <form method="POST" action="{{ route('gabung-hero.store') }}" autocomplete="off">
+              @csrf
               <div class="form-group">
                 <label class="form-label">Nama Toko</label>
-                <input type="text" class="form-input-style" id="tokoNamaInput" placeholder="Contoh: Kriya Kebaikan" required />
+                <input type="text" name="name" class="form-input-style" placeholder="Contoh: Kriya Kebaikan" value="{{ old('name') }}" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Deskripsi Toko</label>
-                <textarea class="form-input-style" id="tokoDeskripsiInput" rows="3" placeholder="Ceritain toko kamu jual apa..." required></textarea>
+                <textarea name="description" class="form-input-style" rows="3" placeholder="Ceritain toko kamu jual apa..." required>{{ old('description') }}</textarea>
               </div>
               <div class="form-group">
                 <label class="form-label">Kategori Produk</label>
-                <select class="form-input-style" id="tokoKategoriInput" required>
+                <select name="category" class="form-input-style" required>
                   <option value="" disabled selected>Pilih kategori produk...</option>
                   <option value="desain-poster">Desain Poster</option>
                   <option value="ilustrasi-digital">Ilustrasi Digital</option>
@@ -222,7 +185,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Nomor HP/WhatsApp</label>
-                <input type="tel" class="form-input-style" id="tokoHpInput" placeholder="Contoh: 081234567xxx" inputmode="numeric" pattern="[0-9]{9,15}" title="Isi hanya dengan angka, 9-15 digit" maxlength="15" required />
+                <input type="tel" name="phone" class="form-input-style" id="tokoHpInput" placeholder="Contoh: 081234567xxx" inputmode="numeric" pattern="[0-9]{9,15}" title="Isi hanya dengan angka, 9-15 digit" maxlength="15" value="{{ old('phone') }}" required />
                 <span class="form-hint">Dipakai pembeli untuk menghubungi kamu soal pesanan.</span>
               </div>
 
@@ -232,24 +195,13 @@
               </label>
 
               <div class="form-action-footer">
-                <a href="{{ route('kindlyshop') }}" class="btn-form-back">Sudah jadi Hero? Kembali ke dashboard</a>
+                <a href="{{ route('kindlyshop') }}" class="btn-form-back">Batal, kembali ke KindlyShop</a>
                 <button type="submit" class="btn-form-next">Daftar Jadi Hero</button>
               </div>
             </form>
           </div>
 
         </div><!-- /#heroFormWrap -->
-
-        <!-- ── 5. PANEL SUKSES (muncul setelah submit) ── -->
-        <div class="dash-section hero-success-panel" id="heroSuccessPanel" style="display:none;">
-          <div class="hero-success-icon">✅</div>
-          <h2 class="dash-card-title">Selamat, <span id="heroSuccessName">Kamu</span>! Kamu sekarang resmi jadi Hero 🎉</h2>
-          <p class="dash-card-sub">Setiap produk yang kamu jual akan membantu program kebaikan yang kamu pilih. Yuk mulai tambah produk pertamamu!</p>
-          <div class="hero-success-actions">
-            <a href="{{ route('tambah-produk') }}" class="btn-hero inisiasi-cta-btn">Tambah Produk Sekarang</a>
-            <a href="{{ route('dashboard') }}" class="btn-form-back">Kembali ke Beranda</a>
-          </div>
-        </div>
 
       </div><!-- /.dash-main-card -->
     </main>
@@ -350,53 +302,6 @@
     // ── Nomor HP/WhatsApp: cuma boleh angka, huruf/simbol otomatis dibuang ──
     document.getElementById('tokoHpInput').addEventListener('input', (e) => {
       e.target.value = e.target.value.replace(/\D/g, '');
-    });
-
-    // ── Validasi field wajib (border merah + reset otomatis saat diisi) ──
-    function validateRequiredFields(form) {
-      let isValid = true;
-      form.querySelectorAll('input[required], select[required], textarea[required]').forEach((field) => {
-        const isInvalid = field.type === 'checkbox' ? !field.checked : (!field.value.trim() || !field.checkValidity());
-        if (isInvalid) {
-          isValid = false;
-          if (field.type === 'checkbox') {
-            const label = field.closest('label');
-            if (label) label.style.color = '#ef4444';
-            field.addEventListener('change', () => { if (label) label.style.color = ''; }, { once: true });
-          } else {
-            field.style.border = '1.5px solid #ef4444';
-            const resetBorder = () => { field.style.border = '1.5px solid rgba(33, 163, 255, 0.15)'; };
-            field.addEventListener('input', resetBorder, { once: true });
-            field.addEventListener('change', resetBorder, { once: true });
-          }
-        }
-      });
-      return isValid;
-    }
-
-    // ── Form pendaftaran toko (dummy — belum terhubung backend) ──
-    document.getElementById('gabungHeroForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      if (!validateRequiredFields(e.target)) {
-        alert('Mohon lengkapi semua kolom wajib yang bertanda merah sebelum mendaftar.');
-        return;
-      }
-
-      const tokoNama = document.getElementById('tokoNamaInput').value.trim();
-
-      localStorage.setItem('isHero', '1');
-      localStorage.setItem('tokoNama', tokoNama);
-      localStorage.setItem('tokoDeskripsi', document.getElementById('tokoDeskripsiInput').value.trim());
-      localStorage.setItem('tokoKategori', document.getElementById('tokoKategoriInput').value);
-      localStorage.setItem('tokoHp', document.getElementById('tokoHpInput').value.trim());
-
-      const userName = localStorage.getItem('userName') || 'Kamu';
-      document.getElementById('heroSuccessName').textContent = userName;
-
-      document.getElementById('heroFormWrap').style.display = 'none';
-      document.getElementById('heroSuccessPanel').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Toko Saya · KindlyJAR</title>
+  <title>Keranjang · KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
@@ -37,7 +37,7 @@
           </svg>
           Program Donasi
         </a>
-        <a href="{{ route('kindlyshop') }}" class="sidebar-link">
+        <a href="{{ route('kindlyshop') }}" class="sidebar-link active">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
             <line x1="3" y1="6" x2="21" y2="6"/>
@@ -62,21 +62,17 @@
           </svg>
           Inisiasi Donasi
         </a>
+        <div class="sidebar-cta">
+          @unless (auth()->user()->shop)
+            <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
+          @endunless
+        </div>
       </nav>
 
-      @unless($shop)
-      <div class="sidebar-cta">
-        <a href="{{ route('gabung-hero') }}">
-          <button class="btn-join-hero">Gabung menjadi Hero!</button>
-        </a>
-      </div>
-      @endunless
-
-      @if($shop)
-      <div class="sidebar-hero-menu-wrap">
+      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="{{ auth()->user()->shop ? '' : 'display:none;' }}">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
-          <a href="{{ route('toko-saya') }}" class="sidebar-link active">
+          <a href="{{ route('toko-saya') }}" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
@@ -109,7 +105,6 @@
           </a>
         </nav>
       </div>
-      @endif
     </div>
   </aside>
 
@@ -117,7 +112,13 @@
   <div class="dash-right">
 
     <div class="dash-topbar">
-      <h1 class="dash-greeting">Toko Saya</h1>
+      <div class="dash-search-container">
+        <a href="{{ route('kindlyshop') }}" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:#3D3D4E;font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Lanjut Belanja
+        </a>
+      </div>
+
       <div class="dash-topbar-right">
         <div class="notif-wrap">
           <button class="notif-btn" id="cartBtn" aria-label="Keranjang">
@@ -152,98 +153,114 @@
       </div>
     </div>
 
-    @if (session('success'))
-      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
-        <div class="banner-content">
-          <span class="banner-icon">✅</span>
-          <p>{{ session('success') }}</p>
-        </div>
-      </div>
-    @endif
-    @if (session('error'))
-      <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;">
-        <div class="banner-content">
-          <span class="banner-icon">⚠️</span>
-          <p>{{ session('error') }}</p>
-        </div>
-      </div>
-    @endif
-
     <main class="dash-scroll">
       <div class="dash-main-card">
 
-        @unless($shop)
-        <!-- Belum jadi Hero -->
-        <section class="dash-section">
-          <h2 class="dash-card-title">Kamu Belum Punya Toko</h2>
-          <p class="dash-card-sub">Daftar jadi Hero dulu buat bisa buka toko dan jualan di KindlyShop.</p>
-          <a href="{{ route('gabung-hero') }}" class="btn-hero inisiasi-cta-btn">Gabung Jadi Hero</a>
-        </section>
+        @if (session('success'))
+          <div style="background:#e6f9ee;color:#1a7d43;border:1px solid #b5ecc8;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-family:'Nunito',sans-serif;font-weight:600;">
+            {{ session('success') }}
+          </div>
+        @endif
+        @if (session('error'))
+          <div style="background:#fdecea;color:#b3261e;border:1px solid #f5c2bd;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-family:'Nunito',sans-serif;font-weight:600;">
+            {{ session('error') }}
+          </div>
+        @endif
+        @if ($errors->any())
+          <div style="background:#fdecea;color:#b3261e;border:1px solid #f5c2bd;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-family:'Nunito',sans-serif;font-weight:600;">
+            <ul style="margin:0;padding-left:18px;">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
+
+        <h1 style="font-family:'Nunito',sans-serif;font-weight:800;font-size:1.5rem;color:#3D3D4E;margin:0 0 20px;">Keranjang Belanja</h1>
+
+        @if ($items->isEmpty())
+          <div style="text-align:center;padding:60px 20px;">
+            <svg width="56" height="56" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 14px;display:block;">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            <p style="color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:600;margin-bottom:18px;">Keranjangmu masih kosong.</p>
+            <a href="{{ route('kindlyshop') }}" class="btn-add-cart" style="text-decoration:none;display:inline-block;padding:12px 28px;">Mulai Belanja</a>
+          </div>
         @else
-        <!-- Sudah jadi Hero -->
-        <div>
-          <section class="dash-section">
-            <h2 class="dash-card-title">{{ $shop->name }}</h2>
-            <p class="dash-card-sub">{{ $shop->description }}</p>
-            <div class="summary-row">
-              <div class="summary-card">
-                <p class="summary-value">{{ $products->count() }}</p>
-                <p class="summary-label">Produk Aktif</p>
-              </div>
-              <div class="summary-card">
-                <p class="summary-value">{{ number_format($products->sum('stock')) }}</p>
-                <p class="summary-label">Total Stok</p>
-              </div>
-              <div class="summary-card">
-                <p class="summary-value">Rp {{ number_format($products->sum('price'), 0, ',', '.') }}</p>
-                <p class="summary-label">Total Nilai Katalog</p>
-              </div>
-            </div>
-          </section>
+          <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
 
-          <section class="dash-section">
-            <h2 class="dash-card-title">Produk Saya</h2>
-            <p class="dash-card-sub">Semua produk yang lagi kamu jual di KindlyShop.</p>
+            <div style="flex:2 1 420px;">
+              @if ($cart && $cart->campaign)
+                <div style="background:#f4f8ff;border:1px solid #dbeafe;border-radius:12px;padding:12px 16px;margin-bottom:16px;">
+                  <p style="margin:0;font-size:.78rem;color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:700;">Program donasi yang didukung dari keranjang ini</p>
+                  <p style="margin:4px 0 0;font-size:.95rem;color:#21A3FF;font-family:'Nunito',sans-serif;font-weight:800;">{{ $cart->campaign->title }}</p>
+                </div>
+              @endif
 
-            @if($products->isEmpty())
-              <div style="text-align:center; padding:32px 0;">
-                <p class="shop-empty-state" style="display:block; margin-bottom:16px;">Belum ada produk, yuk tambah produk pertamamu!</p>
-                <a href="{{ route('tambah-produk') }}" class="btn-hero inisiasi-cta-btn">Tambah Produk Sekarang</a>
-              </div>
-            @else
-              <div class="shop-product-grid">
-                @foreach($products as $product)
-                  <div class="product-card">
-                    <a href="{{ route('detail-produk', $product) }}" class="product-img">
-                      <img src="{{ $product->product_preview ? asset($product->product_preview) : asset('assets/toples.png') }}" alt="{{ $product->title }}" />
-                    </a>
-                    <div class="product-body">
-                      <span class="product-tag">{{ $product->category ?? 'Produk' }}</span>
-                      <h3 class="product-title">{{ $product->title }}</h3>
-                      <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                      <p style="font-family:'Open Sans', sans-serif; font-size:.8rem; color:#94a3b8; margin-top:4px;">Mendukung: {{ optional($product->campaign)->title ?? '-' }}</p>
-                      <p style="font-family:'Open Sans', sans-serif; font-size:.8rem; color:#94a3b8; margin-top:2px;">Stok: {{ $product->stock }}</p>
-                      <div class="product-actions">
-                        <a href="{{ route('produk.edit', $product) }}" class="btn-add-cart" style="text-decoration:none;text-align:center;">Edit</a>
-                        <form action="{{ route('produk.destroy', $product) }}" method="POST" onsubmit="return confirm('Yakin mau hapus produk &quot;{{ $product->title }}&quot;? Tindakan ini tidak bisa dibatalkan.');" style="display:contents;">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" class="product-detail-link" style="border:none;background:none;color:#b3261e;cursor:pointer;font:inherit;">Hapus</button>
-                        </form>
-                      </div>
+              @foreach ($items as $item)
+                <div style="display:flex;gap:14px;align-items:center;padding:16px;border:1px solid #eef1f6;border-radius:14px;margin-bottom:14px;">
+                  <img src="{{ $item->product->product_preview ? asset($item->product->product_preview) : asset('assets/kata15.jpg') }}"
+                       alt="{{ $item->product->title }}"
+                       onerror="this.src='{{ asset('assets/kata15.jpg') }}'"
+                       style="width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;" />
+                  <div style="flex:1;min-width:0;">
+                    <a href="{{ route('detail-produk', $item->product) }}" style="font-family:'Nunito',sans-serif;font-weight:700;color:#3D3D4E;text-decoration:none;font-size:.95rem;">{{ $item->product->title }}</a>
+                    <p style="margin:4px 0 0;font-size:.85rem;color:#6b7a8d;">Rp {{ number_format($item->product->price, 0, ',', '.') }} / item</p>
+
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+                      <form action="{{ route('keranjang.update', $item) }}" method="POST" style="display:flex;align-items:center;gap:6px;">
+                        @csrf
+                        <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}"
+                               style="width:64px;padding:6px 8px;border-radius:8px;border:1px solid #dfe4ee;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;" />
+                        <button type="submit" style="border:1px solid #dfe4ee;background:#fff;border-radius:8px;padding:6px 12px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;">Update</button>
+                      </form>
+                      <form action="{{ route('keranjang.hapus', $item) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="border:none;background:none;color:#b3261e;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;">Hapus</button>
+                      </form>
                     </div>
                   </div>
-                @endforeach
-              </div>
-            @endif
-          </section>
-        </div>
-        @endunless
+                  <p style="font-family:'Nunito',sans-serif;font-weight:800;color:#3D3D4E;font-size:.95rem;white-space:nowrap;">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</p>
+                </div>
+              @endforeach
+            </div>
 
-      </div><!-- /.dash-main-card -->
+            <div style="flex:1 1 300px;min-width:280px;">
+              <form action="{{ route('keranjang.checkout') }}" method="POST" style="border:1px solid #eef1f6;border-radius:16px;padding:20px;position:sticky;top:0;">
+                @csrf
+                <h2 style="font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;color:#3D3D4E;margin:0 0 16px;">Ringkasan Belanja</h2>
+
+                <div style="display:flex;justify-content:space-between;font-family:'Nunito',sans-serif;font-size:.9rem;color:#5b6474;margin-bottom:10px;">
+                  <span>Subtotal Produk</span>
+                  <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                </div>
+
+                <label style="display:block;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;color:#3D3D4E;margin-bottom:6px;">Donasi Tambahan (opsional)</label>
+                <input type="number" name="extra_donation" value="{{ old('extra_donation', 0) }}" min="0" step="1000"
+                       style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid #dfe4ee;font-family:'Nunito',sans-serif;font-weight:700;margin-bottom:14px;" />
+
+                <label style="display:flex;align-items:center;gap:8px;font-family:'Nunito',sans-serif;font-size:.85rem;color:#5b6474;margin-bottom:16px;">
+                  <input type="checkbox" name="is_anonymous" value="1" />
+                  Sembunyikan namaku sebagai donatur
+                </label>
+
+                <div style="display:flex;justify-content:space-between;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;color:#3D3D4E;border-top:1px solid #eef1f6;padding-top:14px;margin-bottom:16px;">
+                  <span>Total</span>
+                  <span id="totalPaidDisplay">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                </div>
+
+                <button type="submit" class="btn-add-cart" style="width:100%;padding:13px;font-size:.95rem;">Checkout Sekarang</button>
+              </form>
+            </div>
+          </div>
+        @endif
+
+      </div>
     </main>
 
-    <!-- Dropdowns -->
     <div class="notif-dropdown" id="notifDropdown">
       <div class="notif-header">
         <span class="notif-title">Notifikasi</span>
@@ -293,47 +310,58 @@
 
   <script src="{{ asset('global/script.js') }}"></script>
   <script>
-    const notifBtn2      = document.getElementById('notifBtn');
-    const notifDropdown2 = document.getElementById('notifDropdown');
-    const profileBtn2    = document.getElementById('profileBtn');
-    const profileDropdown2 = document.getElementById('profileDropdown');
-    const dashRight2     = document.querySelector('.dash-right');
+    const notifBtn      = document.getElementById('notifBtn');
+    const notifDropdown = document.getElementById('notifDropdown');
+    const profileBtn    = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const dashRight     = document.querySelector('.dash-right');
 
-    function positionDropdown2(dropdown, anchor) {
-      const pr = dashRight2.getBoundingClientRect();
+    function positionDropdown(dropdown, anchor) {
+      const pr = dashRight.getBoundingClientRect();
       const ar = anchor.getBoundingClientRect();
       dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
       dropdown.style.right = (pr.right - ar.right) + 'px';
       dropdown.style.left  = 'auto';
     }
 
-    notifBtn2.addEventListener('click', (e) => {
+    notifBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const opening = !notifDropdown2.classList.contains('open');
-      profileDropdown2.classList.remove('open');
+      const opening = !notifDropdown.classList.contains('open');
+      profileDropdown.classList.remove('open');
       if (opening) {
-        positionDropdown2(notifDropdown2, notifBtn2);
-        notifDropdown2.classList.add('open');
+        positionDropdown(notifDropdown, notifBtn);
+        notifDropdown.classList.add('open');
       } else {
-        notifDropdown2.classList.remove('open');
+        notifDropdown.classList.remove('open');
       }
     });
 
-    profileBtn2.addEventListener('click', (e) => {
+    profileBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const opening = !profileDropdown2.classList.contains('open');
-      notifDropdown2.classList.remove('open');
+      const opening = !profileDropdown.classList.contains('open');
+      notifDropdown.classList.remove('open');
       if (opening) {
-        positionDropdown2(profileDropdown2, profileBtn2);
-        profileDropdown2.classList.add('open');
+        positionDropdown(profileDropdown, profileBtn);
+        profileDropdown.classList.add('open');
       } else {
-        profileDropdown2.classList.remove('open');
+        profileDropdown.classList.remove('open');
       }
     });
 
     document.addEventListener('click', () => {
-      notifDropdown2.classList.remove('open');
-      profileDropdown2.classList.remove('open');
+      notifDropdown.classList.remove('open');
+      profileDropdown.classList.remove('open');
+    });
+
+    // Live-update total tampilan saat donasi tambahan diubah
+    const extraDonationInput = document.querySelector('input[name="extra_donation"]');
+    const totalPaidDisplay   = document.getElementById('totalPaidDisplay');
+    const subtotalValue      = {{ (int) $subtotal }};
+
+    extraDonationInput?.addEventListener('input', () => {
+      const extra = parseInt(extraDonationInput.value, 10) || 0;
+      const total = subtotalValue + extra;
+      totalPaidDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
     });
   </script>
 </body>

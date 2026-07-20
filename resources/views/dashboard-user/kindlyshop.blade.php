@@ -95,6 +95,13 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
     </div>
@@ -124,20 +131,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -178,6 +172,17 @@
     <main class="dash-scroll">
 
       <div class="dash-main-card">
+
+        @if (session('success'))
+          <div class="alert-success-box" style="background:#e6f9ee;color:#1a7d43;border:1px solid #b5ecc8;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-family:'Nunito',sans-serif;font-weight:600;">
+            {{ session('success') }}
+          </div>
+        @endif
+        @if (session('error'))
+          <div class="alert-error-box" style="background:#fdecea;color:#b3261e;border:1px solid #f5c2bd;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-family:'Nunito',sans-serif;font-weight:600;">
+            {{ session('error') }}
+          </div>
+        @endif
 
         <!-- Banner header ala Program Donasi -->
         <section class="donation-header-banner">
@@ -235,14 +240,21 @@
             @endphp
 
             <div class="product-card" data-category="{{ Str::slug($product->category ?? 'lainnya') }}" data-title="{{ Str::lower($product->title) }}">
-              <div class="product-img"><img src="{{ $productImage }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" /></div>
+              <a href="{{ route('detail-produk', $product) }}" class="product-img"><img src="{{ $productImage }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" /></a>
               <div class="product-body">
                 <span class="product-tag">{{ $product->category ?? 'Digital Product' }}</span>
-                <h3 class="product-title">{{ $product->title }}</h3>
+                <h3 class="product-title"><a href="{{ route('detail-produk', $product) }}" style="color:inherit;text-decoration:none;">{{ $product->title }}</a></h3>
                 <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
+                  @if ($product->stock > 0)
+                    <form action="{{ route('keranjang.tambah', $product) }}" method="POST" style="display:contents;">
+                      @csrf
+                      <button type="submit" class="btn-add-cart">+ Keranjang</button>
+                    </form>
+                  @else
+                    <button class="btn-add-cart" disabled style="opacity:.5;cursor:not-allowed;">Stok Habis</button>
+                  @endif
+                  <a href="{{ route('detail-produk', $product) }}" class="product-detail-link">Lihat detail</a>
                 </div>
               </div>
             </div>

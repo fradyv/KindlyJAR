@@ -11,8 +11,18 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminRole = Role::where('name', 'admin')->firstOrFail();
         $fundraiserRole = Role::where('name', 'fundraiser')->firstOrFail();
         $normalUserRole = Role::where('name', 'normal_user')->firstOrFail();
+
+        $admin = User::create([
+            'legal_name'    => 'Admin KindlyJAR',
+            'display_name'  => 'Admin',
+            'email'         => 'admin@kindlyjar.com',
+            'hash_password' => Hash::make('password'),
+            'kyc_status'    => 'verified',
+        ]);
+        $admin->roles()->attach($adminRole);
 
         $fundraiser = User::create([
             'legal_name'    => 'Hugo Verniac',

@@ -69,6 +69,10 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        if (! Auth::user()->is_active) {
+            Auth::user()->update(['is_active' => true]);
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 

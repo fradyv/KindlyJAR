@@ -62,13 +62,15 @@
           </svg>
           Inisiasi Donasi
         </a>
+        @unless(auth()->user()->shop)
         <div class="sidebar-cta">
         <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
       </div>
+        @endunless
       </nav>
 
-
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
+      @if(auth()->user()->shop)
+      <div class="sidebar-hero-menu-wrap">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
           <a href="{{ route('toko-saya') }}" class="sidebar-link">
@@ -95,100 +97,18 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
+      @endif
     </div>
   </aside>
-
-  <!-- ── MODAL DONASI & PAYMENT (disamakan dengan dashboard beranda) ── -->
-  <div class="modal-overlay" id="donasiModal">
-  <div class="modal-box donasi-modal-box">
-    <button class="modal-close-btn" id="closeDonasiModal">&times;</button>
-
-    <div class="donasi-modal-header">
-      <span class="donasi-modal-badge" id="donasiKategori">Kategori</span>
-      <h3 id="donasiJudul">Donasi untuk Program</h3>
-    </div>
-
-    <div class="donasi-modal-section">
-      <p class="donasi-modal-label">Pilih Nominal</p>
-      <div class="donasi-nominal-grid">
-        <button type="button" class="donasi-nominal-btn" data-nominal="25000">Rp 25.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="50000">Rp 50.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="100000">Rp 100.000</button>
-        <button type="button" class="donasi-nominal-btn" data-nominal="250000">Rp 250.000</button>
-      </div>
-      <input type="number" id="donasiNominalCustom" class="donasi-input-custom" placeholder="Atau masukkan nominal lain" min="1000" />
-    </div>
-
-    <div class="donasi-modal-section">
-      <label class="donasi-checkbox-row">
-        <input type="checkbox" id="donasiSembunyikan" />
-        Sembunyikan nominal donasi saya
-      </label>
-      <label class="donasi-checkbox-row">
-        <input type="checkbox" id="donasiAnonim" />
-        Donasi sebagai anonim / Hamba Allah
-      </label>
-      <textarea id="donasiUcapan" class="donasi-textarea" placeholder="Tulis doa/ucapan untuk penerima manfaat (opsional)"></textarea>
-    </div>
-
-    <div class="donasi-modal-section">
-      <p class="donasi-modal-label">Metode Pembayaran</p>
-      <div class="donasi-metode-list">
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="Transfer Bank" checked />
-          <span>🏦 Transfer Bank</span>
-        </label>
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="E-Wallet" />
-          <span>📱 E-Wallet</span>
-        </label>
-        <label class="donasi-metode-item">
-          <input type="radio" name="donasiMetode" value="Kartu Kredit" />
-          <span>💳 Kartu Kredit</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="donasi-modal-summary">
-      <span>Total Donasi</span>
-      <strong id="donasiTotal">Rp 0</strong>
-    </div>
-
-    <button class="modal-btn btn-primary donasi-confirm-btn" id="btnKonfirmasiDonasi">Konfirmasi Donasi</button>
-  </div>
-</div>
-
-    <!-- ── MODAL PAYMENT ── -->
-  <div class="modal-overlay" id="paymentModal">
-    <div class="modal-box donasi-modal-box">
-      <button class="modal-close-btn" id="closePaymentModal">&times;</button>
-
-      <div class="donasi-modal-header">
-        <span class="donasi-modal-badge">Pembayaran</span>
-        <h3>Selesaikan Donasi Anda</h3>
-      </div>
-
-      <div class="donasi-modal-section">
-        <p class="donasi-modal-label">Ringkasan</p>
-        <div class="donasi-metode-item" style="flex-direction:column;align-items:flex-start;gap:6px;">
-          <span><strong id="payProgramNama">Program</strong></span>
-          <span style="font-size:.85rem;color:#6b7a8d;">Metode: <strong id="payMetode">-</strong></span>
-          <span style="font-size:.85rem;color:#6b7a8d;">Total: <strong id="payTotal" style="color:#21A3FF;">Rp 0</strong></span>
-        </div>
-      </div>
-
-      <div class="donasi-modal-section">
-        <p class="donasi-modal-label">Instruksi Pembayaran</p>
-        <div id="payInstruksi" class="donasi-metode-item" style="display:block;line-height:1.55;font-size:.9rem;color:#3D3D4E;">
-          Silakan pilih metode pembayaran terlebih dahulu.
-        </div>
-      </div>
-
-      <button class="modal-btn btn-primary donasi-confirm-btn" id="btnBayarSekarang">Bayar Sekarang</button>
-    </div>
-  </div>
 
   <!-- ── KANAN: topbar (tidak scroll) + konten (scroll) ── -->
   <div class="dash-right">
@@ -214,20 +134,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -253,6 +160,7 @@
     </div>
 
     <!-- Banner Warning Tetap Muncul -->
+    @if (auth()->user()->kyc_status !== 'verified')
     <div class="verification-banner" id="verifyBanner">
       <div class="banner-content">
         <span class="banner-icon">⚠️</span>
@@ -263,6 +171,7 @@
         <button class="banner-close" id="closeBannerBtn">&times;</button>
       </div>
     </div>
+    @endif
 
     <!-- AREA SCROLL BOX UTAMA -->
     <main class="dash-scroll">
@@ -311,8 +220,8 @@
                   </div>
                   <span class="t-pct">{{ $percentage }}% Terpenuhi</span>
                 </div>
-                <button class="btn-t-donasi">Donasi!</button>
-                <a href="{{ route('detail-program') }}" class="t-detail">Lihat detail</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="btn-t-donasi" style="display:inline-block;text-align:center;text-decoration:none;">Donasi!</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="t-detail">Lihat detail</a>
               </div>
             </div>
           @empty
@@ -350,8 +259,8 @@
                   <div class="t-bar"><div class="t-fill" style="width: {{ $percentage }}%"></div></div>
                   <span class="t-pct">{{ $percentage }}% Terpenuhi</span>
                 </div>
-                <button class="btn-t-donasi">Donasi!</button>
-                <a href="{{ route('detail-program') }}" class="t-detail">Lihat detail</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="btn-t-donasi" style="display:inline-block;text-align:center;text-decoration:none;">Donasi!</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="t-detail">Lihat detail</a>
               </div>
             </div>
           @empty
@@ -444,8 +353,8 @@
                 </div>
 
                 <div class="card-horizontal-actions">
-                <button class="btn-horizontal-donasi">Donasi!</button>
-                <a href="{{ route('detail-program') }}" class="horizontal-detail-link">Lihat detail</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="btn-horizontal-donasi" style="display:inline-block;text-align:center;text-decoration:none;">Donasi!</a>
+                <a href="{{ route('detail-program', $campaign) }}" class="horizontal-detail-link">Lihat detail</a>
                 </div>
             </div>
             </div>
@@ -637,58 +546,6 @@
     });
 
     donationSearchInput.addEventListener('input', applyDonationFilter);
-  </script>
-    <script>
-    /* script.js global sudah handle: modal donasi, notif, profile, cart.
-       Di sini kita hanya menambahkan flow PAYMENT setelah "Konfirmasi Donasi". */
-    document.addEventListener('DOMContentLoaded', () => {
-      const paymentModal     = document.getElementById('paymentModal');
-      const closePaymentBtn  = document.getElementById('closePaymentModal');
-      const payProgramNama   = document.getElementById('payProgramNama');
-      const payMetodeEl      = document.getElementById('payMetode');
-      const payTotalEl       = document.getElementById('payTotal');
-      const payInstruksiEl   = document.getElementById('payInstruksi');
-      const btnBayarSekarang = document.getElementById('btnBayarSekarang');
-      const btnKonfirmasi    = document.getElementById('btnKonfirmasiDonasi');
-      const donasiModal      = document.getElementById('donasiModal');
-      const donasiJudulEl    = document.getElementById('donasiJudul');
-      const donasiTotalEl    = document.getElementById('donasiTotal');
-      if (!paymentModal || !btnKonfirmasi) return;
-
-      const instruksiMap = {
-        'Transfer Bank': '🏦 Transfer ke <strong>BCA 1234567890</strong> a.n. KindlyJAR. Gunakan nominal tepat sesuai total di atas.',
-        'E-Wallet':      '📱 Scan QRIS via GoPay / OVO / DANA / ShopeePay pada halaman berikutnya.',
-        'Kartu Kredit':  '💳 Anda akan diarahkan ke gateway pembayaran kartu yang aman.'
-      };
-
-      function openPaymentModal() {
-        const metode = document.querySelector('input[name="donasiMetode"]:checked')?.value || 'Transfer Bank';
-        payProgramNama.textContent = donasiJudulEl.textContent;
-        payMetodeEl.textContent    = metode;
-        payTotalEl.textContent     = donasiTotalEl.textContent;
-        payInstruksiEl.innerHTML   = instruksiMap[metode] || '';
-        paymentModal.classList.add('show');
-      }
-      function closePaymentModal() { paymentModal.classList.remove('show'); }
-
-      // Intercept sebelum handler script.js jalan (capture phase)
-      btnKonfirmasi.addEventListener('click', (e) => {
-        const nominal = parseInt((donasiTotalEl.textContent || '').replace(/\D/g, ''), 10) || 0;
-        if (nominal < 1000) return; // biarkan handler asli munculin alert
-        e.stopImmediatePropagation();
-        donasiModal.classList.remove('show');
-        setTimeout(openPaymentModal, 220);
-      }, true);
-
-      closePaymentBtn.addEventListener('click', closePaymentModal);
-      paymentModal.addEventListener('click', (e) => {
-        if (e.target === paymentModal) closePaymentModal();
-      });
-      btnBayarSekarang.addEventListener('click', () => {
-        alert('Terima kasih! Pembayaran ' + payTotalEl.textContent + ' via ' + payMetodeEl.textContent + ' sedang diproses.');
-        closePaymentModal();
-      });
-    });
   </script>
 </body>
 </html>

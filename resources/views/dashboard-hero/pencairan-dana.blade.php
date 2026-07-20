@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Toko Saya · KindlyJAR</title>
+  <title>Pencairan Dana · KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
@@ -64,19 +64,10 @@
         </a>
       </nav>
 
-      @unless($shop)
-      <div class="sidebar-cta">
-        <a href="{{ route('gabung-hero') }}">
-          <button class="btn-join-hero">Gabung menjadi Hero!</button>
-        </a>
-      </div>
-      @endunless
-
-      @if($shop)
       <div class="sidebar-hero-menu-wrap">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
-          <a href="{{ route('toko-saya') }}" class="sidebar-link active">
+          <a href="{{ route('toko-saya') }}" class="sidebar-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
@@ -100,7 +91,7 @@
             </svg>
             Produk yang Terjual
           </a>
-          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link active">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="12" y1="1" x2="12" y2="23"/>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
@@ -109,7 +100,6 @@
           </a>
         </nav>
       </div>
-      @endif
     </div>
   </aside>
 
@@ -117,7 +107,7 @@
   <div class="dash-right">
 
     <div class="dash-topbar">
-      <h1 class="dash-greeting">Toko Saya</h1>
+      <h1 class="dash-greeting">Pencairan Dana</h1>
       <div class="dash-topbar-right">
         <div class="notif-wrap">
           <button class="notif-btn" id="cartBtn" aria-label="Keranjang">
@@ -172,73 +162,123 @@
     <main class="dash-scroll">
       <div class="dash-main-card">
 
-        @unless($shop)
-        <!-- Belum jadi Hero -->
         <section class="dash-section">
-          <h2 class="dash-card-title">Kamu Belum Punya Toko</h2>
-          <p class="dash-card-sub">Daftar jadi Hero dulu buat bisa buka toko dan jualan di KindlyShop.</p>
-          <a href="{{ route('gabung-hero') }}" class="btn-hero inisiasi-cta-btn">Gabung Jadi Hero</a>
+          <h2 class="dash-card-title">Ringkasan Saldo</h2>
+          <p class="dash-card-sub">Saldo terkumpul dari seluruh program donasi yang kamu buat.</p>
+          <div class="summary-row">
+            <div class="summary-card">
+              <p class="summary-value">Rp {{ number_format($totalAvailable, 0, ',', '.') }}</p>
+              <p class="summary-label">Total Saldo Terkumpul</p>
+            </div>
+            <div class="summary-card">
+              <p class="summary-value">Rp {{ number_format($pendingAmount, 0, ',', '.') }}</p>
+              <p class="summary-label">Menunggu Persetujuan</p>
+            </div>
+            <div class="summary-card">
+              <p class="summary-value">Rp {{ number_format($withdrawable, 0, ',', '.') }}</p>
+              <p class="summary-label">Bisa Dicairkan Sekarang</p>
+            </div>
+          </div>
         </section>
-        @else
-        <!-- Sudah jadi Hero -->
-        <div>
-          <section class="dash-section">
-            <h2 class="dash-card-title">{{ $shop->name }}</h2>
-            <p class="dash-card-sub">{{ $shop->description }}</p>
-            <div class="summary-row">
-              <div class="summary-card">
-                <p class="summary-value">{{ $products->count() }}</p>
-                <p class="summary-label">Produk Aktif</p>
+
+        @if ($campaigns->isNotEmpty())
+        <section class="dash-section">
+          <h2 class="dash-card-title">Rincian per Program Donasi</h2>
+          <div class="inisiasi-why-grid">
+            @foreach ($campaigns as $campaign)
+              <div class="inisiasi-why-card">
+                <h4>{{ $campaign->title }}</h4>
+                <p>
+                  Terkumpul Rp {{ number_format($campaign->collected_amount, 0, ',', '.') }}
+                  &middot; Sudah dicairkan Rp {{ number_format($campaign->withdrawn_amount, 0, ',', '.') }}
+                  &middot; Tersedia <strong>Rp {{ number_format($campaign->available_balance, 0, ',', '.') }}</strong>
+                </p>
               </div>
-              <div class="summary-card">
-                <p class="summary-value">{{ number_format($products->sum('stock')) }}</p>
-                <p class="summary-label">Total Stok</p>
-              </div>
-              <div class="summary-card">
-                <p class="summary-value">Rp {{ number_format($products->sum('price'), 0, ',', '.') }}</p>
-                <p class="summary-label">Total Nilai Katalog</p>
+            @endforeach
+          </div>
+        </section>
+        @endif
+
+        <section class="dash-section">
+          <h2 class="dash-card-title">Ajukan Pencairan Dana</h2>
+          <p class="dash-card-sub">Dana akan ditransfer ke rekening/e-wallet yang kamu tuliskan. Permintaan akan ditinjau oleh admin dalam 1-2 hari kerja.</p>
+
+          @if ($errors->any())
+            <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+              <div class="banner-content">
+                <span class="banner-icon">⚠️</span>
+                <p>{{ $errors->first() }}</p>
               </div>
             </div>
-          </section>
+          @endif
 
-          <section class="dash-section">
-            <h2 class="dash-card-title">Produk Saya</h2>
-            <p class="dash-card-sub">Semua produk yang lagi kamu jual di KindlyShop.</p>
+          @if ($withdrawable < 50000)
+            <p style="color:#94a3b8;font-family:'Open Sans',sans-serif;">Saldo yang bisa dicairkan belum mencukupi (minimal Rp 50.000).</p>
+          @else
+            <form method="POST" action="{{ route('pencairan-dana.store') }}" autocomplete="off">
+              @csrf
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Jumlah Pencairan (Rp)</label>
+                  <input type="number" name="amount" class="form-input-style" min="50000" max="{{ $withdrawable }}" step="1000" value="{{ old('amount') }}" required />
+                  <span class="form-hint">Maksimal Rp {{ number_format($withdrawable, 0, ',', '.') }}</span>
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Rekening / E-Wallet Tujuan</label>
+                  <textarea name="bank_or_ewallet_info" class="form-input-style" rows="2" placeholder="Contoh: BCA 1234567890 a.n. Joseph Herlambang" required>{{ old('bank_or_ewallet_info') }}</textarea>
+                </div>
+              </div>
+              <div class="form-action-footer" style="justify-content:flex-end;">
+                <button type="submit" class="btn-form-next">Ajukan Pencairan</button>
+              </div>
+            </form>
+          @endif
+        </section>
 
-            @if($products->isEmpty())
-              <div style="text-align:center; padding:32px 0;">
-                <p class="shop-empty-state" style="display:block; margin-bottom:16px;">Belum ada produk, yuk tambah produk pertamamu!</p>
-                <a href="{{ route('tambah-produk') }}" class="btn-hero inisiasi-cta-btn">Tambah Produk Sekarang</a>
-              </div>
-            @else
-              <div class="shop-product-grid">
-                @foreach($products as $product)
-                  <div class="product-card">
-                    <a href="{{ route('detail-produk', $product) }}" class="product-img">
-                      <img src="{{ $product->product_preview ? asset($product->product_preview) : asset('assets/toples.png') }}" alt="{{ $product->title }}" />
-                    </a>
-                    <div class="product-body">
-                      <span class="product-tag">{{ $product->category ?? 'Produk' }}</span>
-                      <h3 class="product-title">{{ $product->title }}</h3>
-                      <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                      <p style="font-family:'Open Sans', sans-serif; font-size:.8rem; color:#94a3b8; margin-top:4px;">Mendukung: {{ optional($product->campaign)->title ?? '-' }}</p>
-                      <p style="font-family:'Open Sans', sans-serif; font-size:.8rem; color:#94a3b8; margin-top:2px;">Stok: {{ $product->stock }}</p>
-                      <div class="product-actions">
-                        <a href="{{ route('produk.edit', $product) }}" class="btn-add-cart" style="text-decoration:none;text-align:center;">Edit</a>
-                        <form action="{{ route('produk.destroy', $product) }}" method="POST" onsubmit="return confirm('Yakin mau hapus produk &quot;{{ $product->title }}&quot;? Tindakan ini tidak bisa dibatalkan.');" style="display:contents;">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" class="product-detail-link" style="border:none;background:none;color:#b3261e;cursor:pointer;font:inherit;">Hapus</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                @endforeach
-              </div>
-            @endif
-          </section>
-        </div>
-        @endunless
+        <section class="dash-section">
+          <h2 class="dash-card-title">Riwayat Pencairan</h2>
+
+          @if ($requests->isEmpty())
+            <p class="shop-empty-state">Belum ada riwayat pencairan dana.</p>
+          @else
+            <div style="overflow-x:auto;">
+              <table class="riwayat-table" style="width:100%;border-collapse:collapse;">
+                <thead>
+                  <tr style="text-align:left;border-bottom:1px solid #eef1f6;">
+                    <th style="padding:10px 8px;font-family:'Nunito',sans-serif;font-size:.8rem;color:#6b7a8d;">Tanggal</th>
+                    <th style="padding:10px 8px;font-family:'Nunito',sans-serif;font-size:.8rem;color:#6b7a8d;">Jumlah</th>
+                    <th style="padding:10px 8px;font-family:'Nunito',sans-serif;font-size:.8rem;color:#6b7a8d;">Tujuan</th>
+                    <th style="padding:10px 8px;font-family:'Nunito',sans-serif;font-size:.8rem;color:#6b7a8d;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($requests as $req)
+                    @php
+                      $statusColor = match($req->status) {
+                        'approved' => ['bg' => '#e6f9ee', 'text' => '#1a7d43'],
+                        'rejected' => ['bg' => '#fdecea', 'text' => '#b3261e'],
+                        default    => ['bg' => '#fff7e6', 'text' => '#b7791f'],
+                      };
+                      $statusLabel = match($req->status) {
+                        'approved' => 'Disetujui',
+                        'rejected' => 'Ditolak',
+                        default    => 'Menunggu',
+                      };
+                    @endphp
+                    <tr style="border-bottom:1px solid #f5f7fa;">
+                      <td style="padding:10px 8px;font-family:'Open Sans',sans-serif;font-size:.85rem;">{{ $req->created_at->translatedFormat('d M Y, H:i') }}</td>
+                      <td style="padding:10px 8px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;">Rp {{ number_format($req->amount, 0, ',', '.') }}</td>
+                      <td style="padding:10px 8px;font-family:'Open Sans',sans-serif;font-size:.85rem;max-width:220px;">{{ $req->bank_or_ewallet_info }}</td>
+                      <td style="padding:10px 8px;">
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.75rem;background:{{ $statusColor['bg'] }};color:{{ $statusColor['text'] }};">{{ $statusLabel }}</span>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          @endif
+        </section>
 
       </div><!-- /.dash-main-card -->
     </main>

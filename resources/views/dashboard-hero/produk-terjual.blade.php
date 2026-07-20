@@ -64,13 +64,16 @@
         </a>
       </nav>
 
-      <div class="sidebar-cta" id="sidebarHeroCta" style="display:none;">
+      @unless($shop)
+      <div class="sidebar-cta">
         <a href="{{ route('gabung-hero') }}">
           <button class="btn-join-hero">Gabung menjadi Hero!</button>
         </a>
       </div>
+      @endunless
 
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
+      @if($shop)
+      <div class="sidebar-hero-menu-wrap">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
           <a href="{{ route('toko-saya') }}" class="sidebar-link">
@@ -97,8 +100,16 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
+      @endif
     </div>
   </aside>
 
@@ -116,20 +127,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -141,10 +139,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -157,15 +155,14 @@
     <main class="dash-scroll">
       <div class="dash-main-card">
 
-        <!-- Belum jadi Hero -->
-        <section class="dash-section" id="belumHeroNotice" style="display:none;">
+        @unless($shop)
+        <section class="dash-section">
           <h2 class="dash-card-title">Kamu Belum Punya Toko</h2>
           <p class="dash-card-sub">Daftar jadi Hero dulu buat mulai jualan dan lihat pesanan yang masuk.</p>
           <a href="{{ route('gabung-hero') }}" class="btn-hero inisiasi-cta-btn">Gabung Jadi Hero</a>
         </section>
-
-        <!-- Sudah jadi Hero -->
-        <section class="dash-section" id="produkTerjualContent" style="display:none;">
+        @else
+        <section class="dash-section">
           <h2 class="dash-card-title">Produk yang Terjual</h2>
           <p class="dash-card-sub">Daftar pesanan yang masuk dari pembeli di KindlyShop.</p>
 
@@ -182,12 +179,36 @@
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody id="pesananTableBody"></tbody>
+                <tbody>
+                  @forelse($items as $item)
+                    @php $trx = $item->transaction; @endphp
+                    <tr>
+                      <td>#KJ-{{ str_pad($trx->id, 4, '0', STR_PAD_LEFT) }}</td>
+                      <td>{{ optional($item->product)->title ?? '-' }}</td>
+                      <td>{{ $trx->is_anonymous ? 'Hamba Allah' : (optional($trx->buyer)->display_name ?? '-') }}</td>
+                      <td>{{ optional($trx->created_at)->translatedFormat('d M Y') }}</td>
+                      <td>Rp {{ number_format($item->price_at_purchase * $item->quantity, 0, ',', '.') }}</td>
+                      <td>
+                        @if($trx->status === 'success')
+                          <span class="badge berhasil">&#9679; Berhasil</span>
+                        @elseif($trx->status === 'pending')
+                          <span class="badge pending">&#9679; Menunggu</span>
+                        @else
+                          <span class="badge gagal">&#9679; Gagal</span>
+                        @endif
+                      </td>
+                    </tr>
+                  @empty
+                  @endforelse
+                </tbody>
               </table>
             </div>
-            <p id="pesananEmpty" style="text-align:center; color:#b0b7c3; font-family:'Open Sans', sans-serif; font-size:0.9rem; padding:24px 0 8px;">Belum ada pesanan masuk. Yuk promosikan produkmu!</p>
+            @if($items->isEmpty())
+              <p style="text-align:center; color:#b0b7c3; font-family:'Open Sans', sans-serif; font-size:0.9rem; padding:24px 0 8px;">Belum ada pesanan masuk. Yuk promosikan produkmu!</p>
+            @endif
           </div>
         </section>
+        @endunless
 
       </div><!-- /.dash-main-card -->
     </main>
@@ -284,12 +305,6 @@
       notifDropdown2.classList.remove('open');
       profileDropdown2.classList.remove('open');
     });
-
-    // ── Guard: cuma Hero yang punya halaman pesanan ──
-    const isHero = localStorage.getItem('isHero') === '1';
-    document.getElementById(isHero ? 'produkTerjualContent' : 'belumHeroNotice').style.display = 'block';
-
-    // Belum ada sumber data pesanan asli, jadi tabel selalu kosong (empty state) buat sekarang.
   </script>
 </body>
 </html>

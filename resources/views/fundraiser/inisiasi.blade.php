@@ -62,13 +62,16 @@
           </svg>
           Inisiasi Donasi
         </a>
+        @unless (auth()->user()->shop)
         <div class="sidebar-cta">
         <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
       </div>
+      @endunless
       </nav>
 
 
-      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu" style="display:none;">
+      @if (auth()->user()->shop)
+      <div class="sidebar-hero-menu-wrap" id="sidebarHeroMenu">
         <p class="sidebar-label">Menu Hero</p>
         <nav class="sidebar-nav">
           <a href="{{ route('toko-saya') }}" class="sidebar-link">
@@ -95,8 +98,16 @@
             </svg>
             Produk yang Terjual
           </a>
+          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Pencairan Dana
+          </a>
         </nav>
       </div>
+      @endif
     </div>
   </aside>
 
@@ -106,7 +117,7 @@
     <!-- Topbar: selalu terlihat, tidak ikut scroll -->
     <div class="dash-topbar">
       <h1 class="dash-greeting">
-        Giliranmu Membawa Perubahan, <span class="dash-username" id="dashUsername">Joseph Herlambang</span>
+        Giliranmu Membawa Perubahan, <span class="dash-username" id="dashUsername">{{ auth()->user()->display_name }}</span>
       </h1>
       <div class="dash-topbar-right">
         <div class="notif-wrap">
@@ -117,20 +128,7 @@
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           </button>
-          <div class="notif-dropdown" id="cartDropdown">
-            <div class="notif-header">
-              <span class="notif-title">Keranjang</span>
-              <span class="notif-badge">0 item</span>
-            </div>
-            <div class="notif-empty">
-              <svg width="36" height="36" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              <p>Keranjang masih kosong</p>
-            </div>
-          </div>
+          @include('partials.cart-dropdown')
         </div>
         <div class="notif-wrap">
           <button class="notif-btn" id="notifBtn" aria-label="Notifikasi">
@@ -142,10 +140,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -155,6 +153,7 @@
       </div>
     </div>
 
+    @if (auth()->user()->kyc_status === 'unverified')
     <!-- Banner Warning Tetap Muncul -->
     <div class="verification-banner" id="verifyBanner">
       <div class="banner-content">
@@ -166,6 +165,25 @@
         <button class="banner-close" id="closeBannerBtn">&times;</button>
       </div>
     </div>
+    @endif
+
+    @if (session('success'))
+      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
+        <div class="banner-content">
+          <span class="banner-icon">✅</span>
+          <p>{{ session('success') }}</p>
+        </div>
+      </div>
+    @endif
+
+    @if (session('error'))
+      <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;">
+        <div class="banner-content">
+          <span class="banner-icon">⚠️</span>
+          <p>{{ session('error') }}</p>
+        </div>
+      </div>
+    @endif
 
     <!-- AREA SCROLL BOX UTAMA -->
     <main class="dash-scroll">
@@ -179,7 +197,13 @@
         </div>
         <h2 class="inisiasi-hero-title">Jadi Penggalang Dana, Wujudkan Pemerataan di Wilayahmu</h2>
         <p class="inisiasi-hero-sub">Ajukan program donasimu dan bantu bangun akses, air bersih, dan ruang tumbuh yang setara bagi mereka yang membutuhkan.</p>
-        <button class="btn-hero inisiasi-cta-btn" id="btnMulaiPengajuan">Mulai Pengajuan</button>
+        @if (auth()->user()->kyc_status === 'verified')
+          <a href="#buatProgram" class="btn-hero inisiasi-cta-btn" style="display:inline-block;text-decoration:none;">Buat Program Donasi</a>
+        @elseif (auth()->user()->kyc_status === 'pending')
+          <button class="btn-hero inisiasi-cta-btn" disabled style="opacity:.6;cursor:not-allowed;">Menunggu Verifikasi</button>
+        @else
+          <button class="btn-hero inisiasi-cta-btn" id="btnMulaiPengajuan">Mulai Pengajuan</button>
+        @endif
       </div>
 
       <!-- ── KENAPA PERLU VERIFIKASI ── -->
@@ -239,14 +263,16 @@
       <!-- ── CTA PENUTUP / STATUS BANNER ── -->
       <div class="dash-section" id="inisiasiCtaSection">
 
+        @if (auth()->user()->kyc_status === 'unverified')
         <!-- Default: belum pernah submit -->
         <div id="statusDefault">
           <p class="inisiasi-cta-closing">Siap jadi bagian dari perubahan?</p>
           <button class="btn-hero inisiasi-cta-btn" id="btnMulaiPengajuan2">Mulai Pengajuan Sekarang</button>
         </div>
 
+        @elseif (auth()->user()->kyc_status === 'pending')
         <!-- Status: pending -->
-        <div id="statusPending" style="display:none" class="inisiasi-status-banner pending">
+        <div class="inisiasi-status-banner pending">
           <span>🕓</span>
           <div>
             <strong>Pengajuanmu Sedang Ditinjau</strong>
@@ -254,17 +280,109 @@
           </div>
         </div>
 
+        @elseif (auth()->user()->kyc_status === 'rejected')
         <!-- Status: ditolak -->
-        <div id="statusDitolak" style="display:none" class="inisiasi-status-banner ditolak">
+        <div class="inisiasi-status-banner ditolak">
           <span>⚠️</span>
           <div>
             <strong>Pengajuan Belum Bisa Disetujui</strong>
-            <p id="alasanDitolak">Dokumen yang diunggah tidak terbaca dengan jelas.</p>
+            <p>Dokumen yang diunggah belum bisa kami verifikasi. Silakan periksa kembali data dan dokumenmu, lalu ajukan ulang.</p>
             <button class="btn-hero inisiasi-cta-btn" id="btnAjukanUlang">Ajukan Ulang</button>
           </div>
         </div>
 
+        @else
+        <!-- Status: verified -->
+        <div class="inisiasi-status-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
+          <span>✅</span>
+          <div>
+            <strong>Akunmu Sudah Terverifikasi!</strong>
+            <p>Kamu sekarang bisa membuat program donasi sendiri. Isi formulir di bawah untuk mengajukan program baru.</p>
+          </div>
+        </div>
+        @endif
+
       </div>
+
+      @if (auth()->user()->kyc_status === 'verified')
+      <!-- ── BUAT PROGRAM DONASI BARU ── -->
+      <div class="dash-section" id="buatProgram">
+        <h3 class="dash-card-title">Buat Program Donasi Baru</h3>
+        <p class="dash-card-sub">Lengkapi detail program donasimu. Setelah diajukan, program akan langsung tayang di halaman Program Donasi.</p>
+
+        @if ($errors->any())
+          <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+            <div class="banner-content">
+              <span class="banner-icon">⚠️</span>
+              <ul style="margin:0 0 0 18px;">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+        @endif
+
+        <form action="{{ route('program-donasi.store') }}" method="POST">
+          @csrf
+          <div class="form-grid-2">
+            <div class="form-group full-width">
+              <label class="form-label">Judul Program</label>
+              <input type="text" name="title" class="form-input-style" value="{{ old('title') }}" placeholder="Contoh: Beasiswa untuk Anak Yatim di Wilayah Terpencil" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select name="category" class="form-input-style" required>
+                <option value="" disabled selected>Pilih kategori...</option>
+                <option value="Pendidikan" @selected(old('category') === 'Pendidikan')>Pendidikan</option>
+                <option value="Infrastruktur & Akses" @selected(old('category') === 'Infrastruktur & Akses')>Infrastruktur & Akses</option>
+                <option value="Lingkungan" @selected(old('category') === 'Lingkungan')>Lingkungan</option>
+                <option value="Inklusi & Kesetaraan" @selected(old('category') === 'Inklusi & Kesetaraan')>Inklusi & Kesetaraan</option>
+                <option value="Lainnya" @selected(old('category') === 'Lainnya')>Lainnya</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Dana (Rp)</label>
+              <input type="number" name="target_amount" min="100000" step="1000" class="form-input-style" value="{{ old('target_amount') }}" placeholder="Contoh: 25000000" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tanggal Berakhir</label>
+              <input type="date" name="end_date" class="form-input-style" value="{{ old('end_date') }}" min="{{ now()->addDay()->toDateString() }}" required />
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Deskripsi Program</label>
+              <textarea name="description" class="form-input-style" rows="4" placeholder="Ceritakan tujuan dan dampak dari program donasi ini...">{{ old('description') }}</textarea>
+            </div>
+          </div>
+          <div class="form-action-footer" style="justify-content:flex-end;">
+            <button type="submit" class="btn-form-next">Ajukan Program Donasi</button>
+          </div>
+        </form>
+      </div>
+
+      @if ($myCampaigns->isNotEmpty())
+      <div class="dash-section">
+        <h3 class="dash-card-title">Program Donasi yang Sudah Kamu Buat</h3>
+        <div class="inisiasi-why-grid">
+          @foreach ($myCampaigns as $campaign)
+            <div class="inisiasi-why-card">
+              <h4>{{ $campaign->title }}</h4>
+              <p>
+                Terkumpul Rp {{ number_format($campaign->collected_amount, 0, ',', '.') }}
+                dari target Rp {{ number_format($campaign->target_amount, 0, ',', '.') }}
+                &middot; {{ $campaign->transactions_count }} donatur
+                &middot; Status: {{ ucfirst($campaign->status) }}
+                &middot; Saldo tersedia: Rp {{ number_format($campaign->available_balance, 0, ',', '.') }}
+              </p>
+              <a href="{{ route('detail-program', $campaign) }}" style="color:#21A3FF;font-weight:600;text-decoration:none;">Lihat detail &rarr;</a>
+              &nbsp;&middot;&nbsp;
+              <a href="{{ route('pencairan-dana') }}" style="color:#21A3FF;font-weight:600;text-decoration:none;">Cairkan Dana &rarr;</a>
+            </div>
+          @endforeach
+        </div>
+      </div>
+      @endif
+      @endif
 
       </div><!-- /.dash-main-card -->
     </main>
