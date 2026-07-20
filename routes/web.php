@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 // Landing Page
@@ -28,9 +31,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard-user.dashboard-beranda');
     })->name('dashboard');
 
-    Route::get('/kindlyshop', function () {
-        return view('dashboard-user.kindlyshop');
-    })->name('kindlyshop');
+    Route::get('/kindlyshop', [ShopController::class, 'index'])->name('kindlyshop');
 
     Route::get('/gabung-hero', function () {
         return view('dashboard-user.gabung-hero');
@@ -41,9 +42,7 @@ Route::middleware('auth')->group(function () {
     })->name('detail-program');
 
     // Fundraiser
-    Route::get('/program-donasi', function () {
-        return view('fundraiser.program-donasi');
-    })->name('program-donasi');
+    Route::get('/program-donasi', [CampaignController::class, 'index'])->name('program-donasi');
 
     Route::get('/inisiasi', function () {
         return view('fundraiser.inisiasi');
@@ -54,16 +53,14 @@ Route::middleware('auth')->group(function () {
     })->name('verify');
 
     // User Info
-    Route::get('/riwayat', function () {
-        return view('user info.riwayat');
-    })->name('riwayat');
+    Route::get('/riwayat', [TransactionController::class, 'index'])->name('riwayat');
 
     Route::get('/profil', function () {
-        return view('user info.profil-saya');
+        return view('user-info.profil-saya');
     })->name('profil');
 
     Route::get('/pengaturan-akun', function () {
-        return view('user info.pengaturan-akun');
+        return view('user-info.pengaturan-akun');
     })->name('pengaturan-akun');
 
     // Dashboard Hero

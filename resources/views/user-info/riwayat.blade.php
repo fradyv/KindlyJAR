@@ -142,10 +142,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -204,78 +204,61 @@
                 </tr>
             </thead>
             <tbody>
-        
-                <!-- Baris Data 1 (Statis - Template PPT Premium) -->
+              @php $rowNum = 0; @endphp
+              @forelse($transactions as $transaction)
+                @foreach($transaction->items as $item)
+                  @php
+                    $rowNum++;
+                    $product = $item->product;
+                    $fileName = $product?->title ?? 'Produk tidak ditemukan';
+                    $extension = strtolower(pathinfo($product?->file_url ?? '', PATHINFO_EXTENSION));
+                    $iconClass = match(true) {
+                      in_array($extension, ['zip', 'rar', '7z']) => 'zip',
+                      in_array($extension, ['ppt', 'pptx']) => 'ppt',
+                      $transaction->status === 'success' => 'ppt',
+                    default => 'blank',
+                    };
+                    $statusClass = $transaction->status === 'success' ? 'success' : 'pending';
+                    $statusLabel = $transaction->status === 'success' ? 'Completed' : ucfirst($transaction->status);
+                    $purchaseDate = $transaction->payment_time ?? $transaction->created_at;
+                  @endphp
+                  <tr>
+                    <td class="text-center">{{ $rowNum }}</td>
+                    <td>
+                      <div class="dm-file-info">
+                        <div class="dm-file-icon {{ $iconClass }}">
+                          @if($iconClass === 'zip')
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><path d="M12 11v6"></path><path d="M9 14h6"></path></svg>
+                          @else
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                          @endif
+                        </div>
+                        <div class="dm-file-name-container">
+                          <span class="dm-file-name">{{ $fileName }}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>—</td>
+                    <td><span class="dm-badge {{ $statusClass }}">{{ $statusLabel }}</span></td>
+                    <td>{{ $purchaseDate ? $purchaseDate->format('d M Y') : '—' }}</td>
+                    <td>
+                      @if($transaction->status === 'success' && $product?->file_url)
+                      <a href="{{ asset($product->file_url) }}" class="btn-dm-action" title="Download File" download>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                      </a>
+                      @else
+                      <button class="btn-dm-action" title="Download File" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                      </button>
+                      @endif
+                    </td>
+                  </tr>
+                @endforeach
+              @empty
                 <tr>
-                <td class="text-center">1</td>
-                <td>
-                    <div class="dm-file-info">
-                    <!-- Ikon File Dokumen/Presentasi -->
-                    <div class="dm-file-icon ppt">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    </div>
-                    <div class="dm-file-name-container">
-                        <span class="dm-file-name">Modern-Pitch-Deck-Template-v1.pptx</span>
-                    </div>
-                    </div>
-                </td>
-                <td>12.4 MB</td>
-                <td><span class="dm-badge success">Completed</span></td>
-                <td>06 Jul 2026</td>
-                <td>
-                    <button class="btn-dm-action" title="Download File">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    </button>
-                </td>
+                  <td colspan="6" class="text-center">Belum ada riwayat pembelian.</td>
                 </tr>
-
-                <!-- Baris Data 2 (Statis - Zip Asset Bundle) -->
-                <tr>
-                <td class="text-center">2</td>
-                <td>
-                    <div class="dm-file-info">
-                    <!-- Ikon File ZIP / Archive -->
-                    <div class="dm-file-icon zip">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><path d="M12 11v6"></path><path d="M9 14h6"></path></svg>
-                    </div>
-                    <div class="dm-file-name-container">
-                        <span class="dm-file-name">3D-Illustration-Pack-Vol2.zip</span>
-                    </div>
-                    </div>
-                </td>
-                <td>42.9 MB</td>
-                <td><span class="dm-badge success">Completed</span></td>
-                <td>30 Jun 2026</td>
-                <td>
-                    <button class="btn-dm-action" title="Download File">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    </button>
-                </td>
-                </tr>
-
-                <!-- Baris Data 3 (Kosongan - Untuk Nanti Kamu Isi Sendiri) -->
-                <tr>
-                <td class="text-center">3</td>
-                <td>
-                    <div class="dm-file-info">
-                    <div class="dm-file-icon blank">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    </div>
-                    <div class="dm-file-name-container">
-                        <span class="dm-file-name">Nama-File-Template-Baru.pptx</span>
-                    </div>
-                    </div>
-                </td>
-                <td>0.00 KB</td>
-                <td><span class="dm-badge pending">Pending</span></td>
-                <td>--/--/----</td>
-                <td>
-                    <button class="btn-dm-action" title="Download File" disabled>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    </button>
-                </td>
-                </tr>
-
+              @endforelse
             </tbody>
             </table>
         </div>

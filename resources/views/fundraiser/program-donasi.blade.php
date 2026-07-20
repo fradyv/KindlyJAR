@@ -239,10 +239,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -289,83 +289,36 @@
         <p class="dash-card-sub">Yuk, ikut berkontribusi di program yang sedang ramai didukung oleh Hero lainnya.</p>
 
         <div class="trending-grid">
+          @forelse($trendingCampaigns as $campaign)
+            @php
+              $percentage = $campaign->target_amount > 0
+                ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100))
+                : 0;
+              $preview = optional($campaign->products->first())->product_preview;
+              $campaignImage = $preview ? asset($preview) : asset('assets/kata15.jpg');
+            @endphp
 
-            <!-- Card 1 -->
-            <div class="trending-card" data-category="pendidikan" data-title="renovasi laboratorium komputer smk ti papua">
-            <div class="trending-img">
-                <img src="{{ asset('assets/program1.jpg') }}" alt="Renovasi Laboratorium Komputer SMK TI Papua" />
-            </div>
-            <div class="trending-body">
-                <h3 class="trending-title">Renovasi Laboratorium Komputer SMK TI Papua</h3>
-                <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Bantu renovasi ruang lab dan perbaikan perangkat komputer layak untuk siswa di Papua.
-                </p>
+            <div class="trending-card" data-campaign-id="{{ $campaign->id }}" data-category="{{ Str::slug($campaign->category ?? 'lainnya') }}" data-title="{{ Str::lower($campaign->title) }}">
+              <div class="trending-img">
+                <img src="{{ $campaignImage }}" alt="{{ $campaign->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" />
+              </div>
+              <div class="trending-body">
+                <h3 class="trending-title">{{ $campaign->title }}</h3>
+                <p class="trending-desc">{{ Str::limit($campaign->description, 120) }}</p>
                 <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:91%"></div></div>
-                <span class="t-pct">91% Terpenuhi</span>
+                  <div class="t-bar">
+                    <div class="t-fill" style="width:{{ $percentage }}%"></div>
+                  </div>
+                  <span class="t-pct">{{ $percentage }}% Terpenuhi</span>
                 </div>
                 <button class="btn-t-donasi">Donasi!</button>
                 <a href="{{ route('detail-program') }}" class="t-detail">Lihat detail</a>
+              </div>
             </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="trending-card" data-category="pendidikan" data-title="pengadaan buku gambar sekolah alam flores">
-            <div class="trending-img">
-                <img src="{{ asset('assets/program2.jpg') }}" alt="Pengadaan Buku Gambar Sekolah Alam Flores" />
-            </div>
-            <div class="trending-body">
-                <h3 class="trending-title">Pengadaan Buku Gambar Sekolah Alam Flores</h3>
-                <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Sediakan buku dan alat gambar untuk anak-anak Sekolah Alam Flores berkarya lebih leluasa.
-                </p>
-                <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:87%"></div></div>
-                <span class="t-pct">87% Terpenuhi</span>
-                </div>
-                <button class="btn-t-donasi">Donasi!</button>
-                <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="trending-card" data-category="inklusi-kesetaraan" data-title="alat musik kreatif untuk difabel yogyakarta">
-            <div class="trending-img">
-                <img src="{{ asset('assets/program3.jpg') }}" alt="Alat Musik Kreatif untuk Difabel Yogyakarta" />
-            </div>
-            <div class="trending-body">
-                <h3 class="trending-title">Alat Musik Kreatif untuk Difabel Yogyakarta</h3>
-                <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Lengkapi alat musik adaptif agar teman difabel di Yogyakarta punya ruang berkarya setara.
-                </p>
-                <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:63%"></div></div>
-                <span class="t-pct">63% Terpenuhi</span>
-                </div>
-                <button class="btn-t-donasi">Donasi!</button>
-                <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="trending-card" data-category="infrastruktur-akses" data-title="panel surya untuk penerangan sekolah pelosok mentawai">
-            <div class="trending-img">
-                <img src="{{ asset('assets/program4.jpg') }}" alt="Panel Surya untuk Penerangan Sekolah Pelosok Mentawai" />
-            </div>
-            <div class="trending-body">
-                <h3 class="trending-title">Panel Surya untuk Penerangan Sekolah Pelosok Mentawai</h3>
-                <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Terangi sekolah pelosok Mentawai lewat panel surya agar belajar malam tetap jalan.
-                </p>
-                <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width:45%"></div></div>
-                <span class="t-pct">45% Terpenuhi</span>
-                </div>
-                <button class="btn-t-donasi">Donasi!</button>
-                <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-            </div>
-
+          @empty
+            <p class="shop-empty-state">Belum ada program donasi aktif.</p>
+          @endforelse
+      
         </div>
         </section>
 
@@ -375,82 +328,35 @@
         <p class="dash-card-sub">Program-program ini baru saja hadir dan masih butuh dorongan awal darimu.</p>
         
         <div class="trending-grid">
-          
-          <!-- Card 1: -->
-          <div class="trending-card" data-category="infrastruktur-akses" data-title="sumur bor untuk dusun kering waingapu">
-            <div class="trending-img">
-              <img src="{{ asset('assets/baru1.jpg') }}" alt="Sumur Bor untuk Dusun Kering Waingapu" />
-            </div>
-            <div class="trending-body">
-              <h3 class="trending-title">Sumur Bor untuk Dusun Kering Waingapu</h3>
-              <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Bangun sumur bor agar warga Dusun Waingapu gak lagi jalan berkilo-kilo demi air bersih.
-              </p>
-              <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width: 0%"></div></div>
-                <span class="t-pct">0% Terpenuhi</span>
-              </div>
-              <button class="btn-t-donasi">Donasi!</button>
-              <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-          </div>
+          @forelse($newCampaigns as $campaign)
+            @php
+              $percentage = $campaign->target_amount > 0
+                ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100))
+                : 0;
+              $preview = optional($campaign->products->first())->product_preview;
+              $campaignImage = $preview ? asset($preview) : asset('assets/kata15.jpg');
+            @endphp
 
-          <!-- Card 2: -->
-          <div class="trending-card" data-category="infrastruktur-akses" data-title="jembatan gantung penghubung desa terpencil toraja">
-            <div class="trending-img">
-              <img src="{{ asset('assets/baru2.jpg') }}" alt="Jembatan Gantung Penghubung Desa Terpencil Toraja" />
-            </div>
-            <div class="trending-body">
-              <h3 class="trending-title">Jembatan Gantung Penghubung Desa Terpencil Toraja</h3>
-              <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Ganti jembatan darurat dengan yang layak agar akses ke Desa Toraja gak lagi berbahaya.
-              </p>
-              <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width: 2%"></div></div>
-                <span class="t-pct">2% Terpenuhi</span>
+            <div class="trending-card" data-category="{{ Str::slug($campaign->category ?? 'lainnya') }}" data-title="{{ Str::lower($campaign->title) }}">
+              <div class="trending-img">
+                <img src="{{ $campaignImage }}" alt="{{ $campaign->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" />
               </div>
-              <button class="btn-t-donasi">Donasi!</button>
-              <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-          </div>
-
-          <!-- Card 3: -->
-          <div class="trending-card" data-category="pendidikan" data-title="perpustakaan mini untuk anak pedalaman kalimantan">
-            <div class="trending-img">
-              <img src="{{ asset('assets/baru3.jpg') }}" alt="Perpustakaan Mini untuk Anak Pedalaman Kalimantan" />
-            </div>
-            <div class="trending-body">
-              <h3 class="trending-title">Perpustakaan Mini untuk Anak Pedalaman Kalimantan</h3>
-              <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Hadirkan buku bacaan dan rak sederhana agar anak-anak pedalaman Kalimantan gemar membaca.
-              </p>
-              <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width: 0%"></div></div>
-                <span class="t-pct">0% Terpenuhi</span>
+              <div class="trending-body">
+                <h3 class="trending-title">{{ $campaign->title }}</h3>
+                <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
+                  {{ Str::limit($campaign->description, 120) }}
+                </p>
+                <div class="t-progress">
+                  <div class="t-bar"><div class="t-fill" style="width: {{ $percentage }}%"></div></div>
+                  <span class="t-pct">{{ $percentage }}% Terpenuhi</span>
+                </div>
+                <button class="btn-t-donasi">Donasi!</button>
+                <a href="{{ route('detail-program') }}" class="t-detail">Lihat detail</a>
               </div>
-              <button class="btn-t-donasi">Donasi!</button>
-              <a href="#" class="t-detail">Lihat detail</a>
             </div>
-          </div>
-
-          <!-- Card 4: Kursi Roda Aceh -->
-          <div class="trending-card" data-category="inklusi-kesetaraan" data-title="kursi roda adaptif untuk difabel aceh">
-            <div class="trending-img">
-              <img src="{{ asset('assets/baru4.jpg') }}" alt="Kursi Roda Adaptif untuk Difabel Aceh" />
-            </div>
-            <div class="trending-body">
-              <h3 class="trending-title">Kursi Roda Adaptif untuk Difabel Aceh</h3>
-              <p class="trending-desc" style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: #718096; margin-bottom: 10px; line-height: 1.4;">
-                Sediakan kursi roda yang sesuai kebutuhan agar teman difabel di Aceh lebih mudah beraktivitas.
-              </p>
-              <div class="t-progress">
-                <div class="t-bar"><div class="t-fill" style="width: 5%"></div></div>
-                <span class="t-pct">5% Terpenuhi</span>
-              </div>
-              <button class="btn-t-donasi">Donasi!</button>
-              <a href="#" class="t-detail">Lihat detail</a>
-            </div>
-          </div>
+          @empty
+            <p class="shop-empty-state">Belum ada program baru.</p>
+          @endforelse
 
         </div><!-- /.trending-grid -->
       </section>
@@ -496,172 +402,56 @@
         <section class="horizontal-donation-section">
         <div class="horizontal-donation-list">
 
-            <!-- Card 1 (Data Statis Sesuai Gambar Group 50 (1).png) -->
-            <div class="donation-card-horizontal" data-category="infrastruktur-akses" data-title="perbaikan akses jalan desa terisolir flores timur">
+            @forelse($campaigns as $campaign)
+            @php
+              $percentage = $campaign->target_amount > 0
+                ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100))
+                : 0;
+              $preview = optional($campaign->products->first())->product_preview;
+              $campaignImage = $preview ? asset($preview) : asset('assets/kata15.jpg');
+            @endphp
+
+            <div class="donation-card-horizontal" data-category="{{ Str::slug($campaign->category ?? 'lainnya') }}" data-title="{{ Str::lower($campaign->title) }}">
             <div class="card-horizontal-img">
-                <img src="{{ asset('assets/hori1.jpg') }}" alt="Perbaikan Akses Jalan" />
+                <img src="{{ $campaignImage }}" alt="{{ $campaign->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" />
             </div>
             <div class="card-horizontal-body">
-                <h3 class="card-horizontal-title">Perbaikan Akses Jalan Desa Terisolir Flores Timur</h3>
-                
-                <!-- Badge Kategori Sesuai Komponen Asli -->
+                <h3 class="card-horizontal-title">{{ $campaign->title }}</h3>
+
                 <div class="card-horizontal-badges">
                 <button class="btn-category-pill">
-                    <span>Infrastruktur & Akses</span>
+                    <span>{{ $campaign->category ?? 'Lainnya' }}</span>
                     <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 </div>
 
-                <!-- Informasi Lokasi & Relawan -->
                 <div class="card-horizontal-meta">
                 <div class="meta-item">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>Flores Timur - NTT</span>
+                    <span>{{ optional($campaign->fundraiser)->display_name ?? 'Indonesia' }}</span>
                 </div>
                 <div class="meta-item">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    <span>1.765 Membantu</span>
-                </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="card-horizontal-progress">
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: 81%;"></div>
-                </div>
-                <span class="progress-target">Rp. 9.750.000 / 12.000.000</span>
-                </div>
-
-                <!-- Tombol Aksi -->
-                <div class="card-horizontal-actions">
-                <button class="btn-horizontal-donasi">Donasi!</button>
-                <a href="#" class="horizontal-detail-link">Lihat detail</a>
-                </div>
-            </div>
-            </div>
-
-            <!-- Card 2  -->
-            <div class="donation-card-horizontal" data-category="lingkungan" data-title="instalasi air bersih untuk pesisir rote ndao">
-            <div class="card-horizontal-img">
-                <img src="{{ asset('assets/hori2.jpg') }}" alt="Nama Program Donasi" />
-            </div>
-            <div class="card-horizontal-body">
-                <h3 class="card-horizontal-title">Instalasi Air Bersih untuk Pesisir Rote Ndao</h3>
-                
-                <!-- Badge Kategori Kosongan -->
-                <div class="card-horizontal-badges">
-                <button class="btn-category-pill">
-                    <span>Lingkungan</span>
-                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                </div>
-
-                <div class="card-horizontal-meta">
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>Rote Ndao - NTT</span>
-                </div>
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                    <span>723 Membantu</span>
+                    <span>{{ number_format($campaign->transactions_count) }} Membantu</span>
                 </div>
                 </div>
 
                 <div class="card-horizontal-progress">
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: 80%;"></div>
+                    <div class="progress-bar-fill" style="width: {{ $percentage }}%;"></div>
                 </div>
-                <span class="progress-target">Rp. 5.600.000 / Rp. 7.000.000</span>
-                </div>
-
-                <div class="card-horizontal-actions">
-                <button class="btn-horizontal-donasi">Donasi!</button>
-                <a href="#" class="horizontal-detail-link">Lihat detail</a>
-                </div>
-            </div>
-            </div>
-
-            <!-- Card 3  -->
-            <div class="donation-card-horizontal" data-category="inklusi-kesetaraan" data-title="alat bantu dengar untuk anak difabel nias">
-            <div class="card-horizontal-img">
-                <img src="{{ asset('assets/hori3.jpg') }}" alt="Nama Program Donasi" />
-            </div>
-            <div class="card-horizontal-body">
-                <h3 class="card-horizontal-title">Alat Bantu Dengar untuk Anak Difabel Nias</h3>
-                
-                <!-- Badge Kategori Kosongan -->
-                <div class="card-horizontal-badges">
-                <button class="btn-category-pill">
-                    <span>Inklusi & Kesetaraan</span>
-                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                </div>
-
-                <div class="card-horizontal-meta">
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>Nias Selatan - Sumatera Utara</span>
-                </div>
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                    <span>315 Membantu</span>
-                </div>
-                </div>
-
-                <div class="card-horizontal-progress">
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: 72%;"></div>
-                </div>
-                <span class="progress-target">Rp. 1.800.000 / Rp. 2.500.000</span>
+                <span class="progress-target">Rp {{ number_format($campaign->collected_amount, 0, ',', '.') }} / Rp {{ number_format($campaign->target_amount, 0, ',', '.') }}</span>
                 </div>
 
                 <div class="card-horizontal-actions">
                 <button class="btn-horizontal-donasi">Donasi!</button>
-                <a href="#" class="horizontal-detail-link">Lihat detail</a>
+                <a href="{{ route('detail-program') }}" class="horizontal-detail-link">Lihat detail</a>
                 </div>
             </div>
             </div>
-
-            <!-- Card 4  -->
-            <div class="donation-card-horizontal" data-category="pendidikan" data-title="renovasi ruang kelas sekolah dasar pedalaman mentawai">
-            <div class="card-horizontal-img">
-                <img src="{{ asset('assets/hori4.jpg') }}" alt="Nama Program Donasi" />
-            </div>
-            <div class="card-horizontal-body">
-                <h3 class="card-horizontal-title">Renovasi Ruang Kelas Sekolah Dasar Pedalaman Mentawai</h3>
-                
-                <!-- Badge Kategori Kosongan -->
-                <div class="card-horizontal-badges">
-                <button class="btn-category-pill">
-                    <span>Pendidikan</span>
-                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                </div>
-
-                <div class="card-horizontal-meta">
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>Kepulauan Mentawai - Sumatera Barat</span>
-                </div>
-                <div class="meta-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#21A3FF" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                    <span>654  Membantu</span>
-                </div>
-                </div>
-
-                <div class="card-horizontal-progress">
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: 81%;"></div>
-                </div>
-                <span class="progress-target">Rp. 8.100.000 / Rp. 10.000.000</span>
-                </div>
-
-                <div class="card-horizontal-actions">
-                <button class="btn-horizontal-donasi">Donasi!</button>
-                <a href="#" class="horizontal-detail-link">Lihat detail</a>
-                </div>
-            </div>
-            </div>
+            @empty
+            <p class="shop-empty-state">Belum ada program donasi.</p>
+            @endforelse
 
         </div>
         </section>

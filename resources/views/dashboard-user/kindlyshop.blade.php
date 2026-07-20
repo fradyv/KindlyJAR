@@ -149,10 +149,10 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Joseph Herlambang" class="dash-avatar" />
+            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
             <div>
-              <p class="dash-profile-name" id="dashProfileName">Joseph Herlambang</p>
-              <p class="dash-profile-email" id="dashProfileEmail">josephbalado@gmail.com</p>
+              <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
+              <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0b7c3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;flex-shrink:0">
               <polyline points="6 9 12 15 18 9"/>
@@ -229,226 +229,26 @@
 
           <div class="shop-product-grid" id="shopProductGrid">
 
-            <div class="product-card" data-category="desain-poster" data-title="poster retro do what excites dwe playbook">
-              <div class="product-img"><img src="{{ asset('assets/kata1.jpg') }}" alt="Poster Retro 'Do What Excites' - DWE Playbook Vol. 2" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Poster</span>
-                <h3 class="product-title">Poster Retro "Do What Excites" - DWE Playbook Vol. 2</h3>
-                <p class="product-price">Rp 25.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
+            @forelse($products as $product)
+            @php
+              $productImage = $product->product_preview ? asset($product->product_preview) : asset('assets/kata15.jpg');
+            @endphp
 
-            <div class="product-card" data-category="ilustrasi-digital" data-title="ilustrasi potret lily dan senja">
-              <div class="product-img"><img src="{{ asset('assets/kata16.jpg') }}" alt="Ilustrasi Potret 'Lily & Senja'" /></div>
+            <div class="product-card" data-category="{{ Str::slug($product->category ?? 'lainnya') }}" data-title="{{ Str::lower($product->title) }}">
+              <div class="product-img"><img src="{{ $productImage }}" alt="{{ $product->title }}" onerror="this.src='{{ asset('assets/kata15.jpg') }}'" /></div>
               <div class="product-body">
-                <span class="product-tag">Ilustrasi Digital</span>
-                <h3 class="product-title">Ilustrasi Potret "Lily & Senja"</h3>
-                <p class="product-price">Rp 35.000</p>
+                <span class="product-tag">{{ $product->category ?? 'Digital Product' }}</span>
+                <h3 class="product-title">{{ $product->title }}</h3>
+                <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 <div class="product-actions">
                   <button class="btn-add-cart">+ Keranjang</button>
                   <a href="#" class="product-detail-link">Lihat detail</a>
                 </div>
               </div>
             </div>
-
-            <div class="product-card" data-category="desain-poster" data-title="poster retro yuji staff pengmas">
-              <div class="product-img"><img src="{{ asset('assets/kata2.jpg') }}" alt="Poster Retro 'YUJI Staff Pengmas'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Poster</span>
-                <h3 class="product-title">Poster Retro "YUJI Staff Pengmas"</h3>
-                <p class="product-price">Rp 22.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-poster" data-title="poster infografis hardest records to break euroleague">
-              <div class="product-img"><img src="{{ asset('assets/kata3.jpg') }}" alt="Poster Infografis 'Hardest Records to Break'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Poster</span>
-                <h3 class="product-title">Poster Infografis "Hardest Records to Break"</h3>
-                <p class="product-price">Rp 20.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-web" data-title="desain web crumb theory bakery landing page">
-              <div class="product-img"><img src="{{ asset('assets/kata4.jpg') }}" alt="Desain Web 'Crumb Theory' Bakery Landing Page" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Web</span>
-                <h3 class="product-title">Desain Web "Crumb Theory" Bakery Landing Page</h3>
-                <p class="product-price">Rp 150.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-logo" data-title="brand identity kit lune ice cream tea coffee">
-              <div class="product-img"><img src="{{ asset('assets/kata5.jpg') }}" alt="Brand Identity Kit 'LUNE' Ice Cream, Tea & Coffee" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Logo</span>
-                <h3 class="product-title">Brand Identity Kit "LUNE" Ice Cream, Tea & Coffee</h3>
-                <p class="product-price">Rp 175.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="aset-3d" data-title="diorama 3d isometric halte malam">
-              <div class="product-img"><img src="{{ asset('assets/kata6.jpg') }}" alt="Diorama 3D Isometric 'Halte Malam'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Aset 3D</span>
-                <h3 class="product-title">Diorama 3D Isometric "Halte Malam"</h3>
-                <p class="product-price">Rp 55.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="aset-3d" data-title="diorama 3d isometric ruang baca cozy">
-              <div class="product-img"><img src="{{ asset('assets/kata15.jpg') }}" alt="Diorama 3D Isometric 'Ruang Baca Cozy'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Aset 3D</span>
-                <h3 class="product-title">Diorama 3D Isometric "Ruang Baca Cozy"</h3>
-                <p class="product-price">Rp 80.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="aset-3d" data-title="diorama 3d isometric kedai mie ayam">
-              <div class="product-img"><img src="{{ asset('assets/kata7.jpg') }}" alt="Diorama 3D Isometric 'Kedai Mie Ayam'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Aset 3D</span>
-                <h3 class="product-title">Diorama 3D Isometric "Kedai Mie Ayam"</h3>
-                <p class="product-price">Rp 65.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-logo" data-title="logo maskot moji matcha">
-              <div class="product-img"><img src="{{ asset('assets/kata8.jpg') }}" alt="Logo Maskot 'Moji Matcha'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Logo</span>
-                <h3 class="product-title">Logo Maskot "Moji Matcha"</h3>
-                <p class="product-price">Rp 45.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-logo" data-title="logo dan badge midnight raven coffee house">
-              <div class="product-img"><img src="{{ asset('assets/kata9.jpg') }}" alt="Logo & Badge 'Midnight Raven Coffee House'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Logo</span>
-                <h3 class="product-title">Logo & Badge "Midnight Raven Coffee House"</h3>
-                <p class="product-price">Rp 40.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="ilustrasi-digital" data-title="ilustrasi digital potret crimson veil">
-              <div class="product-img"><img src="{{ asset('assets/kata10.jpg') }}" alt="Ilustrasi Digital Potret 'Crimson Veil'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Ilustrasi Digital</span>
-                <h3 class="product-title">Ilustrasi Digital Potret "Crimson Veil"</h3>
-                <p class="product-price">Rp 30.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="ilustrasi-digital" data-title="ilustrasi karakter gadis dan kucing putih">
-              <div class="product-img"><img src="{{ asset('assets/kata11.jpg') }}" alt="Ilustrasi Karakter 'Gadis dan Kucing Putih'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Ilustrasi Digital</span>
-                <h3 class="product-title">Ilustrasi Karakter "Gadis dan Kucing Putih"</h3>
-                <p class="product-price">Rp 32.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="aset-3d" data-title="ikon 3d komputer retro">
-              <div class="product-img"><img src="{{ asset('assets/kata14.jpg') }}" alt="Ikon 3D 'Komputer Retro'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Aset 3D</span>
-                <h3 class="product-title">Ikon 3D "Komputer Retro"</h3>
-                <p class="product-price">Rp 58.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="stok-foto" data-title="foto stok aksi skateboard">
-              <div class="product-img"><img src="{{ asset('assets/kata12.jpg') }}" alt="Foto Stok 'Aksi Skateboard'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Stok Foto</span>
-                <h3 class="product-title">Foto Stok "Aksi Skateboard"</h3>
-                <p class="product-price">Rp 15.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="stok-foto" data-title="foto stok diskusi kolega kantor">
-              <div class="product-img"><img src="{{ asset('assets/kata13.jpg') }}" alt="Foto Stok 'Diskusi Kolega Kantor'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Stok Foto</span>
-                <h3 class="product-title">Foto Stok "Diskusi Kolega Kantor"</h3>
-                <p class="product-price">Rp 15.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="product-card" data-category="desain-logo" data-title="logo the dairy farm">
-              <div class="product-img"><img src="{{ asset('assets/kata17.jpg') }}" alt="Logo 'The Dairy Farm'" /></div>
-              <div class="product-body">
-                <span class="product-tag">Desain Logo</span>
-                <h3 class="product-title">Logo "The Dairy Farm"</h3>
-                <p class="product-price">Rp 42.000</p>
-                <div class="product-actions">
-                  <button class="btn-add-cart">+ Keranjang</button>
-                  <a href="#" class="product-detail-link">Lihat detail</a>
-                </div>
-              </div>
-            </div>
+            @empty
+            <p class="shop-empty-state">Belum ada produk di KindlyShop.</p>
+            @endforelse
 
           </div><!-- /.shop-product-grid -->
 
