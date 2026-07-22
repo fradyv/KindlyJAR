@@ -1898,6 +1898,16 @@
   color: #1A1A2E;
   outline: none;
   transition: all 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+textarea.form-input-style {
+  resize: vertical;
+  overflow-y: auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .form-input-style:focus {
@@ -2941,9 +2951,10 @@ select.form-input-style {
 }
 .donasi-checkbox-row input { accent-color: #21A3FF; }
 .donasi-textarea {
-  width: 100%; min-height: 64px; font-family: 'Open Sans', sans-serif; font-size: 0.85rem;
+  width: 100%; max-width: 100%; min-height: 64px; font-family: 'Open Sans', sans-serif; font-size: 0.85rem;
   padding: 10px 14px; border: 1.5px solid rgba(33, 163, 255, 0.2); border-radius: 12px;
-  outline: none; resize: vertical; margin-top: 4px;
+  outline: none; resize: vertical; margin-top: 4px; box-sizing: border-box;
+  word-break: break-word; overflow-wrap: break-word; overflow-y: auto;
 }
 .donasi-metode-list { display: flex; flex-direction: column; gap: 8px; }
 .donasi-metode-item {

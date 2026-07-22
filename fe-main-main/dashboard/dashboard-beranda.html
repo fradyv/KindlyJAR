@@ -7,6 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../global/style.css"/>
   <link rel="stylesheet" href="../global/dashboard.css"/>
+  <style>
+    @media (max-width: 768px) {
+      .notif-dropdown.open {
+        position: fixed !important;
+        z-index: 9999 !important;
+        max-width: calc(100vw - 16px) !important;
+      }
+    }
+  </style>
 </head>
 <body class="dashboard-body">
 
@@ -448,6 +457,8 @@
 
   <script src="../global/script.js"></script>
   <script>
+    const cartBtn       = document.getElementById('cartBtn');
+    const cartDropdown  = document.getElementById('cartDropdown');
     const notifBtn      = document.getElementById('notifBtn');
     const notifDropdown = document.getElementById('notifDropdown');
     const profileBtn    = document.getElementById('profileBtn');
@@ -455,40 +466,66 @@
     const dashRight     = document.querySelector('.dash-right');
 
     function positionDropdown(dropdown, anchor) {
-      const pr = dashRight.getBoundingClientRect();
       const ar = anchor.getBoundingClientRect();
-      dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
-      dropdown.style.right = (pr.right - ar.right) + 'px';
-      dropdown.style.left  = 'auto';
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        dropdown.style.position = 'fixed';
+        dropdown.style.top      = (ar.bottom + 8) + 'px';
+        const dropW   = dropdown.offsetWidth || 240;
+        let   leftPos = ar.left;
+        if (leftPos + dropW > window.innerWidth - 8) {
+          leftPos = window.innerWidth - dropW - 8;
+        }
+        dropdown.style.left  = Math.max(8, leftPos) + 'px';
+        dropdown.style.right = 'auto';
+      } else {
+        const pr = dashRight.getBoundingClientRect();
+        dropdown.style.position = '';
+        dropdown.style.top      = (ar.bottom - pr.top + 8) + 'px';
+        dropdown.style.right    = (pr.right - ar.right) + 'px';
+        dropdown.style.left     = 'auto';
+      }
     }
+
+    function closeAll() {
+      cartDropdown.classList.remove('open');
+      notifDropdown.classList.remove('open');
+      profileDropdown.classList.remove('open');
+    }
+
+    cartBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const opening = !cartDropdown.classList.contains('open');
+      closeAll();
+      if (opening) {
+        positionDropdown(cartDropdown, cartBtn);
+        cartDropdown.classList.add('open');
+      }
+    });
 
     notifBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const opening = !notifDropdown.classList.contains('open');
-      profileDropdown.classList.remove('open');
+      closeAll();
       if (opening) {
         positionDropdown(notifDropdown, notifBtn);
         notifDropdown.classList.add('open');
-      } else {
-        notifDropdown.classList.remove('open');
       }
     });
 
     profileBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const opening = !profileDropdown.classList.contains('open');
-      notifDropdown.classList.remove('open');
+      closeAll();
       if (opening) {
         positionDropdown(profileDropdown, profileBtn);
         profileDropdown.classList.add('open');
-      } else {
-        profileDropdown.classList.remove('open');
       }
     });
 
     document.addEventListener('click', () => {
-      notifDropdown.classList.remove('open');
-      profileDropdown.classList.remove('open');
+      closeAll();
     });
     /* ── Modal Donasi ── */
 const donasiModal     = document.getElementById('donasiModal');
