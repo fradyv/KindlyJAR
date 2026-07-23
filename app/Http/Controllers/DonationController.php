@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\MidtransService;
+use App\Services\TransactionCompletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DonationController extends Controller
 {
+    public function __construct(
+        private MidtransService $midtrans,
+        private TransactionCompletionService $completion,
+    ) {}
+
     public function store(Request $request, Campaign $campaign): RedirectResponse
     {
         $validated = $request->validate([
@@ -27,18 +34,22 @@ class DonationController extends Controller
             'total_product_price'  => 0,
             'extra_donation'       => $validated['nominal'],
             'total_paid'           => $validated['nominal'],
-            'bank_name'            => $validated['bank_name'] ?? 'Transfer Bank',
+            'bank_name'            => $validated['bank_name'] ?? 'Midtrans',
             'is_anonymous'         => $request->boolean('is_anonymous'),
-            'status'               => 'success',
+            'status'               => 'pending',
+            'created_at'           => now(),
         ]);
 
-        $transaction->payment_time = now();
-        $transaction->created_at = now();
+        $transaction->midtrans_order_id = $this->midtrans->orderIdFor($transaction);
         $transaction->save();
 
-        $campaign->increment('collected_amount', $validated['nominal']);
+        if (! MidtransService::isEnabled()) {
+            $this->completion->complete($transaction);
 
-        return redirect()->route('detail-program', $campaign)
-            ->with('success', 'Terima kasih! Donasimu sebesar Rp '.number_format($validated['nominal'], 0, ',', '.').' berhasil dan langsung tersalurkan.');
+            return redirect()->route('detail-program', $campaign)
+                ->with('success', 'Terima kasih! Donasimu sebesar Rp '.number_format($validated['nominal'], 0, ',', '.').' berhasil dan langsung tersalurkan.');
+        }
+
+        return redirect()->route('payment.show', $transaction);
     }
 }

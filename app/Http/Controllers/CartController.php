@@ -8,12 +8,19 @@ use App\Models\DigitalProduct;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\User;
+use App\Services\MidtransService;
+use App\Services\TransactionCompletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CartController extends Controller
 {
+    public function __construct(
+        private MidtransService $midtrans,
+        private TransactionCompletionService $completion,
+    ) {}
+
     private function userCart(bool $create = false): ?Cart
     {
         /** @var User $user */
@@ -137,13 +144,13 @@ class CartController extends Controller
             'total_product_price'  => $totalProductPrice,
             'extra_donation'       => $extraDonation,
             'total_paid'           => $totalPaid,
-            'bank_name'            => $validated['bank_name'] ?? 'Transfer Bank',
+            'bank_name'            => $validated['bank_name'] ?? 'Midtrans',
             'is_anonymous'         => $request->boolean('is_anonymous'),
-            'status'               => 'success',
+            'status'               => 'pending',
+            'created_at'           => now(),
         ]);
 
-        $transaction->payment_time = now();
-        $transaction->created_at = now();
+        $transaction->midtrans_order_id = $this->midtrans->orderIdFor($transaction);
         $transaction->save();
 
         foreach ($items as $item) {
@@ -153,18 +160,18 @@ class CartController extends Controller
                 'price_at_purchase' => $item->product->price,
                 'quantity'          => $item->quantity,
             ]);
-
-            $item->product->decrement('stock', $item->quantity);
-        }
-
-        if ($cart->campaign_id) {
-            $cart->campaign->increment('collected_amount', $totalPaid);
         }
 
         $cart->items()->delete();
         $cart->update(['campaign_id' => null]);
 
-        return redirect()->route('riwayat')
-            ->with('success', 'Checkout berhasil! Total Rp '.number_format($totalPaid, 0, ',', '.').' telah dibayar dan tersalurkan.');
+        if (! MidtransService::isEnabled()) {
+            $this->completion->complete($transaction);
+
+            return redirect()->route('riwayat')
+                ->with('success', 'Checkout berhasil! Total Rp '.number_format($totalPaid, 0, ',', '.').' telah dibayar dan tersalurkan.');
+        }
+
+        return redirect()->route('payment.show', $transaction);
     }
 }

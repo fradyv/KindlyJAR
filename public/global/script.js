@@ -356,14 +356,16 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener('DOMContentLoaded', () => {
   const tableBody = document.getElementById('historyTableBody');
   if (!tableBody) return;
-  const rows = Array.from(tableBody.querySelectorAll('tr'));
-  
+
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const pageDisplay = document.getElementById('pageDisplay');
+  if (!prevBtn || !nextBtn || !pageDisplay) return;
+
+  const rows = Array.from(tableBody.querySelectorAll('tr'));
 
   let currentPage = 1;
-  const rowsPerPage = 5; // Batasan max 5 baris per halaman
+  const rowsPerPage = 5;
 
   function updatePagination() {
     pageDisplay.textContent = currentPage;
@@ -371,16 +373,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    // Filter baris mana yang harus tampil / sembunyi
     rows.forEach((row, index) => {
-      if (index >= start && index < end) {
-        row.style.display = ""; // Tampilkan
-      } else {
-        row.style.display = "none"; // Sembunyikan
-      }
+      row.style.display = (index >= start && index < end) ? '' : 'none';
     });
 
-    // Validasi tombol aktif/nonaktif
     prevBtn.disabled = (currentPage === 1);
     nextBtn.disabled = (end >= rows.length);
   }
@@ -399,41 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Inisialisasi tampilan pertama
   updatePagination();
-});
-
-const cartBtn      = document.getElementById('cartBtn');
-const cartDropdown = document.getElementById('cartDropdown');
-const notifDropdown  = document.getElementById('notifDropdown');
-const profileDropdown = document.getElementById('profileDropdown');
-
-cartBtn?.addEventListener('click', (e) => {
-  e.stopPropagation();
-  cartDropdown?.classList.toggle('open');
-  notifDropdown?.classList.remove('open');
-  profileDropdown?.classList.remove('open');
-});const notifBtn = document.getElementById('notifBtn');
-const profileBtn = document.getElementById('profileBtn');
-
-notifBtn?.addEventListener('click', (e) => {
-  e.stopPropagation();
-  notifDropdown?.classList.toggle('open');
-  cartDropdown?.classList.remove('open');
-  profileDropdown?.classList.remove('open');
-});
-
-profileBtn?.addEventListener('click', (e) => {
-  e.stopPropagation();
-  profileDropdown?.classList.toggle('open');
-  cartDropdown?.classList.remove('open');
-  notifDropdown?.classList.remove('open');
-});
-
-document.addEventListener('click', () => {
-  cartDropdown?.classList.remove('open');
-  notifDropdown?.classList.remove('open');
-  profileDropdown?.classList.remove('open');
 });
 /* ── INISIASI: tombol CTA menuju halaman verifikasi ── */
 window.addEventListener('DOMContentLoaded', () => {
@@ -490,10 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Visibilitas tombol Back
-    if (currentStep === 1) {
-      btnBack.style.visibility = 'hidden';
-    } else {
-      btnBack.style.visibility = 'visible';
+    if (btnBack) {
+      btnBack.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
     }
 
     // Ubah text tombol Next di akhir halaman
@@ -553,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   // Event Klik Kembali
-  btnBack.addEventListener('click', () => {
+  btnBack?.addEventListener('click', () => {
     if (currentStep > 1) {
       currentStep--;
       updateFormProgress();
@@ -587,31 +547,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
-const settingsNavItems = document.querySelectorAll('.settings-nav-item');
-const settingsSections = document.querySelectorAll('.settings-content .dash-section');
-const settingsContent  = document.querySelector('.settings-content');
+(function () {
+  const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+  const settingsSections = document.querySelectorAll('.settings-content .dash-section');
+  const settingsContent  = document.querySelector('.settings-content');
 
-settingsNavItems.forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
+  settingsNavItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
 
-    const targetId = item.getAttribute('href').replace('#', '');
+      const targetId = item.getAttribute('href').replace('#', '');
 
-    // sembunyikan semua section
-    settingsSections.forEach(s => s.style.display = 'none');
+      settingsSections.forEach(s => s.style.display = 'none');
 
-    // tampilkan yang dipilih
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.style.display = 'block';
-      settingsContent.scrollTop = 0; // scroll balik ke atas
-    }
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.style.display = 'block';
+        if (settingsContent) settingsContent.scrollTop = 0;
+      }
 
-    // update active state nav
-    settingsNavItems.forEach(n => n.classList.remove('active'));
-    item.classList.add('active');
+      settingsNavItems.forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+    });
   });
-});
+})();
 document.getElementById('btnBackDetail')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (document.referrer && document.referrer.includes(location.hostname)) {

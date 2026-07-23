@@ -229,50 +229,8 @@
   </div><!-- .dash-right -->
 
   <script src="{{ asset('global/script.js') }}"></script>
+  @include('partials.dash-dropdown-script')
   <script>
-    const notifBtn2      = document.getElementById('notifBtn');
-    const notifDropdown2 = document.getElementById('notifDropdown');
-    const profileBtn2    = document.getElementById('profileBtn');
-    const profileDropdown2 = document.getElementById('profileDropdown');
-    const dashRight2     = document.querySelector('.dash-right');
-
-    function positionDropdown2(dropdown, anchor) {
-      const pr = dashRight2.getBoundingClientRect();
-      const ar = anchor.getBoundingClientRect();
-      dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
-      dropdown.style.right = (pr.right - ar.right) + 'px';
-      dropdown.style.left  = 'auto';
-    }
-
-    notifBtn2.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !notifDropdown2.classList.contains('open');
-      profileDropdown2.classList.remove('open');
-      if (opening) {
-        positionDropdown2(notifDropdown2, notifBtn2);
-        notifDropdown2.classList.add('open');
-      } else {
-        notifDropdown2.classList.remove('open');
-      }
-    });
-
-    profileBtn2.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !profileDropdown2.classList.contains('open');
-      notifDropdown2.classList.remove('open');
-      if (opening) {
-        positionDropdown2(profileDropdown2, profileBtn2);
-        profileDropdown2.classList.add('open');
-      } else {
-        profileDropdown2.classList.remove('open');
-      }
-    });
-
-    document.addEventListener('click', () => {
-      notifDropdown2.classList.remove('open');
-      profileDropdown2.classList.remove('open');
-    });
-
     // ── Preview foto profil (upload belum tersedia) ──
     const profilPhotoInput   = document.getElementById('profilPhotoInput');
     const profilPhotoPreview = document.getElementById('profilPhotoPreview');

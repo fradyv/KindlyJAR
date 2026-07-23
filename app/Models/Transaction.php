@@ -18,6 +18,9 @@ class Transaction extends Model
         'payment_time',
         'is_anonymous',
         'status',
+        'midtrans_order_id',
+        'midtrans_transaction_id',
+        'created_at',
     ];
 
     protected function casts(): array

@@ -163,7 +163,7 @@
                   <tr>
                     <td>#KJ-{{ str_pad($transaksi->id, 4, '0', STR_PAD_LEFT) }}</td>
                     <td>{{ optional($transaksi->campaign)->title ?? '-' }}</td>
-                    <td>{{ optional($transaksi->created_at)->translatedFormat('d M Y') }}</td>
+                    <td>{{ optional($transaksi->payment_time ?? $transaksi->created_at)->translatedFormat('d M Y') ?? '—' }}</td>
                     <td>Rp {{ number_format($transaksi->total_paid, 0, ',', '.') }}</td>
                     <td>
                       @if($transaksi->status === 'success')
@@ -324,49 +324,6 @@
   </nav>
 
   <script src="{{ asset('global/script.js') }}"></script>
-  <script>
-    const notifBtn      = document.getElementById('notifBtn');
-    const notifDropdown = document.getElementById('notifDropdown');
-    const profileBtn    = document.getElementById('profileBtn');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const dashRight     = document.querySelector('.dash-right');
-
-    function positionDropdown(dropdown, anchor) {
-      const pr = dashRight.getBoundingClientRect();
-      const ar = anchor.getBoundingClientRect();
-      dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
-      dropdown.style.right = (pr.right - ar.right) + 'px';
-      dropdown.style.left  = 'auto';
-    }
-
-    notifBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !notifDropdown.classList.contains('open');
-      profileDropdown.classList.remove('open');
-      if (opening) {
-        positionDropdown(notifDropdown, notifBtn);
-        notifDropdown.classList.add('open');
-      } else {
-        notifDropdown.classList.remove('open');
-      }
-    });
-
-    profileBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !profileDropdown.classList.contains('open');
-      notifDropdown.classList.remove('open');
-      if (opening) {
-        positionDropdown(profileDropdown, profileBtn);
-        profileDropdown.classList.add('open');
-      } else {
-        profileDropdown.classList.remove('open');
-      }
-    });
-
-    document.addEventListener('click', () => {
-      notifDropdown.classList.remove('open');
-      profileDropdown.classList.remove('open');
-    });
-  </script>
+  @include('partials.dash-dropdown-script')
 </body>
 </html>

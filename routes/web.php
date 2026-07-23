@@ -12,6 +12,7 @@ use App\Http\Controllers\FundraiserVerificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,9 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
+Route::post('/payment/notification', [PaymentController::class, 'notification'])
+    ->name('payment.notification');
+
 // Halaman yang wajib login
 Route::middleware('auth')->group(function () {
     // Dashboard User
@@ -46,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/keranjang/{cartItem}/update', [CartController::class, 'updateQuantity'])->name('keranjang.update');
     Route::delete('/keranjang/{cartItem}', [CartController::class, 'remove'])->name('keranjang.hapus');
     Route::post('/keranjang/checkout', [CartController::class, 'checkout'])->name('keranjang.checkout');
+
+    Route::get('/payment/{transaction}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::get('/payment/{transaction}/finish', [PaymentController::class, 'finish'])->name('payment.finish');
 
     Route::get('/gabung-hero', [ShopController::class, 'showJoinForm'])->name('gabung-hero');
     Route::post('/gabung-hero', [ShopController::class, 'store'])->name('gabung-hero.store');

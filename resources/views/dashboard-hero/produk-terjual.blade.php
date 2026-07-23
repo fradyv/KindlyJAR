@@ -141,7 +141,7 @@
                       <td>#KJ-{{ str_pad($trx->id, 4, '0', STR_PAD_LEFT) }}</td>
                       <td>{{ optional($item->product)->title ?? '-' }}</td>
                       <td>{{ $trx->is_anonymous ? 'Hamba Allah' : (optional($trx->buyer)->display_name ?? '-') }}</td>
-                      <td>{{ optional($trx->created_at)->translatedFormat('d M Y') }}</td>
+                      <td>{{ optional($trx->payment_time ?? $trx->created_at)->translatedFormat('d M Y') ?? '—' }}</td>
                       <td>Rp {{ number_format($item->price_at_purchase * $item->quantity, 0, ',', '.') }}</td>
                       <td>
                         @if($trx->status === 'success')
@@ -217,49 +217,6 @@
   </div><!-- .dash-right -->
 
   <script src="{{ asset('global/script.js') }}"></script>
-  <script>
-    const notifBtn2      = document.getElementById('notifBtn');
-    const notifDropdown2 = document.getElementById('notifDropdown');
-    const profileBtn2    = document.getElementById('profileBtn');
-    const profileDropdown2 = document.getElementById('profileDropdown');
-    const dashRight2     = document.querySelector('.dash-right');
-
-    function positionDropdown2(dropdown, anchor) {
-      const pr = dashRight2.getBoundingClientRect();
-      const ar = anchor.getBoundingClientRect();
-      dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
-      dropdown.style.right = (pr.right - ar.right) + 'px';
-      dropdown.style.left  = 'auto';
-    }
-
-    notifBtn2.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !notifDropdown2.classList.contains('open');
-      profileDropdown2.classList.remove('open');
-      if (opening) {
-        positionDropdown2(notifDropdown2, notifBtn2);
-        notifDropdown2.classList.add('open');
-      } else {
-        notifDropdown2.classList.remove('open');
-      }
-    });
-
-    profileBtn2.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !profileDropdown2.classList.contains('open');
-      notifDropdown2.classList.remove('open');
-      if (opening) {
-        positionDropdown2(profileDropdown2, profileBtn2);
-        profileDropdown2.classList.add('open');
-      } else {
-        profileDropdown2.classList.remove('open');
-      }
-    });
-
-    document.addEventListener('click', () => {
-      notifDropdown2.classList.remove('open');
-      profileDropdown2.classList.remove('open');
-    });
-  </script>
+  @include('partials.dash-dropdown-script')
 </body>
 </html>

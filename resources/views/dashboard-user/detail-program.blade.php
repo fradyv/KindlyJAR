@@ -254,7 +254,7 @@
               <div class="detail-donatur-avatar">{{ Str::upper(Str::substr($namaDonatur, 0, 1)) }}</div>
               <div>
                   <p class="detail-donatur-name">{{ $namaDonatur }}</p>
-                  <p class="detail-donatur-time">{{ optional($donasi->created_at)->diffForHumans() }}</p>
+                  <p class="detail-donatur-time">{{ optional($donasi->payment_time ?? $donasi->created_at)->diffForHumans() ?? '—' }}</p>
               </div>
               <span class="detail-donatur-nominal">Rp {{ number_format($donasi->total_paid, 0, ',', '.') }}</span>
               </div>
@@ -345,50 +345,8 @@
   </div><!-- .dash-right -->
 
   <script src="{{ asset('global/script.js') }}"></script>
+  @include('partials.dash-dropdown-script')
   <script>
-    const notifBtn      = document.getElementById('notifBtn');
-    const notifDropdown = document.getElementById('notifDropdown');
-    const profileBtn    = document.getElementById('profileBtn');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const dashRight     = document.querySelector('.dash-right');
-
-    function positionDropdown(dropdown, anchor) {
-      const pr = dashRight.getBoundingClientRect();
-      const ar = anchor.getBoundingClientRect();
-      dropdown.style.top   = (ar.bottom - pr.top + 8) + 'px';
-      dropdown.style.right = (pr.right - ar.right) + 'px';
-      dropdown.style.left  = 'auto';
-    }
-
-    notifBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !notifDropdown.classList.contains('open');
-      profileDropdown.classList.remove('open');
-      if (opening) {
-        positionDropdown(notifDropdown, notifBtn);
-        notifDropdown.classList.add('open');
-      } else {
-        notifDropdown.classList.remove('open');
-      }
-    });
-
-    profileBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opening = !profileDropdown.classList.contains('open');
-      notifDropdown.classList.remove('open');
-      if (opening) {
-        positionDropdown(profileDropdown, profileBtn);
-        profileDropdown.classList.add('open');
-      } else {
-        profileDropdown.classList.remove('open');
-      }
-    });
-
-    document.addEventListener('click', () => {
-      notifDropdown.classList.remove('open');
-      profileDropdown.classList.remove('open');
-    });
-
     // ── Isi nominal donasi dari tombol pilihan ──
     document.querySelectorAll('.donasi-nominal-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
