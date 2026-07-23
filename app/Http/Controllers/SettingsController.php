@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentMethod;
+use App\Models\User;
 use App\Models\UserSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ class SettingsController extends Controller
 {
     public function index(): View
     {
+        /** @var User $user */
         $user = auth()->user();
         $verification = $user->fundraiserVerification;
         $settings = $user->settings ?? new UserSettings([
@@ -33,6 +35,7 @@ class SettingsController extends Controller
             'password'          => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
+        /** @var User $user */
         $user = auth()->user();
 
         if (! Hash::check($validated['current_password'], $user->hash_password)) {
@@ -46,7 +49,9 @@ class SettingsController extends Controller
 
     public function updateTwoFactor(Request $request): RedirectResponse
     {
-        $settings = auth()->user()->settings()->firstOrCreate([]);
+        /** @var User $user */
+        $user = auth()->user();
+        $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['enable_2fa' => $request->boolean('enable_2fa')]);
 
         return back()->with('success', 'Pengaturan 2FA berhasil diperbarui.');
@@ -61,7 +66,9 @@ class SettingsController extends Controller
             $preferences[$key] = $request->boolean("notif.$key");
         }
 
-        $settings = auth()->user()->settings()->firstOrCreate([]);
+        /** @var User $user */
+        $user = auth()->user();
+        $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['notification_preferences' => $preferences]);
 
         return back()->with('success', 'Preferensi notifikasi berhasil disimpan.');
@@ -76,7 +83,9 @@ class SettingsController extends Controller
             $permissions[$key] = $request->boolean("privacy.$key");
         }
 
-        $settings = auth()->user()->settings()->firstOrCreate([]);
+        /** @var User $user */
+        $user = auth()->user();
+        $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['privacy_permissions' => $permissions]);
 
         return back()->with('success', 'Preferensi privasi berhasil disimpan.');
@@ -90,6 +99,7 @@ class SettingsController extends Controller
             'account_name'    => ['required', 'string', 'max:255'],
         ]);
 
+        /** @var User $user */
         $user = auth()->user();
         $makeDefault = ! $user->paymentMethods()->exists();
 
@@ -103,9 +113,11 @@ class SettingsController extends Controller
 
     public function setDefaultPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
     {
-        abort_if($paymentMethod->user_id !== auth()->id(), 403);
+        /** @var User $user */
+        $user = auth()->user();
+        abort_if($paymentMethod->user_id !== $user->id, 403);
 
-        auth()->user()->paymentMethods()->update(['is_default' => false]);
+        $user->paymentMethods()->update(['is_default' => false]);
         $paymentMethod->update(['is_default' => true]);
 
         return back()->with('success', 'Metode pembayaran utama berhasil diperbarui.');
@@ -113,13 +125,15 @@ class SettingsController extends Controller
 
     public function destroyPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
     {
-        abort_if($paymentMethod->user_id !== auth()->id(), 403);
+        /** @var User $user */
+        $user = auth()->user();
+        abort_if($paymentMethod->user_id !== $user->id, 403);
 
         $wasDefault = $paymentMethod->is_default;
         $paymentMethod->delete();
 
         if ($wasDefault) {
-            $next = auth()->user()->paymentMethods()->first();
+            $next = $user->paymentMethods()->first();
             $next?->update(['is_default' => true]);
         }
 
@@ -128,6 +142,7 @@ class SettingsController extends Controller
 
     public function deactivate(Request $request): RedirectResponse
     {
+        /** @var User $user */
         $user = auth()->user();
         $user->update(['is_active' => false]);
 

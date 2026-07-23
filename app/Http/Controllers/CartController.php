@@ -7,15 +7,28 @@ use App\Models\CartItem;
 use App\Models\DigitalProduct;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CartController extends Controller
 {
+    private function userCart(bool $create = false): ?Cart
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        if ($create) {
+            return Cart::firstOrCreate(['user_id' => $user->id]);
+        }
+
+        return Cart::where('user_id', $user->id)->first();
+    }
+
     public function index(): View
     {
-        $cart = auth()->user()->cart;
+        $cart = $this->userCart();
         $items = $cart ? $cart->items()->with(['product.shop', 'product.campaign'])->latest('id')->get() : collect();
         $subtotal = $items->sum(fn ($item) => $item->product->price * $item->quantity);
 
@@ -26,7 +39,7 @@ class CartController extends Controller
     {
         $quantity = max(1, (int) $request->input('quantity', 1));
 
-        $cart = auth()->user()->cart ?? Cart::create(['user_id' => auth()->id()]);
+        $cart = $this->userCart(create: true);
 
         if ($cart->campaign_id && $cart->campaign_id !== $product->campaign_id && $cart->items()->exists()) {
             return back()->with('error', 'Keranjangmu sedang berisi produk dari program donasi lain. Selesaikan checkout atau kosongkan keranjang dulu sebelum menambah produk dari program berbeda.');
@@ -58,7 +71,9 @@ class CartController extends Controller
 
     public function updateQuantity(Request $request, CartItem $cartItem): RedirectResponse
     {
-        abort_if($cartItem->cart->user_id !== auth()->id(), 403);
+        /** @var User $user */
+        $user = $request->user();
+        abort_if($cartItem->cart->user_id !== $user->id, 403);
 
         $quantity = max(1, (int) $request->input('quantity', 1));
 
@@ -73,7 +88,9 @@ class CartController extends Controller
 
     public function remove(CartItem $cartItem): RedirectResponse
     {
-        abort_if($cartItem->cart->user_id !== auth()->id(), 403);
+        /** @var User $user */
+        $user = auth()->user();
+        abort_if($cartItem->cart->user_id !== $user->id, 403);
 
         $cart = $cartItem->cart;
         $cartItem->delete();
@@ -93,7 +110,7 @@ class CartController extends Controller
             'is_anonymous'   => ['nullable', 'boolean'],
         ]);
 
-        $cart = auth()->user()->cart;
+        $cart = $this->userCart();
         $items = $cart ? $cart->items()->with('product')->get() : collect();
 
         if ($items->isEmpty()) {
@@ -111,8 +128,11 @@ class CartController extends Controller
         $extraDonation = $validated['extra_donation'] ?? 0;
         $totalPaid = $totalProductPrice + $extraDonation;
 
+        /** @var User $user */
+        $user = $request->user();
+
         $transaction = Transaction::create([
-            'buyer_id'             => auth()->id(),
+            'buyer_id'             => $user->id,
             'campaign_id'          => $cart->campaign_id,
             'total_product_price'  => $totalProductPrice,
             'extra_donation'       => $extraDonation,

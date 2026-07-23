@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,7 +22,10 @@ class ProfileController extends Controller
             'is_anonymous_donation'  => ['nullable', 'boolean'],
         ]);
 
-        auth()->user()->update([
+        /** @var User $user */
+        $user = $request->user();
+
+        $user->update([
             'display_name'          => $validated['display_name'],
             'bio'                    => $validated['bio'] ?? null,
             'is_anonymous_donation'  => $request->boolean('is_anonymous_donation'),

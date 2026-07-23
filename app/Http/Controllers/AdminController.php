@@ -132,9 +132,12 @@ class AdminController extends Controller
             }
         }
 
+        /** @var User $admin */
+        $admin = auth()->user();
+
         $withdrawal->update([
             'status'   => 'approved',
-            'admin_id' => auth()->id(),
+            'admin_id' => $admin->id,
         ]);
 
         return back()->with('success', 'Pencairan dana sebesar Rp '.number_format($withdrawal->amount, 0, ',', '.').' untuk "'.$fundraiser->display_name.'" berhasil disetujui.');
@@ -146,9 +149,12 @@ class AdminController extends Controller
             return back()->with('error', 'Permintaan pencairan ini sudah diproses sebelumnya.');
         }
 
+        /** @var User $admin */
+        $admin = auth()->user();
+
         $withdrawal->update([
             'status'   => 'rejected',
-            'admin_id' => auth()->id(),
+            'admin_id' => $admin->id,
         ]);
 
         return back()->with('success', 'Permintaan pencairan dana ditolak.');

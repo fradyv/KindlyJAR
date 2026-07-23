@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
             $navCartItems = collect();
 
             if (auth()->check()) {
-                $cart = auth()->user()->cart;
+                /** @var User $user */
+                $user = auth()->user();
+                $cart = $user->cart;
                 $navCartItems = $cart ? $cart->items()->with('product')->latest('id')->get() : collect();
             }
 

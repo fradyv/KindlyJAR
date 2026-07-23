@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -99,27 +99,9 @@
       </div>
     </div>
 
-    @if (auth()->user()->kyc_status !== 'verified')
-    <div class="verification-banner" id="verifyBanner">
-      <div class="banner-content">
-        <span class="banner-icon">⚠️</span>
-        <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
-      </div>
-      <div class="banner-actions">
-        <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
-        <button class="banner-close" id="closeBannerBtn">&times;</button>
-      </div>
-    </div>
-    @endif
+    @include('partials.verification-banner')
 
-    @if (session('success'))
-      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
-        <div class="banner-content">
-          <span class="banner-icon">✅</span>
-          <p>{{ session('success') }}</p>
-        </div>
-      </div>
-    @endif
+    @include('partials.flash-messages')
 
     <main class="dash-scroll">
       <div class="dash-main-card">
@@ -130,6 +112,15 @@
 
           <form id="profilSayaForm" action="{{ route('profil.update') }}" method="POST" autocomplete="off">
             @csrf
+
+            @if ($errors->any())
+              <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
+                <div class="banner-content">
+                  <span class="banner-icon">⚠️</span>
+                  <p>{{ $errors->first() }}</p>
+                </div>
+              </div>
+            @endif
 
             <div class="profile-photo-row">
               <label class="profile-photo-edit" for="profilPhotoInput" aria-label="Ganti foto profil">
@@ -282,12 +273,12 @@
       profileDropdown2.classList.remove('open');
     });
 
-    // ── Ganti foto profil (preview lokal, dummy — belum terhubung upload API) ──
+    // ── Preview foto profil (upload belum tersedia) ──
     const profilPhotoInput   = document.getElementById('profilPhotoInput');
     const profilPhotoPreview = document.getElementById('profilPhotoPreview');
     const dashUserAvatar     = document.getElementById('dashUserAvatar');
 
-    profilPhotoInput.addEventListener('change', (e) => {
+    profilPhotoInput?.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
@@ -296,21 +287,6 @@
         if (dashUserAvatar) dashUserAvatar.src = ev.target.result;
       };
       reader.readAsDataURL(file);
-    });
-
-    // ── Prefill toggle anonim dari localStorage ──
-    const anonToggle = document.getElementById('anonToggle');
-    anonToggle.checked = localStorage.getItem('donasiAnonim') === '1';
-
-    // ── Simpan Perubahan (dummy — belum terhubung backend) ──
-    document.getElementById('profilSayaForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const displayName = document.getElementById('displayNameInput').value.trim();
-      if (displayName) localStorage.setItem('userName', displayName);
-      localStorage.setItem('donasiAnonim', anonToggle.checked ? '1' : '0');
-
-      alert('Perubahan profil berhasil disimpan.');
     });
   </script>
 </body>

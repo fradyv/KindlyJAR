@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,10 @@ class CampaignController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        if (auth()->user()->kyc_status !== 'verified') {
+        /** @var User $user */
+        $user = auth()->user();
+
+        if ($user->kyc_status !== 'verified') {
             return redirect()->route('inisiasi')
                 ->with('error', 'Akunmu harus terverifikasi sebelum bisa membuat program donasi.');
         }
@@ -59,7 +63,7 @@ class CampaignController extends Controller
         ]);
 
         Campaign::create([
-            'fundraiser_id'  => auth()->id(),
+            'fundraiser_id'  => $user->id,
             'title'          => $validated['title'],
             'description'    => $validated['description'],
             'category'       => $validated['category'],

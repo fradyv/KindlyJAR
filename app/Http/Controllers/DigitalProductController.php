@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\DigitalProduct;
 use App\Models\TransactionItem;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,9 @@ class DigitalProductController extends Controller
 {
     public function create(): View
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
         $campaigns = Campaign::where('status', 'active')->orderBy('title')->get();
 
         return view('dashboard-hero.tambah-produk', compact('shop', 'campaigns'));
@@ -22,7 +25,9 @@ class DigitalProductController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
 
         if (! $shop) {
             return redirect()->route('gabung-hero');
@@ -60,7 +65,9 @@ class DigitalProductController extends Controller
 
     public function sold(): View
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
         $productIds = $shop ? $shop->products()->pluck('id') : collect();
 
         $items = TransactionItem::whereIn('product_id', $productIds)
@@ -85,7 +92,9 @@ class DigitalProductController extends Controller
 
     public function edit(DigitalProduct $product): View
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);
 
@@ -96,7 +105,9 @@ class DigitalProductController extends Controller
 
     public function update(Request $request, DigitalProduct $product): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);
 
@@ -131,7 +142,9 @@ class DigitalProductController extends Controller
 
     public function destroy(DigitalProduct $product): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,11 @@ class DonationController extends Controller
             'is_anonymous' => ['nullable', 'boolean'],
         ]);
 
+        /** @var User $user */
+        $user = $request->user();
+
         $transaction = Transaction::create([
-            'buyer_id'             => auth()->id(),
+            'buyer_id'             => $user->id,
             'campaign_id'          => $campaign->id,
             'total_product_price'  => 0,
             'extra_donation'       => $validated['nominal'],

@@ -15,6 +15,8 @@
   <div class="dash-right">
     @include('partials.admin-topbar', ['pageTitle' => 'Penyaluran Donasi'])
 
+    @include('partials.flash-messages')
+
     <main class="dash-scroll">
       <div class="dash-main-card">
         <section class="dash-section">

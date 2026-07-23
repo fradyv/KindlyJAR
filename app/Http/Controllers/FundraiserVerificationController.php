@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FundraiserVerification;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +14,7 @@ class FundraiserVerificationController extends Controller
 {
     public function create(): View|RedirectResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         if (in_array($user->kyc_status, ['pending', 'verified'])) {
@@ -26,6 +28,7 @@ class FundraiserVerificationController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $validated = $request->validate([

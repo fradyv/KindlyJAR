@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -62,51 +62,9 @@
           </svg>
           Inisiasi Donasi
         </a>
-        @unless(auth()->user()->shop)
-        <div class="sidebar-cta">
-          <a href="{{ route('gabung-hero') }}" class="btn-join-hero" style="display:inline-block;text-align:center;text-decoration:none;">Gabung menjadi Hero!</a>
-        </div>
-        @endunless
       </nav>
 
-      @if(auth()->user()->shop)
-      <div class="sidebar-hero-menu-wrap">
-        <p class="sidebar-label">Menu Hero</p>
-        <nav class="sidebar-nav">
-          <a href="{{ route('toko-saya') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            Toko Saya
-          </a>
-          <a href="{{ route('tambah-produk') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-            Tambah Produk
-          </a>
-          <a href="{{ route('produk-terjual') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-            Produk yang Terjual
-          </a>
-          <a href="{{ route('pencairan-dana') }}" class="sidebar-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="12" y1="1" x2="12" y2="23"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-            Pencairan Dana
-          </a>
-        </nav>
-      </div>
-      @endif
+      @include('partials.dashboard-sidebar-extras')
     </div>
   </aside>
 
@@ -142,27 +100,8 @@
       </div>
     </div>
 
-    @if (session('success'))
-      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
-        <div class="banner-content">
-          <span class="banner-icon">✅</span>
-          <p>{{ session('success') }}</p>
-        </div>
-      </div>
-    @endif
-
-    @if (auth()->user()->kyc_status !== 'verified')
-      <div class="verification-banner" id="verifyBanner">
-        <div class="banner-content">
-          <span class="banner-icon">⚠️</span>
-          <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
-        </div>
-        <div class="banner-actions">
-          <a href="{{ route('verify') }}" class="banner-btn">Verifikasi Sekarang</a>
-          <button class="banner-close" id="closeBannerBtn">&times;</button>
-        </div>
-      </div>
-    @endif
+    @include('partials.flash-messages')
+    @include('partials.verification-banner')
 
     <!-- AREA SCROLL BOX UTAMA -->
     <main class="dash-scroll">

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use App\Models\TransactionItem;
+use App\Models\User;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
+        /** @var User $user */
         $user = auth()->user();
 
         $trendingCampaigns = Campaign::where('status', 'active')
