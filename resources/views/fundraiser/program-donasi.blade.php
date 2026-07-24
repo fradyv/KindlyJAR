@@ -420,7 +420,8 @@
   <script>
     // Filter kategori + search Program Donasi
     const donationCategoryRow = document.getElementById('donationCategoryRow');
-    const donationCards       = Array.from(document.querySelectorAll('.trending-card, .donation-card-horizontal'));
+    const donationListCards   = Array.from(document.querySelectorAll('.horizontal-donation-list .donation-card-horizontal'));
+    const donationFeaturedCards = Array.from(document.querySelectorAll('.trending-card'));
     const donationSearchInput = document.getElementById('donationSearchInput');
     const donationEmptyState  = document.getElementById('donationEmptyState');
     let activeDonationFilter = 'semua';
@@ -429,7 +430,8 @@
       const query = donationSearchInput.value.trim().toLowerCase();
       let visibleCount = 0;
 
-      donationCards.forEach((card) => {
+      // Kategori hanya memfilter daftar di bawah bar kategori
+      donationListCards.forEach((card) => {
         const matchesCategory = activeDonationFilter === 'semua' || card.dataset.category === activeDonationFilter;
         const matchesSearch = !query || card.dataset.title.includes(query);
         const show = matchesCategory && matchesSearch;
@@ -437,12 +439,18 @@
         if (show) visibleCount++;
       });
 
+      // Bagian atas (trending) tidak terpengaruh kategori, hanya search
+      donationFeaturedCards.forEach((card) => {
+        const matchesSearch = !query || card.dataset.title.includes(query);
+        card.style.display = matchesSearch ? '' : 'none';
+      });
+
       donationEmptyState.style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
     donationCategoryRow.addEventListener('click', (e) => {
       const pill = e.target.closest('.btn-category-pill');
-      if (!pill) return;
+      if (!pill || !pill.dataset.filter) return;
       donationCategoryRow.querySelectorAll('.btn-category-pill').forEach((p) => p.classList.remove('active'));
       pill.classList.add('active');
       activeDonationFilter = pill.dataset.filter;

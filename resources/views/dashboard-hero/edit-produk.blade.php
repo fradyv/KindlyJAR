@@ -174,6 +174,27 @@
                   <input type="file" name="photo" id="produkFotoInput" accept="image/*" />
                 </div>
               </div>
+              <div class="form-group full-width">
+                <label class="form-label">Ganti Aset Digital</label>
+                @if ($product->file_url)
+                  <p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#22c55e;margin:0 0 10px;">
+                    Aset saat ini: {{ basename($product->file_url) }}
+                    @if ($product->formattedFileSize())
+                      ({{ $product->formattedFileSize() }})
+                    @endif
+                  </p>
+                @else
+                  <p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#ef4444;margin:0 0 10px;">
+                    Belum ada aset digital — pembeli tidak bisa download. Upload file di bawah.
+                  </p>
+                @endif
+                <div class="custom-file-upload">
+                  <span class="upload-icon-style">📦</span>
+                  <span class="upload-text-main" id="produkAsetLabel">Pilih File Aset Baru (opsional)</span>
+                  <span class="upload-text-sub">Format: PDF, ZIP, PNG, JPG, PPT, PPTX, DOC, DOCX (max 50MB)</span>
+                  <input type="file" name="asset" id="produkAsetInput" accept=".pdf,.zip,.png,.jpg,.jpeg,.ppt,.pptx,.doc,.docx" />
+                </div>
+              </div>
             </div>
 
             <div class="form-action-footer">
@@ -242,6 +263,13 @@
       const file = e.target.files[0];
       if (!file) return;
       document.getElementById('produkFotoLabel').textContent = 'Terpilih: ' + file.name;
+    });
+
+    const produkAsetInput = document.getElementById('produkAsetInput');
+    produkAsetInput?.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('produkAsetLabel').textContent = 'Terpilih: ' + file.name;
     });
   </script>
 </body>

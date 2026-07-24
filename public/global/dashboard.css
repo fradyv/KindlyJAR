@@ -657,6 +657,22 @@
 
 .badge.berhasil { color: #22c55e; }
 .badge.gagal    { color: #ef4444; }
+.badge.pending  { color: #f59e0b; }
+
+a.pending-payment-link {
+  color: #21A3FF;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+a.pending-payment-link:hover {
+  text-decoration: underline;
+}
+
+a.pending-payment-link .badge.pending {
+  cursor: pointer;
+}
 
 /* ── BOX PUTIH RIWAYAT ── */
 .history-box {
@@ -705,10 +721,16 @@
   background: rgba(33, 163, 255, 0.05);
 }
 
-.page-nav-btn:disabled {
+.page-nav-btn:disabled,
+.page-nav-btn.is-disabled {
   opacity: 0.3;
   cursor: not-allowed;
   border-color: #e0e0e0;
+  pointer-events: none;
+}
+
+a.page-nav-btn {
+  text-decoration: none;
 }
 
 .page-num-display {
@@ -1837,6 +1859,12 @@ select.form-input-style {
 
 .btn-form-back:hover {
   color: #3D3D4E;
+}
+
+a.btn-form-back.verify-exit-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 
 .btn-form-next {
@@ -3158,6 +3186,38 @@ select.form-input-style {
     gap: 8px;
   }
 
+  /* Verifikasi KYC: greeting satu baris + ellipsis */
+  body.verify-kyc-page .dash-topbar {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  body.verify-kyc-page .dash-greeting {
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  body.verify-kyc-page .dash-topbar-right {
+    flex-shrink: 0;
+  }
+
+  body.verify-kyc-page .dash-profile {
+    min-width: 0;
+  }
+
+  body.verify-kyc-page .dash-profile-name {
+    max-width: 92px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   /* Sembunyikan email profil di layar kecil */
   .dash-profile-email {
     display: none;
@@ -3346,6 +3406,32 @@ select.form-input-style {
     flex-direction: column;
   }
 
+  /* Verify stepper — layar sangat kecil */
+  .step-node {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  .form-steps-track::before,
+  .form-progress-bar-fill {
+    left: 14px;
+    right: 14px;
+  }
+
+  .step-label-text {
+    font-size: 0.62rem;
+  }
+
+  .custom-file-upload {
+    padding: 14px 10px;
+  }
+
+  .btn-form-next,
+  .btn-form-back {
+    padding: 12px 16px;
+  }
+
   /* Detail galeri: 2 kolom */
   .detail-galeri {
     grid-template-columns: repeat(2, 1fr);
@@ -3402,4 +3488,245 @@ select.form-input-style {
   .btn-request-otp {
     padding: 12px;
   }
+
+  /* Form verifikasi KYC */
+  .form-progress-container {
+    margin-bottom: 24px;
+  }
+
+  .step-node {
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
+    border-width: 2px;
+  }
+
+  .form-steps-track::before,
+  .form-progress-bar-fill {
+    left: 17px;
+    right: 17px;
+  }
+
+  .step-labels-row {
+    gap: 4px;
+  }
+
+  .step-label-text {
+    font-size: 0.72rem;
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.25;
+  }
+
+  .custom-file-upload {
+    padding: 18px 14px;
+  }
+
+  .upload-icon-style {
+    font-size: 1.4rem;
+  }
+
+  .upload-text-main {
+    font-size: 0.82rem;
+  }
+
+  .upload-text-sub {
+    font-size: 0.72rem;
+  }
+
+  .form-action-footer {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  #draftSaveIndicator {
+    width: 100%;
+    text-align: center;
+    margin-right: 0 !important;
+    order: -1;
+  }
+
+  .verification-banner .banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
 }
+
+/* ══════════════════════════════════════════════
+   ADMIN PANEL — MOBILE NAVIGATION
+   ══════════════════════════════════════════════ */
+
+.admin-hamburger,
+.admin-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body.admin-panel .dash-scroll {
+    padding-bottom: 120px;
+  }
+
+  body.admin-panel .dash-topbar {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  body.admin-panel .dash-greeting {
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+  }
+
+  body.admin-panel .dash-topbar-right,
+  body.admin-panel .profile-wrap,
+  body.admin-panel .dash-profile {
+    flex-shrink: 0;
+  }
+
+  body.admin-panel .dash-profile {
+    max-width: 168px;
+    padding: 5px 12px 5px 5px;
+    gap: 8px;
+  }
+
+  body.admin-panel .dash-profile .dash-avatar,
+  body.admin-panel .dash-profile .dash-avatar-empty {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+  }
+
+  body.admin-panel .dash-profile-email {
+    display: none;
+  }
+
+  body.admin-panel .dash-profile-name {
+    max-width: 88px;
+    font-size: 0.82rem;
+  }
+
+  body.admin-panel .dash-profile > svg:last-child {
+    display: none;
+  }
+
+  body.admin-panel .summary-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-hamburger {
+    display: flex;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 72px;
+    height: 72px;
+    background: #21A3FF;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    padding: 12px;
+    z-index: 220;
+    box-shadow: 0 8px 24px rgba(33, 163, 255, 0.35);
+  }
+
+  .admin-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2.5px;
+    background: #fff;
+    border-radius: 99px;
+    transition: all 0.3s ease;
+  }
+
+  .admin-hamburger.open span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg);
+  }
+
+  .admin-hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .admin-hamburger.open span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg);
+  }
+
+  .admin-mobile-nav {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 4px;
+    padding: 24px 28px 100px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    overflow-y: auto;
+  }
+
+  .admin-mobile-nav.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.admin-nav-open {
+    overflow: hidden;
+  }
+
+  .admin-mobile-nav-title {
+    margin: 0 0 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #6b7a8d;
+    text-align: center;
+  }
+
+  .admin-mobile-nav-link {
+    display: block;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #3D3D4E;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .admin-mobile-nav-link:hover,
+  .admin-mobile-nav-link.active {
+    background: rgba(33, 163, 255, 0.1);
+    color: #21A3FF;
+  }
+
+  .admin-mobile-nav-muted {
+    color: #6b7a8d;
+    font-size: 0.95rem;
+  }
+
+  .admin-mobile-nav-divider {
+    width: 48px;
+    height: 2px;
+    background: rgba(33, 163, 255, 0.15);
+    border-radius: 99px;
+    margin: 10px auto;
+  }
+} 

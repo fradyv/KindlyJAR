@@ -130,59 +130,80 @@
             </div>
           @endif
 
-          <form method="POST" action="{{ route('tambah-produk.store') }}" enctype="multipart/form-data" autocomplete="off">
+          @php
+            $categories = ['Desain Poster', 'Ilustrasi Digital', 'Desain Web', 'Aset 3D', 'Desain Logo', 'Stok Foto'];
+            $draftVal = fn (string $key, mixed $default = '') => old($key, $draft[$key] ?? $default);
+            $hasDraftAsset = filled($draft['asset_path'] ?? null);
+            $hasDraftPhoto = filled($draft['photo_path'] ?? null);
+          @endphp
+
+          <form id="productCreateForm" method="POST" action="{{ route('tambah-produk.store') }}" enctype="multipart/form-data" autocomplete="off">
             @csrf
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label">Nama Produk</label>
-                <input type="text" name="title" class="form-input-style" placeholder="Contoh: Poster Ilustrasi Senja" value="{{ old('title') }}" required />
+                <input type="text" name="title" class="form-input-style" placeholder="Contoh: Poster Ilustrasi Senja" value="{{ $draftVal('title') }}" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Harga (Rp)</label>
-                <input type="number" name="price" class="form-input-style" placeholder="Contoh: 25000" min="0" value="{{ old('price') }}" required />
+                <input type="number" name="price" class="form-input-style" placeholder="Contoh: 25000" min="0" value="{{ $draftVal('price') }}" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Kategori Produk</label>
                 <select name="category" class="form-input-style" required>
-                  <option value="" disabled selected>Pilih kategori produk...</option>
-                  <option value="Desain Poster">Desain Poster</option>
-                  <option value="Ilustrasi Digital">Ilustrasi Digital</option>
-                  <option value="Desain Web">Desain Web</option>
-                  <option value="Aset 3D">Aset 3D</option>
-                  <option value="Desain Logo">Desain Logo</option>
-                  <option value="Stok Foto">Stok Foto</option>
+                  <option value="" disabled {{ $draftVal('category') ? '' : 'selected' }}>Pilih kategori produk...</option>
+                  @foreach ($categories as $cat)
+                    <option value="{{ $cat }}" @selected($draftVal('category') === $cat)>{{ $cat }}</option>
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">
                 <label class="form-label">Stok</label>
-                <input type="number" name="stock" class="form-input-style" placeholder="Contoh: 100" min="0" value="{{ old('stock', 0) }}" />
+                <input type="number" name="stock" class="form-input-style" placeholder="Contoh: 100" min="0" value="{{ $draftVal('stock', 0) }}" />
               </div>
               <div class="form-group full-width">
                 <label class="form-label">Program Donasi yang Didukung</label>
                 <select name="campaign_id" class="form-input-style" required>
-                  <option value="" disabled selected>Pilih program donasi...</option>
+                  <option value="" disabled {{ $draftVal('campaign_id') ? '' : 'selected' }}>Pilih program donasi...</option>
                   @foreach($campaigns as $campaign)
-                    <option value="{{ $campaign->id }}">{{ $campaign->title }}</option>
+                    <option value="{{ $campaign->id }}" @selected((string) $draftVal('campaign_id') === (string) $campaign->id)>{{ $campaign->title }}</option>
                   @endforeach
                 </select>
                 <span class="form-hint">Hasil penjualan produk ini akan tercatat mendukung program yang kamu pilih.</span>
               </div>
               <div class="form-group full-width">
                 <label class="form-label">Deskripsi Produk</label>
-                <textarea name="description" class="form-input-style" rows="3" placeholder="Ceritain produk kamu..." required>{{ old('description') }}</textarea>
+                <textarea name="description" class="form-input-style" rows="3" placeholder="Ceritain produk kamu..." required>{{ $draftVal('description') }}</textarea>
               </div>
               <div class="form-group full-width">
-                <label class="form-label">Upload Foto Produk</label>
+                <label class="form-label">Upload Foto Produk <span style="color:#b0b7c3;font-weight:500;">(Preview di KindlyShop)</span></label>
                 <div class="custom-file-upload">
                   <span class="upload-icon-style">🖼️</span>
-                  <span class="upload-text-main" id="produkFotoLabel">Pilih Foto Produk</span>
+                  <span class="upload-text-main" id="produkFotoLabel">{{ $hasDraftPhoto ? 'File berhasil diunggah' : 'Pilih Foto Produk' }}</span>
                   <span class="upload-text-sub">Format: JPG, PNG max 5MB</span>
                   <input type="file" name="photo" id="produkFotoInput" accept="image/*" />
+                  @if ($hasDraftPhoto)
+                    <span class="draft-file-hint" data-field="photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draft['photo_original_name'] ?? basename($draft['photo_path']) }}</span>
+                  @endif
                 </div>
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label">Upload Aset Digital <span style="color:#ef4444;">*</span></label>
+                <div class="custom-file-upload">
+                  <span class="upload-icon-style">📦</span>
+                  <span class="upload-text-main" id="produkAsetLabel">{{ $hasDraftAsset ? 'File berhasil diunggah' : 'Pilih File Aset untuk Pembeli' }}</span>
+                  <span class="upload-text-sub">Format: PDF, ZIP, PNG, JPG, PPT, PPTX, DOC, DOCX (max 50MB)</span>
+                  <input type="file" name="asset" id="produkAsetInput" accept=".pdf,.zip,.png,.jpg,.jpeg,.ppt,.pptx,.doc,.docx" @if(! $hasDraftAsset) required @endif />
+                  @if ($hasDraftAsset)
+                    <span class="draft-file-hint" data-field="asset" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draft['asset_original_name'] ?? basename($draft['asset_path']) }}</span>
+                  @endif
+                </div>
+                <span class="form-hint">File ini yang bisa didownload pembeli setelah pembayaran berhasil.</span>
               </div>
             </div>
 
             <div class="form-action-footer">
+              <span id="productDraftIndicator" style="font-size:.85rem;color:#b0b7c3;margin-right:auto;display:none;"></span>
               <a href="{{ route('toko-saya') }}" class="btn-form-back">Batal</a>
               <button type="submit" class="btn-form-next">Simpan Produk</button>
             </div>
@@ -241,16 +262,164 @@
 
   </div><!-- .dash-right -->
 
+  @php
+    $productCreateDraftConfig = [
+      'csrf'       => csrf_token(),
+      'draftUrl'   => route('tambah-produk.draft'),
+      'draftFileUrl' => route('tambah-produk.draft-file'),
+      'draftFiles' => [
+        'photo' => $draft['photo_original_name'] ?? null,
+        'asset' => $draft['asset_original_name'] ?? null,
+      ],
+    ];
+  @endphp
+  <script>
+    window.productCreateDraftConfig = @json($productCreateDraftConfig);
+  </script>
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-    // ── Preview nama file foto produk ──
-    const produkFotoInput = document.getElementById('produkFotoInput');
-    produkFotoInput?.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      document.getElementById('produkFotoLabel').textContent = 'Terpilih: ' + file.name;
-    });
+    (function () {
+      const form = document.getElementById('productCreateForm');
+      if (!form) return;
+
+      const config = window.productCreateDraftConfig || {};
+      const draftFiles = { ...(config.draftFiles || {}) };
+      const indicator = document.getElementById('productDraftIndicator');
+      const draftFields = ['title', 'price', 'category', 'stock', 'campaign_id', 'description'];
+      let saveTimer = null;
+
+      function setIndicator(text, color = '#b0b7c3') {
+        if (!indicator) return;
+        indicator.textContent = text;
+        indicator.style.color = color;
+        indicator.style.display = text ? 'inline' : 'none';
+      }
+
+      function collectDraftPayload() {
+        const data = {};
+        draftFields.forEach((name) => {
+          const el = form.querySelector(`[name="${name}"]`);
+          if (el) data[name] = el.value;
+        });
+        return data;
+      }
+
+      function scheduleDraftSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          setIndicator('Menyimpan draf...', '#21A3FF');
+          fetch(config.draftUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-CSRF-TOKEN': config.csrf,
+            },
+            body: JSON.stringify(collectDraftPayload()),
+          })
+            .then(async (res) => {
+              if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                throw new Error(body.message || 'Gagal menyimpan draf.');
+              }
+              setIndicator('Draf tersimpan', '#22c55e');
+              setTimeout(() => setIndicator(''), 2500);
+            })
+            .catch((err) => setIndicator(err.message || 'Gagal menyimpan draf', '#ef4444'));
+        }, 700);
+      }
+
+      draftFields.forEach((name) => {
+        const el = form.querySelector(`[name="${name}"]`);
+        el?.addEventListener('input', scheduleDraftSave);
+        el?.addEventListener('change', scheduleDraftSave);
+      });
+
+      function updateDraftHint(field, filename) {
+        const input = form.querySelector(`#produk${field === 'photo' ? 'Foto' : 'Aset'}Input`);
+        const upload = input?.closest('.custom-file-upload');
+        if (!upload) return;
+
+        let hint = upload.querySelector(`.draft-file-hint[data-field="${field}"]`);
+        if (!hint) {
+          hint = document.createElement('span');
+          hint.className = 'draft-file-hint';
+          hint.dataset.field = field;
+          hint.style.cssText = 'display:block;margin-top:6px;font-size:.85rem;color:#22c55e;';
+          upload.appendChild(hint);
+        }
+        hint.textContent = filename ? `Tersimpan: ${filename}` : '';
+        hint.style.display = filename ? 'block' : 'none';
+      }
+
+      function restoreDraftFileUi() {
+        Object.entries(draftFiles).forEach(([field, filename]) => {
+          if (!filename) return;
+          const labelId = field === 'photo' ? 'produkFotoLabel' : 'produkAsetLabel';
+          const inputId = field === 'photo' ? 'produkFotoInput' : 'produkAsetInput';
+          const label = document.getElementById(labelId);
+          const input = document.getElementById(inputId);
+          if (label) {
+            label.textContent = 'File berhasil diunggah';
+            label.style.color = '#22c55e';
+          }
+          if (field === 'asset' && input) input.removeAttribute('required');
+          updateDraftHint(field, filename);
+        });
+      }
+
+      async function uploadDraftFile(field, file) {
+        const fd = new FormData();
+        fd.append('field', field);
+        fd.append('file', file);
+        fd.append('_token', config.csrf);
+
+        const res = await fetch(config.draftFileUrl, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': config.csrf },
+          body: fd,
+        });
+
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.message || 'Gagal mengunggah file.');
+        return body;
+      }
+
+      function bindFileInput(inputId, labelId, field) {
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(labelId);
+        if (!input || !label) return;
+
+        if (!label.dataset.defaultText) label.dataset.defaultText = label.textContent;
+
+        input.addEventListener('change', async () => {
+          const file = input.files[0];
+          if (!file) return;
+
+          label.textContent = 'Mengunggah...';
+          label.style.color = '#21A3FF';
+
+          try {
+            const result = await uploadDraftFile(field, file);
+            draftFiles[field] = result.filename;
+            label.textContent = 'File berhasil diunggah';
+            label.style.color = '#22c55e';
+            if (field === 'asset') input.removeAttribute('required');
+            updateDraftHint(field, result.filename);
+          } catch (err) {
+            alert(err.message || 'Gagal mengunggah file.');
+            input.value = '';
+            label.textContent = label.dataset.defaultText;
+            label.style.color = '';
+          }
+        });
+      }
+
+      restoreDraftFileUi();
+      bindFileInput('produkFotoInput', 'produkFotoLabel', 'photo');
+      bindFileInput('produkAsetInput', 'produkAsetLabel', 'asset');
+    })();
   </script>
 </body>
 </html>

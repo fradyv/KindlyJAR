@@ -18,9 +18,13 @@ class DonationController extends Controller
 
     public function store(Request $request, Campaign $campaign): RedirectResponse
     {
+        if (! $campaign->acceptsContributions()) {
+            return redirect()->route('detail-program', $campaign)
+                ->with('error', 'Program donasi ini sudah terpenuhi dan tidak menerima donasi lagi.');
+        }
+
         $validated = $request->validate([
             'nominal'      => ['required', 'numeric', 'min:1000'],
-            'bank_name'    => ['nullable', 'string', 'max:100'],
             'is_anonymous' => ['nullable', 'boolean'],
         ]);
 
@@ -32,7 +36,7 @@ class DonationController extends Controller
             'total_product_price'  => 0,
             'extra_donation'       => $validated['nominal'],
             'total_paid'           => $validated['nominal'],
-            'bank_name'            => $validated['bank_name'] ?? 'Midtrans',
+            'bank_name'            => 'Midtrans',
             'is_anonymous'         => $request->boolean('is_anonymous'),
             'status'               => 'pending',
             'created_at'           => now(),

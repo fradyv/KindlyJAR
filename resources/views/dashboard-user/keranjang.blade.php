@@ -120,6 +120,17 @@
 
         <h1 style="font-family:'Nunito',sans-serif;font-weight:800;font-size:1.5rem;color:#3D3D4E;margin:0 0 20px;">Keranjang Belanja</h1>
 
+        @if ($pendingPayment ?? null)
+          <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+            <p style="margin:0 0 8px;font-family:'Nunito',sans-serif;font-weight:700;color:#92400e;font-size:.9rem;">
+              Kamu punya pembayaran yang belum selesai (Rp {{ number_format((float) $pendingPayment->total_paid, 0, ',', '.') }}).
+            </p>
+            <a href="{{ route('payment.show', $pendingPayment) }}" style="font-family:'Nunito',sans-serif;font-weight:700;color:#21A3FF;text-decoration:none;font-size:.85rem;">
+              Lanjutkan / coba bayar lagi →
+            </a>
+          </div>
+        @endif
+
         @if ($items->isEmpty())
           <div style="text-align:center;padding:60px 20px;">
             <svg width="56" height="56" fill="none" stroke="#b0b7c3" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 14px;display:block;">
@@ -134,14 +145,36 @@
           <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
 
             <div style="flex:2 1 420px;">
-              @if ($cart && $cart->campaign)
+              @if ($campaignGroups->count() > 1)
                 <div style="background:#f4f8ff;border:1px solid #dbeafe;border-radius:12px;padding:12px 16px;margin-bottom:16px;">
                   <p style="margin:0;font-size:.78rem;color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:700;">Program donasi yang didukung dari keranjang ini</p>
-                  <p style="margin:4px 0 0;font-size:.95rem;color:#21A3FF;font-family:'Nunito',sans-serif;font-weight:800;">{{ $cart->campaign->title }}</p>
+                  <p style="margin:4px 0 0;font-size:.9rem;color:#21A3FF;font-family:'Nunito',sans-serif;font-weight:800;line-height:1.5;">
+                    {{ $campaignGroups->map(fn ($group) => optional($group->first()->product->campaign)->title)->filter()->implode(' · ') }}
+                  </p>
                 </div>
+              @elseif ($campaignGroups->count() === 1)
+                @php $singleCampaign = $campaignGroups->first()->first()->product->campaign; @endphp
+                @if ($singleCampaign)
+                <div style="background:#f4f8ff;border:1px solid #dbeafe;border-radius:12px;padding:12px 16px;margin-bottom:16px;">
+                  <p style="margin:0;font-size:.78rem;color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:700;">Program donasi yang didukung dari keranjang ini</p>
+                  <p style="margin:4px 0 0;font-size:.95rem;color:#21A3FF;font-family:'Nunito',sans-serif;font-weight:800;">{{ $singleCampaign->title }}</p>
+                </div>
+                @endif
               @endif
 
-              @foreach ($items as $item)
+              @foreach ($campaignGroups as $group)
+                @php
+                  $campaign = $group->first()->product->campaign;
+                  $groupSubtotal = $group->sum(fn ($item) => $item->product->price * $item->quantity);
+                @endphp
+                @if ($campaignGroups->count() > 1)
+                <div style="margin-bottom:10px;padding:10px 14px;background:#f8fafc;border:1px solid #eef1f6;border-radius:12px;">
+                  <p style="margin:0;font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;color:#3D3D4E;">{{ $campaign?->title ?? 'Program Donasi' }}</p>
+                  <p style="margin:4px 0 0;font-family:'Open Sans',sans-serif;font-size:.8rem;color:#6b7a8d;">Subtotal program: Rp {{ number_format($groupSubtotal, 0, ',', '.') }}</p>
+                </div>
+                @endif
+
+              @foreach ($group as $item)
                 <div style="display:flex;gap:14px;align-items:center;padding:16px;border:1px solid #eef1f6;border-radius:14px;margin-bottom:14px;">
                   <img src="{{ $item->product->product_preview ? asset($item->product->product_preview) : asset('assets/kata15.jpg') }}"
                        alt="{{ $item->product->title }}"
@@ -149,6 +182,9 @@
                        style="width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;" />
                   <div style="flex:1;min-width:0;">
                     <a href="{{ route('detail-produk', $item->product) }}" style="font-family:'Nunito',sans-serif;font-weight:700;color:#3D3D4E;text-decoration:none;font-size:.95rem;">{{ $item->product->title }}</a>
+                    @if ($campaignGroups->count() === 1 && $item->product->campaign)
+                    <p style="margin:4px 0 0;font-size:.78rem;color:#21A3FF;font-family:'Nunito',sans-serif;font-weight:700;">{{ $item->product->campaign->title }}</p>
+                    @endif
                     <p style="margin:4px 0 0;font-size:.85rem;color:#6b7a8d;">Rp {{ number_format($item->product->price, 0, ',', '.') }} / item</p>
 
                     <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
@@ -167,6 +203,7 @@
                   </div>
                   <p style="font-family:'Nunito',sans-serif;font-weight:800;color:#3D3D4E;font-size:.95rem;white-space:nowrap;">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</p>
                 </div>
+              @endforeach
               @endforeach
             </div>
 

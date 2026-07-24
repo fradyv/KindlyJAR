@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kelola Transaksi · KindlyJAR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
-</head>
-<body class="dashboard-body">
+@extends('layouts.admin')
 
-  @include('partials.admin-sidebar')
+@section('title', 'Riwayat Transaksi')
+@section('pageTitle', 'Riwayat Transaksi')
 
-  <div class="dash-right">
-    @include('partials.admin-topbar', ['pageTitle' => 'Kelola Transaksi'])
-
-    @include('partials.flash-messages')
-
-    <main class="dash-scroll">
+@section('content')
       <div class="dash-main-card">
         <section class="dash-section">
           <h2 class="dash-card-title">Semua Transaksi</h2>
@@ -62,7 +48,7 @@
                     <td style="padding:10px 8px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;">
                       {{ $t->is_anonymous ? 'Anonim' : ($t->buyer->display_name ?? '—') }}
                     </td>
-                    <td style="padding:10px 8px;font-family:'Open Sans',sans-serif;font-size:.85rem;">{{ $t->campaign->title ?? '—' }}</td>
+                    <td style="padding:10px 8px;font-family:'Open Sans',sans-serif;font-size:.85rem;">{{ $t->campaign->title ?? 'Beberapa program' }}</td>
                     <td style="padding:10px 8px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;">Rp {{ number_format($t->total_paid, 0, ',', '.') }}</td>
                     <td style="padding:10px 8px;font-family:'Open Sans',sans-serif;font-size:.85rem;">{{ optional($t->payment_time ?? $t->created_at)->translatedFormat('d M Y, H:i') ?? '—' }}</td>
                     <td style="padding:10px 8px;">
@@ -75,9 +61,7 @@
               </tbody>
             </table>
           </div>
+          @include('partials.pagination', ['paginator' => $transactions])
         </section>
       </div>
-    </main>
-  </div>
-</body>
-</html>
+@endsection

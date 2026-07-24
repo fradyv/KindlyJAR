@@ -148,13 +148,15 @@
               </a>
             @endif
 
-            @if ($product->stock > 0)
+            @if ($product->stock > 0 && (! $product->campaign || $product->campaign->acceptsContributions()))
               <form action="{{ route('keranjang.tambah', $product) }}" method="POST" style="display:flex;gap:12px;align-items:center;">
                 @csrf
                 <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
                        style="width:80px;padding:10px 12px;border-radius:10px;border:1px solid #dfe4ee;font-family:'Nunito',sans-serif;font-weight:700;" />
                 <button type="submit" class="btn-add-cart" style="padding:12px 28px;">+ Tambah ke Keranjang</button>
               </form>
+            @elseif ($product->campaign && ! $product->campaign->acceptsContributions())
+              <p style="color:#b3261e;font-family:'Nunito',sans-serif;font-weight:700;">Program donasi untuk produk ini sudah terpenuhi. Pembelian sementara ditutup.</p>
             @else
               <p style="color:#b3261e;font-family:'Nunito',sans-serif;font-weight:700;">Stok produk ini sedang habis.</p>
             @endif

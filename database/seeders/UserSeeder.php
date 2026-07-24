@@ -33,9 +33,9 @@ class UserSeeder extends Seeder
             'kyc_status'    => 'verified',
             'bio'           => 'Relawan kemanusiaan yang fokus menggalang dana untuk daerah 3T di Indonesia.',
         ]);
-        $fundraiser->roles()->attach($fundraiserRole);
+        $fundraiser->roles()->attach([$fundraiserRole->id, $normalUserRole->id]);
 
-        // ── Hero: penjual produk digital di KindlyShop (terverifikasi, punya toko) ──
+        // ── Hero: penjual produk digital di KindlyShop (KYC terverifikasi, punya toko) ──
         $heroes = [
             [
                 'legal_name'   => 'Herlambang Suryana',
@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
                 'kyc_status'    => 'verified',
                 'bio'           => $data['bio'],
             ]);
-            $hero->roles()->attach($normalUserRole);
+            $hero->roles()->attach([$normalUserRole->id, $fundraiserRole->id]);
         }
 
         // ── Savior: pembeli/donatur biasa ──

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentMethod;
 use App\Models\UserSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,9 +20,8 @@ class SettingsController extends Controller
             'notification_preferences' => [],
             'privacy_permissions'      => [],
         ]);
-        $paymentMethods = $user->paymentMethods()->orderByDesc('is_default')->get();
 
-        return view('user-info.pengaturan-akun', compact('verification', 'settings', 'paymentMethods'));
+        return view('user-info.pengaturan-akun', compact('verification', 'settings'));
     }
 
     public function updatePassword(Request $request): RedirectResponse
@@ -88,52 +86,6 @@ class SettingsController extends Controller
         $settings->update(['privacy_permissions' => $permissions]);
 
         return back()->with('success', 'Preferensi privasi berhasil disimpan.');
-    }
-
-    public function storePaymentMethod(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'provider'        => ['required', 'string', 'max:100'],
-            'account_number'  => ['required', 'string', 'max:50'],
-            'account_name'    => ['required', 'string', 'max:255'],
-        ]);
-
-        $user = $this->authUser();
-        $makeDefault = ! $user->paymentMethods()->exists();
-
-        $method = $user->paymentMethods()->create([
-            ...$validated,
-            'is_default' => $makeDefault,
-        ]);
-
-        return back()->with('success', 'Metode pembayaran "'.$method->provider.'" berhasil ditambahkan.');
-    }
-
-    public function setDefaultPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
-    {
-        $user = $this->authUser();
-        abort_if($paymentMethod->user_id !== $user->id, 403);
-
-        $user->paymentMethods()->update(['is_default' => false]);
-        $paymentMethod->update(['is_default' => true]);
-
-        return back()->with('success', 'Metode pembayaran utama berhasil diperbarui.');
-    }
-
-    public function destroyPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
-    {
-        $user = $this->authUser();
-        abort_if($paymentMethod->user_id !== $user->id, 403);
-
-        $wasDefault = $paymentMethod->is_default;
-        $paymentMethod->delete();
-
-        if ($wasDefault) {
-            $next = $user->paymentMethods()->first();
-            $next?->update(['is_default' => true]);
-        }
-
-        return back()->with('success', 'Metode pembayaran berhasil dihapus.');
     }
 
     public function deactivate(Request $request): RedirectResponse

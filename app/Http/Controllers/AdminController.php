@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use App\Models\FundraiserVerification;
+use App\Models\Role;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\WithdrawalRequest;
@@ -41,7 +42,8 @@ class AdminController extends Controller
                 ->orWhere('legal_name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%")))
             ->latest('id')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.users', compact('users', 'search'));
     }
@@ -72,9 +74,16 @@ class AdminController extends Controller
     public function approveVerification(FundraiserVerification $verification): RedirectResponse
     {
         $verification->update(['status' => 'verified']);
-        $verification->user->update(['kyc_status' => 'verified']);
 
-        return back()->with('success', 'Verifikasi KYC "'.$verification->user->display_name.'" berhasil disetujui.');
+        $user = $verification->user;
+        $user->update(['kyc_status' => 'verified']);
+
+        $fundraiserRole = Role::where('name', 'fundraiser')->first();
+        if ($fundraiserRole && ! $user->hasRole('fundraiser')) {
+            $user->roles()->attach($fundraiserRole);
+        }
+
+        return back()->with('success', 'Verifikasi KYC "'.$user->display_name.'" berhasil disetujui.');
     }
 
     public function rejectVerification(FundraiserVerification $verification): RedirectResponse
@@ -92,7 +101,8 @@ class AdminController extends Controller
         $transactions = Transaction::with(['buyer', 'campaign'])
             ->when($status !== 'all', fn ($q) => $q->where('status', $status))
             ->latest('created_at')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.transactions', compact('transactions', 'status'));
     }
@@ -163,7 +173,8 @@ class AdminController extends Controller
         $campaigns = Campaign::with('fundraiser')
             ->withCount(['transactions' => fn ($q) => $q->where('status', 'success')])
             ->latest('created_at')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.campaigns', compact('campaigns'));
     }

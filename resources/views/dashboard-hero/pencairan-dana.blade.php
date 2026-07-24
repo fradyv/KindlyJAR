@@ -188,7 +188,7 @@
         <section class="dash-section">
           <h2 class="dash-card-title">Riwayat Pencairan</h2>
 
-          @if ($requests->isEmpty())
+          @if ($requests->total() === 0)
             <p class="shop-empty-state">Belum ada riwayat pencairan dana.</p>
           @else
             <div style="overflow-x:auto;">
@@ -227,6 +227,7 @@
                 </tbody>
               </table>
             </div>
+            @include('partials.pagination', ['paginator' => $requests])
           @endif
         </section>
 

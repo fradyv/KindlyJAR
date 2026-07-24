@@ -120,10 +120,11 @@
         @php
           $preview = optional($campaign->products->first())->product_preview;
           $campaignImage = $preview ? asset($preview) : asset('assets/kata15.jpg');
-          $percentage = $campaign->target_amount > 0
-            ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100))
-            : 0;
-          $sisaHari = $campaign->end_date ? max(0, now()->diffInDays($campaign->end_date, false)) : null;
+          $percentage = $campaign->progressPercentage();
+          $sisaHari = ($campaign->end_date && $campaign->end_date->isFuture())
+            ? (int) now()->diffInDays($campaign->end_date)
+            : null;
+          $canDonate = $campaign->acceptsContributions();
         @endphp
 
         <!-- 1. HERO BANNER -->
@@ -151,9 +152,11 @@
             </div>
         </div>
         <div class="detail-meta-row">
-            <span>👥 {{ number_format($campaign->transactions_count) }} donatur</span>
-            @if($sisaHari !== null)
+            <span>👥 {{ number_format($campaign->transactions()->where('status', 'success')->count()) }} donatur</span>
+            @if($canDonate && $sisaHari !== null)
             <span>⏳ {{ $sisaHari }} hari lagi</span>
+            @elseif(!$canDonate)
+            <span>✅ Program terpenuhi</span>
             @endif
         </div>
         </div>
@@ -162,6 +165,14 @@
         <div class="detail-section" id="donasiForm">
         <h2 class="detail-section-title">Donasi untuk Program Ini</h2>
 
+        @if (!$canDonate)
+          <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;margin-bottom:16px;">
+            <div class="banner-content">
+              <span class="banner-icon">🎉</span>
+              <p style="margin:0;">Program donasi ini sudah <strong>terpenuhi 100%</strong>. Terima kasih atas dukungan para Hero! Donasi baru tidak dapat diterima lagi.</p>
+            </div>
+          </div>
+        @else
         @if ($errors->any())
           <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
             <div class="banner-content">
@@ -191,26 +202,11 @@
               </label>
             </div>
 
-            <div class="donasi-modal-section">
-              <p class="donasi-modal-label">Metode Pembayaran</p>
-              <div class="donasi-metode-list">
-                <label class="donasi-metode-item">
-                  <input type="radio" name="bank_name" value="Transfer Bank" checked />
-                  <span>🏦 Transfer Bank</span>
-                </label>
-                <label class="donasi-metode-item">
-                  <input type="radio" name="bank_name" value="E-Wallet" />
-                  <span>📱 E-Wallet</span>
-                </label>
-                <label class="donasi-metode-item">
-                  <input type="radio" name="bank_name" value="Kartu Kredit" />
-                  <span>💳 Kartu Kredit</span>
-                </label>
-              </div>
-            </div>
+            <p class="form-hint" style="margin:0 0 16px;">Pembayaran diproses aman melalui Midtrans (transfer bank, e-wallet, kartu kredit/debit).</p>
 
             <button type="submit" class="btn-donasi-besar btn-form-next" style="width:100%;">Donasi Sekarang</button>
         </form>
+        @endif
         </div>
 
         <!-- 4. DESKRIPSI PROGRAM -->

@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kelola Pengguna · KindlyJAR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
-</head>
-<body class="dashboard-body">
+@extends('layouts.admin')
 
-  @include('partials.admin-sidebar')
+@section('title', 'Kelola Pengguna')
+@section('pageTitle', 'Kelola Pengguna')
 
-  <div class="dash-right">
-    @include('partials.admin-topbar', ['pageTitle' => 'Kelola Pengguna'])
-
-    @include('partials.flash-messages')
-
-    <main class="dash-scroll">
+@section('content')
       <div class="dash-main-card">
         <section class="dash-section">
           <h2 class="dash-card-title">Semua Pengguna</h2>
@@ -88,9 +74,7 @@
               </tbody>
             </table>
           </div>
+          @include('partials.pagination', ['paginator' => $users])
         </section>
       </div>
-    </main>
-  </div>
-</body>
-</html>
+@endsection

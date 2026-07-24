@@ -112,6 +112,7 @@ class TransactionSeeder extends Seeder
             TransactionItem::create([
                 'transaction_id'    => $transaction->id,
                 'product_id'        => $product->id,
+                'campaign_id'       => $product->campaign_id,
                 'price_at_purchase' => $totalProduct,
                 'quantity'          => 1,
             ]);

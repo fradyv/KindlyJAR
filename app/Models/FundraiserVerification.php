@@ -21,9 +21,28 @@ class FundraiserVerification extends Model
         'passbook_photo',
         'statement_letter',
         'supporting_docs',
+        'file_original_names',
         'status',
         'created_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'file_original_names' => 'array',
+        ];
+    }
+
+    public function fileDisplayName(string $field): ?string
+    {
+        if (empty($this->{$field})) {
+            return null;
+        }
+
+        $names = $this->file_original_names ?? [];
+
+        return $names[$field] ?? basename($this->{$field});
+    }
 
     public function user()
     {

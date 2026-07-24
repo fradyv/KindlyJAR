@@ -17,7 +17,6 @@ class FundraiserVerificationController extends Controller
     private const FILE_FIELDS = [
         'ktp_photo',
         'selfie_ktp_photo',
-        'profile_photo',
         'passbook_photo',
         'statement_letter',
         'supporting_docs',
@@ -26,7 +25,6 @@ class FundraiserVerificationController extends Controller
     private const PHOTO_FIELDS = [
         'ktp_photo',
         'selfie_ktp_photo',
-        'profile_photo',
         'passbook_photo',
     ];
 
@@ -125,21 +123,30 @@ class FundraiserVerificationController extends Controller
             return response()->json(['message' => $fileValidator->errors()->first('file')], 422);
         }
 
-        $path = 'storage/'.Storage::disk('public')->put('verifications', $request->file('file'));
+        $uploadedFile = $request->file('file');
+        $originalName = $uploadedFile->getClientOriginalName();
+        $path = 'storage/'.Storage::disk('public')->put('verifications', $uploadedFile);
 
-        FundraiserVerification::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                $field       => $path,
-                'status'      => 'draft',
-                'created_at'  => now(),
-            ]
-        );
+        $verification = FundraiserVerification::firstOrNew(['user_id' => $user->id]);
+        $originalNames = $verification->file_original_names ?? [];
+        $originalNames[$field] = $originalName;
+
+        $verification->fill([
+            $field                => $path,
+            'file_original_names' => $originalNames,
+            'status'              => 'draft',
+        ]);
+
+        if (! $verification->exists) {
+            $verification->created_at = now();
+        }
+
+        $verification->save();
 
         return response()->json([
             'ok'       => true,
             'field'    => $field,
-            'filename' => basename($path),
+            'filename' => $originalName,
         ]);
     }
 
@@ -158,7 +165,6 @@ class FundraiserVerificationController extends Controller
             'bank_account_name'   => ['required', 'string', 'max:255'],
             'ktp_photo'           => [$this->fileRequiredRule($existing, 'ktp_photo', $request), 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'selfie_ktp_photo'    => [$this->fileRequiredRule($existing, 'selfie_ktp_photo', $request), 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
-            'profile_photo'        => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'passbook_photo'      => [$this->fileRequiredRule($existing, 'passbook_photo', $request), 'nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             'statement_letter'    => [$this->fileRequiredRule($existing, 'statement_letter', $request), 'nullable', 'file', 'mimes:pdf', 'max:5120'],
             'supporting_docs'     => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
@@ -173,7 +179,6 @@ class FundraiserVerificationController extends Controller
             'statement_letter.required' => 'Surat pernyataan wajib diunggah.',
             'ktp_photo.mimes'           => 'Foto KTP harus berformat PNG, JPG, atau JPEG.',
             'selfie_ktp_photo.mimes'  => 'Foto selfie harus berformat PNG, JPG, atau JPEG.',
-            'profile_photo.mimes'     => 'Foto profil harus berformat PNG, JPG, atau JPEG.',
             'passbook_photo.mimes'    => 'Foto buku tabungan harus berformat PNG, JPG, atau JPEG.',
             'statement_letter.mimes'  => 'Surat pernyataan harus berformat PDF.',
             'supporting_docs.mimes'   => 'Berkas pendukung harus berformat PDF.',
@@ -191,9 +196,12 @@ class FundraiserVerificationController extends Controller
         $validated = $validator->validated();
 
         $filePaths = [];
+        $fileOriginalNames = $existing?->file_original_names ?? [];
+
         foreach (self::FILE_FIELDS as $field) {
             if ($request->hasFile($field)) {
                 $filePaths[$field] = 'storage/'.Storage::disk('public')->put('verifications', $request->file($field));
+                $fileOriginalNames[$field] = $request->file($field)->getClientOriginalName();
             }
         }
 
@@ -204,13 +212,13 @@ class FundraiserVerificationController extends Controller
                 'ktp_number'          => $validated['ktp_number'],
                 'ktp_photo'           => $filePaths['ktp_photo'] ?? optional($existing)->ktp_photo,
                 'selfie_ktp_photo'    => $filePaths['selfie_ktp_photo'] ?? optional($existing)->selfie_ktp_photo,
-                'profile_photo'       => $filePaths['profile_photo'] ?? optional($existing)->profile_photo,
                 'bank_name'           => $validated['bank_name'],
                 'bank_account_number' => $validated['bank_account_number'],
                 'bank_account_name'   => $validated['bank_account_name'],
                 'passbook_photo'      => $filePaths['passbook_photo'] ?? optional($existing)->passbook_photo,
                 'statement_letter'    => $filePaths['statement_letter'] ?? optional($existing)->statement_letter,
                 'supporting_docs'     => $filePaths['supporting_docs'] ?? optional($existing)->supporting_docs,
+                'file_original_names' => $fileOriginalNames,
                 'status'              => 'pending',
                 'created_at'          => now(),
             ]
@@ -250,7 +258,6 @@ class FundraiserVerificationController extends Controller
             'ktp_number'          => 2,
             'ktp_photo'           => 2,
             'selfie_ktp_photo'    => 2,
-            'profile_photo'       => 2,
             'bank_name'           => 3,
             'bank_account_number' => 3,
             'bank_account_name'   => 3,

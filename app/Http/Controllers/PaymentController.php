@@ -30,8 +30,25 @@ class PaymentController extends Controller
         }
 
         if ($transaction->status === 'failed') {
-            return redirect()->route('riwayat')
-                ->with('error', 'Pembayaran gagal atau kedaluwarsa. Silakan coba lagi.');
+            return $this->redirectAfterCancelled($transaction);
+        }
+
+        $transaction->load(['campaign', 'items.campaign']);
+
+        if ($this->completion->transactionHasBlockedCampaign($transaction)) {
+            $this->completion->fail($transaction);
+
+            $message = 'Salah satu program donasi di pesanan ini sudah terpenuhi. Pembayaran tidak dapat dilanjutkan.';
+
+            if ((float) $transaction->total_product_price > 0) {
+                return redirect()->route('keranjang')->with('error', $message);
+            }
+
+            if ($transaction->campaign) {
+                return redirect()->route('detail-program', $transaction->campaign)->with('error', $message);
+            }
+
+            return redirect()->route('program-donasi')->with('error', $message);
         }
 
         try {
@@ -39,13 +56,27 @@ class PaymentController extends Controller
         } catch (Throwable $e) {
             report($e);
 
-            return redirect()->back()
-                ->with('error', 'Gagal memuat halaman pembayaran. Periksa konfigurasi Midtrans kamu.');
+            $message = 'Gagal memuat halaman pembayaran.';
+            if (! MidtransService::isEnabled()) {
+                $message = 'Midtrans belum dikonfigurasi. Set MIDTRANS_SERVER_KEY atau aktifkan MIDTRANS_DEMO_MODE=true untuk development.';
+            }
+
+            return $this->redirectAfterPaymentLoadError($transaction, $message);
         }
 
-        $transaction->load('campaign');
+        $transaction->load(['campaign', 'items.campaign']);
 
-        return view('payment.snap', compact('transaction', 'snapToken'));
+        $campaignTitles = $transaction->items
+            ->pluck('campaign.title')
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($campaignTitles->isEmpty() && $transaction->campaign) {
+            $campaignTitles = collect([$transaction->campaign->title]);
+        }
+
+        return view('payment.snap', compact('transaction', 'snapToken', 'campaignTitles'));
     }
 
     public function finish(Request $request, Transaction $transaction): RedirectResponse
@@ -65,11 +96,10 @@ class PaymentController extends Controller
             return $this->redirectAfterSuccess($transaction);
         }
 
-        if ($status && $this->midtrans->isFailedStatus($status)) {
+        if ($status && $this->midtrans->isCancelledStatus($status)) {
             $this->completion->fail($transaction, $request->query('transaction_id'));
 
-            return redirect()->route('riwayat')
-                ->with('error', 'Pembayaran gagal atau dibatalkan.');
+            return $this->redirectAfterCancelled($transaction);
         }
 
         if ($transaction->fresh()->status === 'success') {
@@ -77,7 +107,7 @@ class PaymentController extends Controller
         }
 
         return redirect()->route('payment.show', $transaction)
-            ->with('success', 'Pembayaran sedang diproses. Selesaikan pembayaran di popup Midtrans.');
+            ->with('success', 'Pembayaran belum selesai. Kamu bisa mencoba bayar lagi.');
     }
 
     public function notification(Request $request): Response
@@ -97,7 +127,7 @@ class PaymentController extends Controller
 
             if ($this->midtrans->isSuccessfulStatus($status)) {
                 $this->completion->complete($transaction, $midtransTransactionId);
-            } elseif ($this->midtrans->isFailedStatus($status)) {
+            } elseif ($this->midtrans->isCancelledStatus($status)) {
                 $this->completion->fail($transaction, $midtransTransactionId);
             }
         } catch (Throwable $e) {
@@ -107,6 +137,47 @@ class PaymentController extends Controller
         }
 
         return response('OK', 200);
+    }
+
+    private function redirectAfterPaymentLoadError(Transaction $transaction, ?string $message = null): RedirectResponse
+    {
+        $message ??= 'Gagal memuat halaman pembayaran. Periksa konfigurasi Midtrans kamu. Produk masih ada di keranjang — kamu bisa coba bayar lagi.';
+
+        if ((float) $transaction->total_product_price > 0) {
+            return redirect()->route('keranjang')
+                ->with('error', $message)
+                ->with('retry_payment_url', route('payment.show', $transaction));
+        }
+
+        $transaction->load('campaign');
+
+        if ($transaction->campaign) {
+            return redirect()->route('detail-program', $transaction->campaign)
+                ->with('error', $message)
+                ->with('retry_payment_url', route('payment.show', $transaction));
+        }
+
+        return redirect()->route('program-donasi')
+            ->with('error', $message)
+            ->with('retry_payment_url', route('payment.show', $transaction));
+    }
+
+    private function redirectAfterCancelled(Transaction $transaction): RedirectResponse
+    {
+        if ((float) $transaction->total_product_price > 0) {
+            return redirect()->route('keranjang')
+                ->with('error', 'Pembayaran dibatalkan. Produk masih ada di keranjang — silakan checkout ulang jika ingin melanjutkan.');
+        }
+
+        $transaction->load('campaign');
+
+        if ($transaction->campaign) {
+            return redirect()->route('detail-program', $transaction->campaign)
+                ->with('error', 'Donasi dibatalkan. Silakan coba lagi jika kamu masih ingin berdonasi.');
+        }
+
+        return redirect()->route('program-donasi')
+            ->with('error', 'Donasi dibatalkan.');
     }
 
     private function redirectAfterSuccess(Transaction $transaction): RedirectResponse

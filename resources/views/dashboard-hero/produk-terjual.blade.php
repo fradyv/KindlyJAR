@@ -158,8 +158,10 @@
                 </tbody>
               </table>
             </div>
-            @if($items->isEmpty())
+            @if($items->total() === 0)
               <p style="text-align:center; color:#b0b7c3; font-family:'Open Sans', sans-serif; font-size:0.9rem; padding:24px 0 8px;">Belum ada pesanan masuk. Yuk promosikan produkmu!</p>
+            @else
+              @include('partials.pagination', ['paginator' => $items])
             @endif
           </div>
         </section>

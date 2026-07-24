@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pencairan Dana · KindlyJAR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
-</head>
-<body class="dashboard-body">
+@extends('layouts.admin')
 
-  @include('partials.admin-sidebar')
+@section('title', 'Pencairan Dana')
+@section('pageTitle', 'Pencairan Dana')
 
-  <div class="dash-right">
-    @include('partials.admin-topbar', ['pageTitle' => 'Pencairan Dana'])
-
-    @include('partials.flash-messages')
-
-    <main class="dash-scroll">
+@section('content')
       <div class="dash-main-card">
         <section class="dash-section">
           <h2 class="dash-card-title">Permintaan Pencairan Dana</h2>
@@ -72,7 +58,7 @@
                       </td>
                       <td style="padding:10px 8px;">
                         @if ($w->status === 'pending')
-                          <div style="display:flex;gap:6px;">
+                          <div style="display:flex;gap:6px;flex-wrap:wrap;">
                             <form method="POST" action="{{ route('admin.withdrawals.approve', $w) }}">
                               @csrf
                               <button type="submit" class="btn-success-solid" style="padding:5px 12px;font-size:.75rem;">Setujui</button>
@@ -94,7 +80,4 @@
           @endif
         </section>
       </div>
-    </main>
-  </div>
-</body>
-</html>
+@endsection

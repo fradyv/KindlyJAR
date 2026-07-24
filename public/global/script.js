@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!textMain.dataset.defaultText) {
           textMain.dataset.defaultText = textMain.textContent;
         }
-        textMain.textContent = `Tersimpan: ${filename}`;
+        textMain.textContent = 'File berhasil diunggah';
         textMain.style.color = '#22c55e';
       }
 
@@ -580,6 +580,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnBack) {
       btnBack.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+    }
+
+    const btnExit = document.getElementById('btnFormExit');
+    if (btnExit) {
+      btnExit.style.display = (currentStep === 1) ? '' : 'none';
     }
 
     if (btnNext) {
@@ -699,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.target.value = e.target.value.replace(/\D/g, '').slice(0, 16);
   });
 
-  const photoFields = new Set(['ktp_photo', 'selfie_ktp_photo', 'profile_photo', 'passbook_photo']);
+  const photoFields = new Set(['ktp_photo', 'selfie_ktp_photo', 'passbook_photo']);
   const pdfFields = new Set(['statement_letter', 'supporting_docs']);
   const photoExts = ['jpg', 'jpeg', 'png'];
 
@@ -759,7 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.removeAttribute('required');
 
         if (textMain) {
-          textMain.textContent = `Tersimpan: ${result.filename}`;
+          textMain.textContent = 'File berhasil diunggah';
           textMain.style.color = '#22c55e';
         }
 
@@ -775,16 +780,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  const btnReqOtp = document.getElementById('btnReqOtp');
-  if (btnReqOtp) {
-    btnReqOtp.addEventListener('click', () => {
-      btnReqOtp.textContent = 'Terkirim (60s)';
-      btnReqOtp.disabled = true;
-      btnReqOtp.style.opacity = '0.6';
-      alert('Kode OTP simulasi telah dikirim ke nomor WhatsApp Anda!');
-    });
-  }
 });
 (function () {
   const settingsNavItems = document.querySelectorAll('.settings-nav-item');

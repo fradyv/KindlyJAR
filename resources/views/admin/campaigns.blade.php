@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Penyaluran Donasi · KindlyJAR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
-</head>
-<body class="dashboard-body">
+@extends('layouts.admin')
 
-  @include('partials.admin-sidebar')
+@section('title', 'Penyaluran Donasi')
+@section('pageTitle', 'Penyaluran Donasi')
 
-  <div class="dash-right">
-    @include('partials.admin-topbar', ['pageTitle' => 'Penyaluran Donasi'])
-
-    @include('partials.flash-messages')
-
-    <main class="dash-scroll">
+@section('content')
       <div class="dash-main-card">
         <section class="dash-section">
           <h2 class="dash-card-title">Pantau Penyaluran Donasi</h2>
@@ -70,9 +56,7 @@
               </tbody>
             </table>
           </div>
+          @include('partials.pagination', ['paginator' => $campaigns])
         </section>
       </div>
-    </main>
-  </div>
-</body>
-</html>
+@endsection

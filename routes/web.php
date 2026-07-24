@@ -90,15 +90,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/pengaturan-akun/2fa', [SettingsController::class, 'updateTwoFactor'])->name('pengaturan-akun.2fa');
     Route::post('/pengaturan-akun/notifikasi', [SettingsController::class, 'updateNotifications'])->name('pengaturan-akun.notifikasi');
     Route::post('/pengaturan-akun/privasi', [SettingsController::class, 'updatePrivacy'])->name('pengaturan-akun.privasi');
-    Route::post('/pengaturan-akun/metode-pembayaran', [SettingsController::class, 'storePaymentMethod'])->name('pengaturan-akun.metode-pembayaran.store');
-    Route::post('/pengaturan-akun/metode-pembayaran/{paymentMethod}/utama', [SettingsController::class, 'setDefaultPaymentMethod'])->name('pengaturan-akun.metode-pembayaran.utama');
-    Route::delete('/pengaturan-akun/metode-pembayaran/{paymentMethod}', [SettingsController::class, 'destroyPaymentMethod'])->name('pengaturan-akun.metode-pembayaran.destroy');
     Route::post('/pengaturan-akun/nonaktifkan', [SettingsController::class, 'deactivate'])->name('pengaturan-akun.nonaktifkan');
 
     // Dashboard Hero
     Route::get('/toko-saya', [ShopController::class, 'myShop'])->name('toko-saya');
 
     Route::get('/tambah-produk', [DigitalProductController::class, 'create'])->name('tambah-produk');
+    Route::post('/tambah-produk/draft', [DigitalProductController::class, 'saveDraft'])->name('tambah-produk.draft');
+    Route::post('/tambah-produk/draft-file', [DigitalProductController::class, 'uploadDraftFile'])->name('tambah-produk.draft-file');
     Route::post('/tambah-produk', [DigitalProductController::class, 'store'])->name('tambah-produk.store');
     Route::get('/produk/{product}/edit', [DigitalProductController::class, 'edit'])->name('produk.edit');
     Route::put('/produk/{product}', [DigitalProductController::class, 'update'])->name('produk.update');

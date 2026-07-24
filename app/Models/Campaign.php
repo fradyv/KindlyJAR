@@ -56,4 +56,37 @@ class Campaign extends Model
     {
         return (float) $this->collected_amount - (float) $this->withdrawn_amount;
     }
+
+    public function isFull(): bool
+    {
+        return (float) $this->target_amount > 0
+            && (float) $this->collected_amount >= (float) $this->target_amount;
+    }
+
+    public function acceptsContributions(): bool
+    {
+        return $this->status === 'active' && ! $this->isFull();
+    }
+
+    public function progressPercentage(): int
+    {
+        if ((float) $this->target_amount <= 0) {
+            return 0;
+        }
+
+        return (int) min(100, round(((float) $this->collected_amount / (float) $this->target_amount) * 100));
+    }
+
+    public function markAsCompletedIfFull(): void
+    {
+        if ($this->status === 'active' && $this->isFull()) {
+            $this->update(['status' => 'completed']);
+        }
+    }
+
+    public function scopeAcceptingContributions($query)
+    {
+        return $query->where('status', 'active')
+            ->whereColumn('collected_amount', '<', 'target_amount');
+    }
 }

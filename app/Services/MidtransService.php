@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Transaction;
 use App\Models\User;
+use Exception;
 use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
@@ -32,9 +33,14 @@ class MidtransService
         return 'KJ-T-'.$transaction->id;
     }
 
+    public function retryOrderIdFor(Transaction $transaction): string
+    {
+        return $this->orderIdFor($transaction).'-'.now()->format('YmdHis');
+    }
+
     public function findTransactionByOrderId(string $orderId): ?Transaction
     {
-        if (preg_match('/^KJ-T-(\d+)$/', $orderId, $matches)) {
+        if (preg_match('/^KJ-T-(\d+)(?:-.+)?$/', $orderId, $matches)) {
             return Transaction::find($matches[1]);
         }
 
@@ -50,10 +56,28 @@ class MidtransService
 
         $orderId = $transaction->midtrans_order_id ?? $this->orderIdFor($transaction);
 
-        if (! $transaction->midtrans_order_id) {
-            $transaction->update(['midtrans_order_id' => $orderId]);
+        $params = $this->buildSnapParams($transaction, $buyer, $orderId);
+
+        try {
+            $token = Snap::getSnapToken($params);
+        } catch (Exception $e) {
+            if (! $this->isDuplicateOrderIdError($e)) {
+                throw $e;
+            }
+
+            $orderId = $this->retryOrderIdFor($transaction);
+            $params = $this->buildSnapParams($transaction, $buyer, $orderId);
+            $token = Snap::getSnapToken($params);
         }
 
+        $transaction->update(['midtrans_order_id' => $orderId]);
+
+        return $token;
+    }
+
+    /** @return array<string, mixed> */
+    private function buildSnapParams(Transaction $transaction, User $buyer, string $orderId): array
+    {
         $params = [
             'transaction_details' => [
                 'order_id'     => $orderId,
@@ -101,7 +125,15 @@ class MidtransService
             ]];
         }
 
-        return Snap::getSnapToken($params);
+        return $params;
+    }
+
+    private function isDuplicateOrderIdError(Exception $e): bool
+    {
+        $message = strtolower($e->getMessage());
+
+        return str_contains($message, 'order_id')
+            && (str_contains($message, 'sudah digunakan') || str_contains($message, 'already been taken'));
     }
 
     public function parseNotification(): Notification
@@ -114,6 +146,11 @@ class MidtransService
     public function isSuccessfulStatus(string $status): bool
     {
         return in_array($status, ['capture', 'settlement'], true);
+    }
+
+    public function isCancelledStatus(string $status): bool
+    {
+        return $status === 'cancel';
     }
 
     public function isFailedStatus(string $status): bool

@@ -118,7 +118,7 @@
 
       <!-- Satu card besar pembungkus utama konten kosong -->
       <div class="dash-main-card">
-        <h2 class="dash-card-title">Koleksi Karya yang Sudah Kamu Milikii</h2>
+        <h2 class="dash-card-title">Koleksi Karya yang Sudah Kamu Miliki</h2>
         <p class="dash-card-sub">Akses kembali semua aset digital dan karya kreator yang pernah kamu beli kapan saja.</p>
         <!-- ── AREA DASHBOARD: RIWAYAT ASSET & DOWNLOAD ── -->
         <div class="download-manager-container">
@@ -128,11 +128,11 @@
             <div class="dm-left-controls">
             <div class="dm-search-wrapper">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Cari aset digital saya..." class="dm-search-input" />
+                <input type="text" id="dmSearchInput" placeholder="Cari aset digital saya..." class="dm-search-input" autocomplete="off" />
             </div>
             </div>
             <div class="dm-right-controls">
-            <span class="dm-total-info">Total: {{ $assetCount }} Aset Unduhan</span>
+            <span class="dm-total-info" id="dmTotalInfo">Total: {{ $assetCount }} Aset Unduhan</span>
             </div>
         </div>
 
@@ -150,12 +150,11 @@
                 </tr>
             </thead>
             <tbody>
-              @php $rowNum = 0; @endphp
-              @forelse($transactions as $transaction)
-                @foreach($transaction->items as $item)
+              @forelse($purchaseRows as $item)
                   @php
-                    $rowNum++;
+                    $transaction = $item->transaction;
                     $product = $item->product;
+                    $rowNum = $purchaseRows->firstItem() + $loop->index;
                     $fileName = $product?->title ?? 'Produk tidak ditemukan';
                     $extension = strtolower(pathinfo($product?->file_url ?? '', PATHINFO_EXTENSION));
                     $iconClass = match(true) {
@@ -164,9 +163,19 @@
                       $transaction->status === 'success' => 'ppt',
                     default => 'blank',
                     };
-                    $statusClass = $transaction->status === 'success' ? 'success' : 'pending';
-                    $statusLabel = $transaction->status === 'success' ? 'Completed' : ucfirst($transaction->status);
+                    $statusClass = match($transaction->status) {
+                      'success' => 'success',
+                      'failed'  => 'failed',
+                      default   => 'pending',
+                    };
+                    $statusLabel = match($transaction->status) {
+                      'success' => 'Completed',
+                      'failed'  => 'Dibatalkan',
+                      'pending' => 'Menunggu Bayar',
+                      default   => ucfirst($transaction->status),
+                    };
                     $purchaseDate = $transaction->payment_time ?? $transaction->created_at;
+                    $fileSizeLabel = $product?->formattedFileSize() ?? '—';
                   @endphp
                   <tr>
                     <td class="text-center">{{ $rowNum }}</td>
@@ -184,13 +193,17 @@
                         </div>
                       </div>
                     </td>
-                    <td>—</td>
+                    <td>{{ $fileSizeLabel }}</td>
                     <td><span class="dm-badge {{ $statusClass }}">{{ $statusLabel }}</span></td>
                     <td>{{ $purchaseDate ? $purchaseDate->format('d M Y') : '—' }}</td>
                     <td>
                       @if($transaction->status === 'success' && $product?->file_url)
-                      <a href="{{ asset($product->file_url) }}" class="btn-dm-action" title="Download File" download>
+                      <a href="{{ $product->fileAssetUrl() }}" class="btn-dm-action" title="Download File" download>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                      </a>
+                      @elseif($transaction->status === 'pending')
+                      <a href="{{ route('payment.show', $transaction) }}" class="btn-dm-action" title="Bayar lagi" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
                       </a>
                       @else
                       <button class="btn-dm-action" title="Download File" disabled>
@@ -199,20 +212,18 @@
                       @endif
                     </td>
                   </tr>
-                @endforeach
               @empty
-                <tr>
+                <tr id="dmEmptyRow">
                   <td colspan="6" class="text-center">Belum ada riwayat pembelian.</td>
                 </tr>
               @endforelse
+              <tr id="dmNoResultsRow" style="display:none;">
+                <td colspan="6" class="text-center">Tidak ada aset yang cocok dengan pencarian.</td>
+              </tr>
             </tbody>
             </table>
         </div>
-          <div class="history-pagination">
-            <button class="page-nav-btn" id="prevBtn" disabled>&lt;</button>
-            <span class="page-num-display" id="pageDisplay">1</span>
-            <button class="page-nav-btn" id="nextBtn" disabled>&gt;</button>
-          </div>
+          @include('partials.pagination', ['paginator' => $purchaseRows])
         </div>
       </div><!-- /.dash-main-card -->
     </main>
@@ -320,57 +331,43 @@
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-        // Ambil semua elemen baris data dari table body kamu
-    const tableRows = document.querySelectorAll(".dm-table tbody tr");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const pageDisplay = document.getElementById("pageDisplay");
+    (function () {
+      const tbody = document.querySelector('.dm-table tbody');
+      const searchInput = document.getElementById('dmSearchInput');
+      const totalInfo = document.getElementById('dmTotalInfo');
+      const noResultsRow = document.getElementById('dmNoResultsRow');
+      const totalAssets = {{ (int) $assetCount }};
+      const totalOnPage = {{ (int) $purchaseRows->count() }};
 
-    let currentPage = 1;
-    const maxRowsPerPage = 10; // 🌟 Di sini settingan maksimal 10 data per halaman
-
-    function updateTablePagination() {
-      const totalRows = tableRows.length;
-      const totalPages = Math.ceil(totalRows / maxRowsPerPage);
-
-      // Looping untuk sembunyikan/tampilkan baris berdasarkan halaman aktif
-      tableRows.forEach((row, index) => {
-        const start = (currentPage - 1) * maxRowsPerPage;
-        const end = start + maxRowsPerPage;
-
-        if (index >= start && index < end) {
-          row.style.display = ""; // Tampilkan
-        } else {
-          row.style.display = "none"; // Sembunyikan
-        }
+      const dataRows = Array.from(tbody.querySelectorAll('tr')).filter((row) => {
+        return row.id !== 'dmEmptyRow' && row.id !== 'dmNoResultsRow';
       });
 
-      // Update text nomor halaman
-      pageDisplay.textContent = currentPage;
+      function applySearchFilter() {
+        const query = (searchInput?.value || '').trim().toLowerCase();
+        let visibleCount = 0;
 
-      // Atur tombol aktif/mati (disabled)
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-    }
+        dataRows.forEach((row) => {
+          const match = !query || row.textContent.toLowerCase().includes(query);
+          row.style.display = match ? '' : 'none';
+          if (match) visibleCount++;
+        });
 
-    // Event Listener Klik Tombol Panah
-    prevBtn.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        updateTablePagination();
+        if (noResultsRow) {
+          noResultsRow.style.display = dataRows.length > 0 && visibleCount === 0 ? '' : 'none';
+        }
+
+        if (totalInfo) {
+          if (query && visibleCount !== dataRows.length) {
+            totalInfo.textContent = 'Menampilkan: ' + visibleCount + ' dari ' + totalOnPage + ' aset di halaman ini';
+          } else {
+            totalInfo.textContent = 'Total: ' + totalAssets + ' Aset Unduhan';
+          }
+        }
       }
-    });
 
-    nextBtn.addEventListener("click", () => {
-      const totalPages = Math.ceil(tableRows.length / maxRowsPerPage);
-      if (currentPage < totalPages) {
-        currentPage++;
-        updateTablePagination();
-      }
-    });
-
-    // Jalankan fungsi pertama kali saat halaman di-load
-    document.addEventListener("DOMContentLoaded", updateTablePagination);
+      searchInput?.addEventListener('input', applySearchFilter);
+    })();
   </script>
 </body>
 </html>

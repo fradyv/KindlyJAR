@@ -39,7 +39,7 @@
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
-        Kelola Transaksi
+        Riwayat Transaksi
       </a>
       <a href="{{ route('admin.withdrawals') }}" class="sidebar-link @if(request()->routeIs('admin.withdrawals')) active @endif">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -58,7 +58,7 @@
     </nav>
 
     <div class="sidebar-cta">
-      <a href="{{ route('home') }}" style="display:inline-block;text-align:center;text-decoration:none;color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;">&larr; Ke Beranda Situs</a>
+      <a href="{{ route('dashboard') }}" style="display:inline-block;text-align:center;text-decoration:none;color:#6b7a8d;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;">&larr; Ke Beranda</a>
     </div>
   </div>
 </aside>

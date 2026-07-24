@@ -69,7 +69,6 @@ class KindlyJarFlowTest extends TestCase
 
         $this->post(route('keranjang.checkout'), [
             'extra_donation' => 5000,
-            'bank_name'      => 'BCA',
         ])
             ->assertRedirect(route('riwayat'))
             ->assertSessionHas('success');
@@ -80,20 +79,73 @@ class KindlyJarFlowTest extends TestCase
             'status'      => 'success',
         ]);
 
+        $this->assertDatabaseHas('transaction_items', [
+            'product_id'  => $product->id,
+            'campaign_id' => $product->campaign_id,
+        ]);
+
         $product->refresh();
         $this->assertSame($initialStock - 1, $product->stock);
+    }
+
+    public function test_savior_can_checkout_mixed_campaign_cart_with_single_payment(): void
+    {
+        $user = User::where('email', 'joseph@gmail.com')->firstOrFail();
+
+        $products = DigitalProduct::where('stock', '>', 0)
+            ->get()
+            ->unique('campaign_id')
+            ->take(2)
+            ->values();
+
+        $this->assertGreaterThanOrEqual(2, $products->count(), 'Need at least two products from different campaigns in seed data.');
+
+        [$productA, $productB] = $products;
+        $campaignA = Campaign::findOrFail($productA->campaign_id);
+        $campaignB = Campaign::findOrFail($productB->campaign_id);
+        $beforeA = (float) $campaignA->collected_amount;
+        $beforeB = (float) $campaignB->collected_amount;
+        $extraDonation = 10000;
+        $expectedTotal = (float) $productA->price + (float) $productB->price + $extraDonation;
+
+        $this->actingAs($user);
+
+        $this->post(route('keranjang.tambah', $productA), ['quantity' => 1])->assertRedirect()->assertSessionHas('success');
+        $this->post(route('keranjang.tambah', $productB), ['quantity' => 1])->assertRedirect()->assertSessionHas('success');
+
+        $this->post(route('keranjang.checkout'), [
+            'extra_donation' => $extraDonation,
+        ])
+            ->assertRedirect(route('riwayat'))
+            ->assertSessionHas('success');
+
+        $transaction = Transaction::where('buyer_id', $user->id)
+            ->where('status', 'success')
+            ->latest('id')
+            ->firstOrFail();
+
+        $this->assertNull($transaction->campaign_id);
+        $this->assertSame($expectedTotal, (float) $transaction->total_paid);
+
+        $campaignA->refresh();
+        $campaignB->refresh();
+
+        $shareA = round($extraDonation * ((float) $productA->price / ((float) $productA->price + (float) $productB->price)), 2);
+        $shareB = round($extraDonation - $shareA, 2);
+
+        $this->assertSame($beforeA + (float) $productA->price + $shareA, (float) $campaignA->collected_amount);
+        $this->assertSame($beforeB + (float) $productB->price + $shareB, (float) $campaignB->collected_amount);
     }
 
     public function test_savior_can_donate_to_campaign(): void
     {
         $user = User::where('email', 'dinda@gmail.com')->firstOrFail();
-        $campaign = Campaign::firstOrFail();
+        $campaign = Campaign::acceptingContributions()->firstOrFail();
         $before = $campaign->collected_amount;
 
         $this->actingAs($user)
             ->post(route('donasi.store', $campaign), [
-                'nominal'   => 25000,
-                'bank_name' => 'Mandiri',
+                'nominal' => 25000,
             ])
             ->assertRedirect(route('detail-program', $campaign))
             ->assertSessionHas('success');
@@ -108,6 +160,24 @@ class KindlyJarFlowTest extends TestCase
                 ->where('status', 'success')
                 ->exists()
         );
+    }
+
+    public function test_donation_is_blocked_when_campaign_is_full(): void
+    {
+        $user = User::where('email', 'dinda@gmail.com')->firstOrFail();
+        $campaign = Campaign::acceptingContributions()->firstOrFail();
+
+        $campaign->update([
+            'collected_amount' => $campaign->target_amount,
+            'status'           => 'completed',
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('donasi.store', $campaign), [
+                'nominal' => 25000,
+            ])
+            ->assertRedirect(route('detail-program', $campaign))
+            ->assertSessionHas('error');
     }
 
     public function test_non_admin_cannot_access_admin_panel(): void

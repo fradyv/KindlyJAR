@@ -23,7 +23,11 @@
       Selesaikan Pembayaran
     </h1>
     <p style="font-family:'Open Sans',sans-serif;color:#6b7a8d;font-size:.92rem;margin:0 0 6px;">
-      @if ($transaction->campaign)
+      @if (($campaignTitles ?? collect())->count() > 1)
+        {{ $campaignTitles->implode(' · ') }}
+      @elseif (($campaignTitles ?? collect())->count() === 1)
+        {{ $campaignTitles->first() }}
+      @elseif ($transaction->campaign)
         {{ $transaction->campaign->title }}
       @else
         Pembelian KindlyShop
@@ -49,6 +53,7 @@
 
   <script>
     const finishBaseUrl = @json(route('payment.finish', $transaction));
+    const paymentShowUrl = @json(route('payment.show', $transaction));
 
     function redirectToFinish(result) {
       const params = new URLSearchParams();
@@ -61,22 +66,16 @@
     function openSnap() {
       snap.pay(@json($snapToken), {
         onSuccess: function (result) {
-          alert('Pembayaran berhasil!');
-          console.log('onSuccess:', result);
           redirectToFinish(result);
         },
         onPending: function (result) {
-          alert('Menunggu pembayaranmu. Selesaikan instruksi di metode yang dipilih.');
-          console.log('onPending:', result);
           redirectToFinish(result);
         },
-        onError: function (result) {
-          alert('Pembayaran gagal. Silakan coba lagi.');
-          console.log('onError:', result);
-          redirectToFinish(result);
+        onError: function () {
+          window.location.href = paymentShowUrl;
         },
         onClose: function () {
-          alert('Kamu menutup popup tanpa menyelesaikan pembayaran.');
+          window.location.href = @json($transaction->total_product_price > 0 ? route('keranjang') : ($transaction->campaign ? route('detail-program', $transaction->campaign) : route('program-donasi')));
         }
       });
     }

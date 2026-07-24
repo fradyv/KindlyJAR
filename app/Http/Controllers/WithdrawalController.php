@@ -21,7 +21,7 @@ class WithdrawalController extends Controller
 
         $wallet->update(['balance' => $totalAvailable]);
 
-        $requests = $wallet->withdrawalRequests()->latest()->get();
+        $requests = $wallet->withdrawalRequests()->latest()->paginate(10)->withQueryString();
 
         return view('dashboard-hero.pencairan-dana', [
             'wallet'         => $wallet,

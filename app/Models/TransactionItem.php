@@ -11,6 +11,7 @@ class TransactionItem extends Model
     protected $fillable = [
         'transaction_id',
         'product_id',
+        'campaign_id',
         'price_at_purchase',
         'quantity',
     ];
@@ -30,5 +31,10 @@ class TransactionItem extends Model
     public function product()
     {
         return $this->belongsTo(DigitalProduct::class, 'product_id');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class);
     }
 }

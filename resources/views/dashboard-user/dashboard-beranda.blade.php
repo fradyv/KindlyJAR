@@ -161,15 +161,33 @@
               <tbody id="historyTableBody">
                 @forelse($riwayatAktivitas as $transaksi)
                   <tr>
-                    <td>#KJ-{{ str_pad($transaksi->id, 4, '0', STR_PAD_LEFT) }}</td>
-                    <td>{{ optional($transaksi->campaign)->title ?? '-' }}</td>
+                    <td>
+                      @if($transaksi->status === 'pending')
+                        <a href="{{ route('payment.show', $transaksi) }}" class="pending-payment-link" title="Lanjutkan pembayaran">
+                          #KJ-{{ str_pad($transaksi->id, 4, '0', STR_PAD_LEFT) }}
+                        </a>
+                      @else
+                        #KJ-{{ str_pad($transaksi->id, 4, '0', STR_PAD_LEFT) }}
+                      @endif
+                    </td>
+                    <td>
+                      @if($transaksi->status === 'pending')
+                        <a href="{{ route('payment.show', $transaksi) }}" class="pending-payment-link" title="Lanjutkan pembayaran">
+                          {{ optional($transaksi->campaign)->title ?? ($transaksi->total_product_price > 0 ? 'Beberapa program donasi' : '-') }}
+                        </a>
+                      @else
+                        {{ optional($transaksi->campaign)->title ?? ($transaksi->total_product_price > 0 ? 'Beberapa program donasi' : '-') }}
+                      @endif
+                    </td>
                     <td>{{ optional($transaksi->payment_time ?? $transaksi->created_at)->translatedFormat('d M Y') ?? '—' }}</td>
                     <td>Rp {{ number_format($transaksi->total_paid, 0, ',', '.') }}</td>
                     <td>
                       @if($transaksi->status === 'success')
                         <span class="badge berhasil">&#9679; Berhasil</span>
                       @elseif($transaksi->status === 'pending')
-                        <span class="badge pending">&#9679; Menunggu</span>
+                        <a href="{{ route('payment.show', $transaksi) }}" class="pending-payment-link" title="Lanjutkan pembayaran" style="text-decoration:none;">
+                          <span class="badge pending">&#9679; Menunggu · Bayar</span>
+                        </a>
                       @else
                         <span class="badge gagal">&#9679; Gagal</span>
                       @endif
@@ -183,6 +201,7 @@
               </tbody>
             </table>
           </div>
+          @include('partials.pagination', ['paginator' => $riwayatAktivitas])
         </div>
       </section>
 
@@ -271,7 +290,7 @@
   </div>
 </div>
 
-  </div><!-- .dash-right -->
+  {{-- </div><!-- .dash-right -->
 
   <!-- ── TOMBOL GABUNG HERO (mobile floating, hanya ≤768px) ── -->
   <a href="{{ route('gabung-hero') }}" class="dash-mobile-hero-btn" aria-label="Gabung menjadi Hero" id="mobileHeroBtn">
@@ -321,9 +340,10 @@
       </svg>
       Inisiasi
     </a>
-  </nav>
+  </nav> --}}
 
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
+  @include('partials.mobile-bottom-nav')
 </body>
 </html>

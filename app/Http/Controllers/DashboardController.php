@@ -34,8 +34,8 @@ class DashboardController extends Controller
         $riwayatAktivitas = $user->transactions()
             ->with('campaign')
             ->latest('created_at')
-            ->take(5)
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('dashboard-user.dashboard-beranda', compact(
             'trendingCampaigns',

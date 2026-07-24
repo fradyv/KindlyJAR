@@ -10,6 +10,10 @@ class CampaignController extends Controller
 {
     public function index()
     {
+        Campaign::where('status', 'active')
+            ->whereColumn('collected_amount', '>=', 'target_amount')
+            ->update(['status' => 'completed']);
+
         $allCampaigns = Campaign::where('status', 'active')
             ->with(['fundraiser', 'products'])
             ->withCount('transactions')
@@ -24,16 +28,20 @@ class CampaignController extends Controller
 
     public function show(Campaign $campaign)
     {
+        $campaign->markAsCompletedIfFull();
+        $campaign->refresh();
+
         $campaign->load(['fundraiser', 'products']);
         $campaign->loadCount('transactions');
 
         $donaturTerbaru = $campaign->transactions()
             ->with('buyer')
+            ->where('status', 'success')
             ->latest()
             ->take(5)
             ->get();
 
-        $programSerupa = Campaign::where('status', 'active')
+        $programSerupa = Campaign::acceptingContributions()
             ->where('id', '!=', $campaign->id)
             ->with('products')
             ->inRandomOrder()

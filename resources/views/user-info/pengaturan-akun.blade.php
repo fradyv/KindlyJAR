@@ -3,172 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pengaturan Akun ∑ KindlyJAR</title>
+  <title>Pengaturan Akun ù KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
-
-  <style>
-    /* -- ADD PAYMENT MODAL -- */
-    #addPaymentModal .donasi-modal-box { max-width: 520px; }
-    .pm-type-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .pm-type-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 18px 10px;
-      border: 1.5px solid #e2e8f0;
-      background: #fff;
-      border-radius: 14px;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: .85rem;
-      color: #3D3D4E;
-      transition: all .18s ease;
-      text-align: center;
-    }
-    .pm-type-card .pm-type-icon { font-size: 1.8rem; }
-    .pm-type-card:hover {
-      border-color: #21A3FF;
-      background: #f0f9ff;
-      transform: translateY(-2px);
-    }
-    .pm-type-card.selected {
-      border-color: #21A3FF;
-      background: #eaf6ff;
-      box-shadow: 0 0 0 3px rgba(33,163,255,.15);
-    }
-    .pm-form-group { margin-bottom: 14px; }
-    .pm-form-group label {
-      display:block;
-      font-family:'Nunito',sans-serif;
-      font-weight:600;
-      font-size:.85rem;
-      color:#3D3D4E;
-      margin-bottom:6px;
-    }
-    .pm-form-group input,
-    .pm-form-group select {
-      width:100%;
-      padding:10px 12px;
-      border:1.5px solid #e2e8f0;
-      border-radius:10px;
-      font-family:'Open Sans',sans-serif;
-      font-size:.9rem;
-      color:#3D3D4E;
-      background:#fff;
-      box-sizing:border-box;
-      transition:border-color .15s;
-    }
-    .pm-form-group input:focus,
-    .pm-form-group select:focus {
-      outline:none;
-      border-color:#21A3FF;
-    }
-    .pm-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .pm-disclaimer {
-      display:flex; align-items:flex-start; gap:8px;
-      background:#f0f9ff; border:1px solid #d0eaff;
-      border-radius:10px; padding:10px 12px;
-      font-size:.8rem; color:#3D3D4E; line-height:1.45;
-      margin-top:4px;
-    }
-    .pm-modal-actions {
-      display:flex; gap:10px; margin-top:6px;
-    }
-    .pm-modal-actions .modal-btn { flex:1; margin:0; }
-    .pm-btn-secondary {
-      background:#fff; color:#3D3D4E;
-      border:1.5px solid #e2e8f0;
-    }
-    .pm-btn-secondary:hover { background:#f4f7fb; }
-    .pm-back-link {
-      background:none; border:none; padding:0; margin-bottom:10px;
-      color:#21A3FF; font-family:'Nunito',sans-serif; font-weight:600;
-      font-size:.85rem; cursor:pointer;
-    }
-    .payment-method-row .payment-method-actions {
-      display:flex; gap:6px; align-items:center;
-    }
-    .payment-method-badge {
-      display:inline-block;
-      background:#21A3FF; color:#fff;
-      font-family:'Nunito',sans-serif; font-weight:700;
-      font-size:.7rem; padding:2px 8px; border-radius:999px;
-      margin-left:6px; vertical-align:middle;
-    }
-    .btn-make-primary {
-      background:#fff; color:#21A3FF;
-      border:1.5px solid #21A3FF;
-      padding:6px 10px; border-radius:8px;
-      font-family:'Nunito',sans-serif; font-weight:700;
-      font-size:.75rem; cursor:pointer;
-      transition:all .15s;
-    }
-    .btn-make-primary:hover { background:#21A3FF; color:#fff; }
-    @media (max-width: 520px) {
-      .pm-type-grid { grid-template-columns: 1fr; }
-      .pm-form-row { grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
 <body class="dashboard-body">
-
-  <!-- -- MODAL: TAMBAH METODE PEMBAYARAN -- -->
-  <div class="modal-overlay" id="addPaymentModal">
-    <div class="modal-box donasi-modal-box">
-      <button class="modal-close-btn" id="closeAddPaymentModal" type="button">&times;</button>
-
-      <div class="donasi-modal-header">
-        <h3>Tambah Metode Pembayaran</h3>
-      </div>
-
-      <form action="{{ route('pengaturan-akun.metode-pembayaran.store') }}" method="POST">
-        @csrf
-        <div class="pm-form-group">
-          <label>Penyedia (Bank / E-Wallet)</label>
-          <select name="provider" required>
-            <option value="" disabled selected>Pilih penyedia...</option>
-            <option value="BCA">BCA</option>
-            <option value="BNI">BNI</option>
-            <option value="BRI">BRI</option>
-            <option value="Mandiri">Mandiri</option>
-            <option value="CIMB Niaga">CIMB Niaga</option>
-            <option value="GoPay">GoPay</option>
-            <option value="OVO">OVO</option>
-            <option value="DANA">DANA</option>
-            <option value="ShopeePay">ShopeePay</option>
-            <option value="LinkAja">LinkAja</option>
-          </select>
-        </div>
-        <div class="pm-form-group">
-          <label>Nomor Rekening / HP</label>
-          <input type="text" name="account_number" inputmode="numeric" maxlength="30" placeholder="Contoh: 1234567890" required />
-        </div>
-        <div class="pm-form-group">
-          <label>Nama Pemilik</label>
-          <input type="text" name="account_name" maxlength="100" placeholder="Sesuai buku tabungan / akun" required />
-        </div>
-
-        <div class="pm-disclaimer">
-          ?? <span>Data pembayaran Anda aman &amp; terenkripsi. Nomor sensitif akan otomatis di-mask di daftar.</span>
-        </div>
-
-        <div class="pm-modal-actions">
-          <button type="button" class="modal-btn pm-btn-secondary" id="pmCancelBtn">Batal</button>
-          <button type="submit" class="modal-btn btn-primary">Simpan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
 
   <!-- -- SIDEBAR (khusus Profil & Pengaturan) -- -->
   <aside class="sidebar">
@@ -272,14 +112,7 @@
     </div>
     @endif
 
-    @if (session('success'))
-      <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
-        <div class="banner-content">
-          <span class="banner-icon">?</span>
-          <p>{{ session('success') }}</p>
-        </div>
-      </div>
-    @endif
+    @include('partials.flash-messages')
 
     <main class="dash-scroll">
       <div class="dash-main-card settings-layout">
@@ -288,7 +121,6 @@
           <a href="#keamanan" class="settings-nav-item"> Keamanan</a>
           <a href="#notifikasi" class="settings-nav-item"> Notifikasi</a>
           <a href="#privasi" class="settings-nav-item"> Privasi</a>
-          <a href="#pembayaran" class="settings-nav-item"> Pembayaran</a>
           <a href="#hapus-akun" class="settings-nav-item danger"> Hapus Akun</a>
         </nav>
       <div class="settings-content">
@@ -481,46 +313,6 @@
           </form>
         </section>
 
-        <!-- -- METODE PEMBAYARAN -- -->
-        <section class="dash-section" id="pembayaran" style="display:none">
-          <h2 class="dash-card-title">Metode Pembayaran</h2>
-          <p class="dash-card-sub">Simpan rekening atau e-wallet yang sering Anda gunakan untuk donasi dan belanja.</p>
-
-          <div class="payment-method-list" id="paymentMethodList">
-            @foreach ($paymentMethods as $method)
-              <div class="payment-method-row">
-                <div>
-                  <strong>{{ $method->provider }}</strong>
-                  @if ($method->is_default)
-                    <span class="payment-method-badge">Utama</span>
-                  @endif
-                  <p style="margin:2px 0 0;color:#6b7a8d;font-size:.85rem;">
-                    {{ Str::mask($method->account_number, 'ï', 3, -3) }} &middot; {{ $method->account_name }}
-                  </p>
-                </div>
-                <div class="payment-method-actions">
-                  @unless ($method->is_default)
-                    <form action="{{ route('pengaturan-akun.metode-pembayaran.utama', $method) }}" method="POST">
-                      @csrf
-                      <button type="submit" class="btn-make-primary">Jadikan Utama</button>
-                    </form>
-                  @endunless
-                  <form action="{{ route('pengaturan-akun.metode-pembayaran.destroy', $method) }}" method="POST" onsubmit="return confirm('Hapus metode pembayaran ini?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn-danger-outline" style="padding:6px 10px;font-size:.75rem;">Hapus</button>
-                  </form>
-                </div>
-              </div>
-            @endforeach
-          </div>
-          <p class="payment-empty-state" id="paymentEmptyState" style="{{ $paymentMethods->isEmpty() ? '' : 'display:none;' }}color:#6b7a8d;font-size:.9rem;margin:8px 0 0;">
-            Belum ada metode pembayaran. Klik tombol di bawah untuk menambahkan.
-          </p>
-
-          <button type="button" class="btn-add-payment" id="btnAddPayment">+ Tambah Metode Pembayaran</button>
-        </section>
-
         <!-- -- HAPUS / NONAKTIFKAN AKUN -- -->
         <section class="dash-section" id="hapus-akun" style="display:none">
           <h2 class="dash-card-title">Hapus / Nonaktifkan Akun</h2>
@@ -591,21 +383,6 @@
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-    /* -- MODAL TAMBAH METODE PEMBAYARAN (open/close saja, submit ke backend) -- */
-    const addPaymentModal = document.getElementById('addPaymentModal');
-    document.getElementById('btnAddPayment')?.addEventListener('click', () => {
-      addPaymentModal.classList.add('show');
-    });
-    document.getElementById('closeAddPaymentModal')?.addEventListener('click', () => {
-      addPaymentModal.classList.remove('show');
-    });
-    document.getElementById('pmCancelBtn')?.addEventListener('click', () => {
-      addPaymentModal.classList.remove('show');
-    });
-    addPaymentModal?.addEventListener('click', (e) => {
-      if (e.target === addPaymentModal) addPaymentModal.classList.remove('show');
-    });
-
     document.getElementById('btnDeleteAccount')?.addEventListener('click', () => {
       alert('Fitur hapus akun permanen belum tersedia. Silakan hubungi tim KindlyJAR untuk permintaan ini.');
     });

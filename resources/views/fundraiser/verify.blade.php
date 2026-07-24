@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Riwayat Pembelian · KindlyJAR</title>
+  <title>Verifikasi Penggalang Dana · KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
 </head>
-<body class="dashboard-body">
+<body class="dashboard-body verify-kyc-page">
 
   <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
@@ -131,6 +131,14 @@
 
       <!-- Satu card besar pembungkus utama konten kosong -->
       <div class="dash-main-card">
+        <a href="{{ route('inisiasi') }}" class="detail-back-link verify-exit-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Kembali ke Inisiasi Donasi
+        </a>
+
         <!-- ── HEADLINE AJUKAN FORM ── -->
 <div style="margin-bottom: 28px;">
   <h2 class="dash-card-title" style="font-size: 1.5rem;">Formulir Pengajuan Penggalang Dana</h2>
@@ -157,14 +165,10 @@
 <!-- ── MAIN FORM BLOCK ── -->
 @php
   $requiredDraftFiles = ['ktp_photo', 'selfie_ktp_photo', 'passbook_photo', 'statement_letter'];
-  $draftFileNames = [
-    'ktp_photo'        => optional($verification)->ktp_photo ? basename($verification->ktp_photo) : null,
-    'selfie_ktp_photo' => optional($verification)->selfie_ktp_photo ? basename($verification->selfie_ktp_photo) : null,
-    'profile_photo'    => optional($verification)->profile_photo ? basename($verification->profile_photo) : null,
-    'passbook_photo'   => optional($verification)->passbook_photo ? basename($verification->passbook_photo) : null,
-    'statement_letter' => optional($verification)->statement_letter ? basename($verification->statement_letter) : null,
-    'supporting_docs'  => optional($verification)->supporting_docs ? basename($verification->supporting_docs) : null,
-  ];
+  $draftFileFields = ['ktp_photo', 'selfie_ktp_photo', 'passbook_photo', 'statement_letter', 'supporting_docs'];
+  $draftFileNames = collect($draftFileFields)->mapWithKeys(fn ($field) => [
+    $field => optional($verification)->fileDisplayName($field),
+  ])->all();
 @endphp
 <form id="verificationForm" action="{{ route('verify.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
   @csrf
@@ -234,18 +238,6 @@
           @endif
         </div>
       </div>
-      <div class="form-group full-width">
-        <label class="form-label">Upload Foto Profil <span style="color: #b0b7c3; font-weight: 500;">(Opsional)</span></label>
-        <div class="custom-file-upload">
-          <span class="upload-icon-style">👤</span>
-          <span class="upload-text-main">Pilih Foto Profil Anda</span>
-          <span class="upload-text-sub">Format: PNG, JPG, JPEG (max 5MB)</span>
-          <input type="file" name="profile_photo" accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
-          @if ($draftFileNames['profile_photo'])
-            <span class="draft-file-hint" data-field="profile_photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['profile_photo'] }}</span>
-          @endif
-        </div>
-      </div>
     </div>
   </div>
 
@@ -291,8 +283,8 @@
       <div class="form-group">
         <label class="form-label">Upload Surat Pernyataan</label>
         <div style="margin-bottom: 8px;">
-          <a href="#" class="template-download-link">
-            <span>📥</span> Download Template Surat Pernyataan Resmi.docx
+          <a href="{{ asset('assets/surat_pernyataan.pdf') }}" class="template-download-link" target="_blank" rel="noopener noreferrer" download>
+             Download Template Surat Pernyataan Resmi.pdf
           </a>
         </div>
         <div class="custom-file-upload">
@@ -318,21 +310,13 @@
           @endif
         </div>
       </div>
-      
-      <!-- OTP Area (simulasi, belum terhubung ke sistem SMS/WhatsApp) -->
-      <div class="form-group full-width" style="margin-top: 10px;">
-        <label class="form-label">Kode Verifikasi OTP <span style="color: #b0b7c3; font-weight: 500;">(Simulasi)</span></label>
-        <div class="otp-input-group">
-          <input type="text" maxlength="6" placeholder="Masukkan 6 digit kode" style="flex: 1; letter-spacing: 4px; text-align: center; font-weight: 700;" class="form-input-style" />
-          <button type="button" class="btn-request-otp" id="btnReqOtp">Minta OTP</button>
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- FORM NAVIGASI BAWAH -->
   <div class="form-action-footer">
     <span id="draftSaveIndicator" style="font-size:.85rem;color:#b0b7c3;margin-right:auto;display:none;"></span>
+    <a href="{{ route('inisiasi') }}" class="btn-form-back verify-exit-link" id="btnFormExit">Keluar</a>
     <button type="button" class="btn-form-back" id="btnFormBack" style="visibility: hidden;">Kembali</button>
     <button type="button" class="btn-form-next" id="btnFormNext">Lanjut</button>
   </div>
@@ -388,14 +372,62 @@
 
   </div><!-- .dash-right -->
 
-  <script>
-    window.verifyDraftConfig = @json([
+  <!-- ── BOTTOM NAV (mobile only) ── -->
+  <nav class="dash-bottom-nav" aria-label="Navigasi mobile">
+    <a href="{{ route('program-donasi') }}" class="dash-bnav-item" aria-label="Program Donasi">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+      </svg>
+      Donasi
+    </a>
+    <a href="{{ route('kindlyshop') }}" class="dash-bnav-item" aria-label="KindlyShop">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      Shop
+    </a>
+    <a href="{{ route('dashboard') }}" class="dash-bnav-item bnav-center" aria-label="Beranda">
+      <div class="bnav-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      Beranda
+    </a>
+    <a href="{{ route('riwayat') }}" class="dash-bnav-item" aria-label="Riwayat">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Riwayat
+    </a>
+    <a href="{{ route('inisiasi') }}" class="dash-bnav-item active" aria-label="Inisiasi">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+      </svg>
+      Inisiasi
+    </a>
+  </nav>
+
+  @php
+    $verifyDraftConfig = [
       'csrf'         => csrf_token(),
       'draftUrl'     => route('verify.draft'),
       'draftFileUrl' => route('verify.draft-file'),
       'errorStep'    => (int) session('verify_error_step', 1),
       'draftFiles'   => $draftFileNames,
-    ]);
+    ];
+  @endphp
+  <script>
+    window.verifyDraftConfig = @json($verifyDraftConfig);
   </script>
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
