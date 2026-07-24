@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
   <div class="modal-box">
     <button class="modal-close-btn" id="closeModalBtn">&times;</button>
     <div class="modal-content">
-      <div class="modal-icon">👋</div>
+      <div class="modal-icon">??</div>
       <h3>Yuk, Gabung Bersama Kami!</h3>
       <p>Kamu perlu memiliki akun terlebih dahulu untuk berdonasi atau mengikuti program keren di KindlyJAR.</p>
       <div class="modal-actions">
@@ -24,17 +24,21 @@
   </div>
 </div>
 
-  <!-- ── MOBILE NAV ── -->
+  <!-- -- MOBILE NAV -- -->
   <div class="mobile-nav" id="mobileNav">
     <a href="#" onclick="closeMobileNav()">Home</a>
     <a href="#program-donasi" onclick="closeMobileNav()">Program Donasi</a>
     <a href="#katalog-produk" onclick="closeMobileNav()">Katalog Produk</a>
     <div class="mobile-nav-divider"></div>
-    <a href="{{ route('login') }}">Sign In</a>
-    <a href="{{ route('register') }}" class="btn-signup-mobile">Galang Dana</a>
+    @if(auth()->user())
+      <a href="{{ route('dashboard') }}">Dashboard</a>
+    @else
+      <a href="{{ route('login') }}">Sign In</a>
+    @endif
+    <a href="{{ route('program-donasi') }}" class="btn-signup-mobile">Galang Dana</a>
   </div>
 
-  <!-- ── NAVBAR ── -->
+  <!-- -- NAVBAR -- -->
   <header>
     <a class="logo" href="#">
       <div class="logo-icon">
@@ -48,8 +52,12 @@
       <a href="#program-donasi">Program Donasi</a>
       <a href="#katalog-produk">Katalog Produk</a>
       <div class="nav-divider"></div>
-      <a href="{{ route('login') }}">Sign In</a>
-      <a href="{{ route('register') }}" class="btn-signup">Galang Dana</a>
+      @if(auth()->user())
+        <a href="{{ route('dashboard') }}">Dashboard</a>
+      @else
+        <a href="{{ route('login') }}">Sign In</a>
+      @endif
+      <a href="{{ route('program-donasi') }}" class="btn-signup">Galang Dana</a>
     </nav>
 
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
@@ -59,7 +67,7 @@
     </button>
   </header>
 
-  <!-- ── HERO ── -->
+  <!-- -- HERO -- -->
   <section id="hero">
     <div class="hero-content">
       <h1 class="hero-title">Menyalakan Lentera<br> di Ujung Negeri</h1>
@@ -78,7 +86,7 @@
       <img src="{{ asset('assets/toples.png') }}" alt="KindlyJAR toples" />
     </div>
   </section>
- <!-- ── PROGRAM DONASI ── -->
+ <!-- -- PROGRAM DONASI -- -->
   <section id="program-donasi">
     <div class="section-header">
       <h2 class="section-title">Program Donasi</h2>
@@ -162,7 +170,7 @@
     </div>
   </section>
 
-<!-- ── KATALOG PRODUK ── -->
+<!-- -- KATALOG PRODUK -- -->
   <section id="katalog-produk">
     <div class="section-header">
       <h2 class="section-title">Katalog Produk Digital</h2>
@@ -289,7 +297,7 @@
     </div>
   </section>
  
-   <!-- ── JEJAK KEBAIKAN ── -->
+   <!-- -- JEJAK KEBAIKAN -- -->
   <section id="jejak-kebaikan">
     <div class="section-header">
       <h2 class="section-title">Jejak Kebaikan KindlyJAR</h2>
@@ -324,7 +332,7 @@
  
     </div>
   </section>
-<!-- ── KENALI PARA HERO ── -->
+<!-- -- KENALI PARA HERO -- -->
 <section id="para-hero">
   <div class="section-header">
     <h2 class="section-title">Kenali Para Hero di Balik Perubahan</h2>
@@ -469,7 +477,7 @@
   <div class="slider-dots" id="heroDots" aria-label="Navigasi slider"></div>
 </section>
 
-<!-- ── TESTIMONI SAVIOR ── -->
+<!-- -- TESTIMONI SAVIOR -- -->
 <section id="testimoni">
   <div class="section-header">
     <h2 class="section-title">Apa Kata Mereka yang Telah Memulai?</h2>
@@ -582,7 +590,7 @@
   <div class="slider-dots" id="testiDots" aria-label="Navigasi slider"></div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- -- FOOTER -- -->
 <footer class="site-footer">
   <div class="footer-top">
 
@@ -650,7 +658,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>© 2026 KindlyJAR. Dibuat dengan ❤️ untuk Nusantara.</p>
+    <p>� 2026 KindlyJAR. Dibuat dengan ?? untuk Nusantara.</p>
     <div class="footer-bottom-links">
       <a href="#">Privasi</a>
       <a href="#">Ketentuan</a>
@@ -661,7 +669,7 @@
 
 <script src="{{ asset('global/script.js') }}"></script>
 <script>
-  // ── HAMBURGER MENU ──
+  // -- HAMBURGER MENU --
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const mobileNav = document.getElementById('mobileNav');
 

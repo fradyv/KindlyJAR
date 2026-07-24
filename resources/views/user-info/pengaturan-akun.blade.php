@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pengaturan Akun · KindlyJAR</title>
+  <title>Pengaturan Akun � KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
 
   <style>
-    /* ── ADD PAYMENT MODAL ── */
+    /* -- ADD PAYMENT MODAL -- */
     #addPaymentModal .donasi-modal-box { max-width: 520px; }
     .pm-type-grid {
       display: grid;
@@ -121,7 +121,7 @@
 </head>
 <body class="dashboard-body">
 
-  <!-- ── MODAL: TAMBAH METODE PEMBAYARAN ── -->
+  <!-- -- MODAL: TAMBAH METODE PEMBAYARAN -- -->
   <div class="modal-overlay" id="addPaymentModal">
     <div class="modal-box donasi-modal-box">
       <button class="modal-close-btn" id="closeAddPaymentModal" type="button">&times;</button>
@@ -158,7 +158,7 @@
         </div>
 
         <div class="pm-disclaimer">
-          🔒 <span>Data pembayaran Anda aman &amp; terenkripsi. Nomor sensitif akan otomatis di-mask di daftar.</span>
+          ?? <span>Data pembayaran Anda aman &amp; terenkripsi. Nomor sensitif akan otomatis di-mask di daftar.</span>
         </div>
 
         <div class="pm-modal-actions">
@@ -170,7 +170,7 @@
   </div>
 
 
-  <!-- ── SIDEBAR (khusus Profil & Pengaturan) ── -->
+  <!-- -- SIDEBAR (khusus Profil & Pengaturan) -- -->
   <aside class="sidebar">
     <div class="sidebar-top">
       <a class="logo sidebar-logo" href="{{ route('home') }}">
@@ -220,7 +220,7 @@
     </div>
   </aside>
 
-  <!-- ── KANAN: topbar (tidak scroll) + konten (scroll) ── -->
+  <!-- -- KANAN: topbar (tidak scroll) + konten (scroll) -- -->
   <div class="dash-right">
 
     <div class="dash-topbar">
@@ -246,7 +246,7 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
+            @include('partials.user-avatar')
             <div>
               <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
               <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
@@ -262,7 +262,7 @@
     @if (auth()->user()->kyc_status === 'unverified')
     <div class="verification-banner" id="verifyBanner">
       <div class="banner-content">
-        <span class="banner-icon">⚠️</span>
+        <span class="banner-icon">??</span>
         <p><strong>Akun Belum Terverifikasi:</strong> Silakan verifikasi identitasmu terlebih dahulu untuk membuka akses penuh penggalangan dana dan donasi secara aman.</p>
       </div>
       <div class="banner-actions">
@@ -275,7 +275,7 @@
     @if (session('success'))
       <div class="verification-banner" style="background:#ecfdf5;border-color:#a7f3d0;">
         <div class="banner-content">
-          <span class="banner-icon">✅</span>
+          <span class="banner-icon">?</span>
           <p>{{ session('success') }}</p>
         </div>
       </div>
@@ -292,17 +292,17 @@
           <a href="#hapus-akun" class="settings-nav-item danger"> Hapus Akun</a>
         </nav>
       <div class="settings-content">
-        <!-- ── INFORMASI PRIBADI (KYC) ── -->
+        <!-- -- INFORMASI PRIBADI (KYC) -- -->
         <section class="dash-section" id="informasi-pribadi">
           <h2 class="dash-card-title">Informasi Pribadi</h2>
           <p class="dash-card-sub">Status verifikasi identitas (KYC) akun Anda.</p>
 
           @php
             $kycBadge = match(auth()->user()->kyc_status) {
-              'verified' => ['✅', 'Terverifikasi', '#ecfdf5', '#a7f3d0'],
-              'pending'  => ['🕓', 'Sedang Ditinjau', '#fffbeb', '#fde68a'],
-              'rejected' => ['⚠️', 'Ditolak', '#fef2f2', '#fecaca'],
-              default    => ['ℹ️', 'Belum Terverifikasi', '#f0f9ff', '#bae6fd'],
+              'verified' => ['?', 'Terverifikasi', '#ecfdf5', '#a7f3d0'],
+              'pending'  => ['??', 'Sedang Ditinjau', '#fffbeb', '#fde68a'],
+              'rejected' => ['??', 'Ditolak', '#fef2f2', '#fecaca'],
+              default    => ['??', 'Belum Terverifikasi', '#f0f9ff', '#bae6fd'],
             };
           @endphp
 
@@ -330,7 +330,7 @@
           </div>
         </section>
 
-        <!-- ── KEAMANAN ── -->
+        <!-- -- KEAMANAN -- -->
         <section class="dash-section" id="keamanan" style="display:none">
           <h2 class="dash-card-title">Keamanan</h2>
           <p class="dash-card-sub">Ganti password akun dan aktifkan lapisan keamanan tambahan.</p>
@@ -338,7 +338,7 @@
           @if ($errors->has('current_password') || $errors->has('password'))
             <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
               <div class="banner-content">
-                <span class="banner-icon">⚠️</span>
+                <span class="banner-icon">??</span>
                 <p>{{ $errors->first('current_password') ?: $errors->first('password') }}</p>
               </div>
             </div>
@@ -380,7 +380,7 @@
           </form>
         </section>
 
-        <!-- ── NOTIFIKASI ── -->
+        <!-- -- NOTIFIKASI -- -->
         <section class="dash-section" id="notifikasi" style="display:none">
           <h2 class="dash-card-title">Notifikasi</h2>
           <p class="dash-card-sub">Atur notifikasi email dan push untuk update program, donasi, dan lainnya.</p>
@@ -436,7 +436,7 @@
           </form>
         </section>
 
-        <!-- ── PRIVASI ── -->
+        <!-- -- PRIVASI -- -->
         <section class="dash-section" id="privasi" style="display:none">
           <h2 class="dash-card-title">Privasi</h2>
           <p class="dash-card-sub">Atur izin penggunaan data pribadi dan preferensi privasi akun Anda.</p>
@@ -481,7 +481,7 @@
           </form>
         </section>
 
-        <!-- ── METODE PEMBAYARAN ── -->
+        <!-- -- METODE PEMBAYARAN -- -->
         <section class="dash-section" id="pembayaran" style="display:none">
           <h2 class="dash-card-title">Metode Pembayaran</h2>
           <p class="dash-card-sub">Simpan rekening atau e-wallet yang sering Anda gunakan untuk donasi dan belanja.</p>
@@ -495,7 +495,7 @@
                     <span class="payment-method-badge">Utama</span>
                   @endif
                   <p style="margin:2px 0 0;color:#6b7a8d;font-size:.85rem;">
-                    {{ Str::mask($method->account_number, '•', 3, -3) }} &middot; {{ $method->account_name }}
+                    {{ Str::mask($method->account_number, '�', 3, -3) }} &middot; {{ $method->account_name }}
                   </p>
                 </div>
                 <div class="payment-method-actions">
@@ -521,7 +521,7 @@
           <button type="button" class="btn-add-payment" id="btnAddPayment">+ Tambah Metode Pembayaran</button>
         </section>
 
-        <!-- ── HAPUS / NONAKTIFKAN AKUN ── -->
+        <!-- -- HAPUS / NONAKTIFKAN AKUN -- -->
         <section class="dash-section" id="hapus-akun" style="display:none">
           <h2 class="dash-card-title">Hapus / Nonaktifkan Akun</h2>
           <div class="danger-zone" style="margin-top:16px;">
@@ -591,7 +591,7 @@
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-    /* ── MODAL TAMBAH METODE PEMBAYARAN (open/close saja, submit ke backend) ── */
+    /* -- MODAL TAMBAH METODE PEMBAYARAN (open/close saja, submit ke backend) -- */
     const addPaymentModal = document.getElementById('addPaymentModal');
     document.getElementById('btnAddPayment')?.addEventListener('click', () => {
       addPaymentModal.classList.add('show');

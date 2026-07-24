@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-
 class TransactionController extends Controller
 {
     public function index()
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         $transactions = $user
             ->transactions()

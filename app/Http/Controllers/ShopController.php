@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\DigitalProduct;
 use App\Models\Shop;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,8 +19,7 @@ class ShopController extends Controller
 
     public function showJoinForm(): View|RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         if ($user->shop) {
             return redirect()->route('toko-saya');
@@ -32,8 +30,7 @@ class ShopController extends Controller
 
     public function myShop(): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
         $products = $shop ? $shop->products()->with('campaign')->latest('id')->get() : collect();
 
@@ -42,8 +39,7 @@ class ShopController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         if ($user->shop) {
             return redirect()->route('toko-saya');

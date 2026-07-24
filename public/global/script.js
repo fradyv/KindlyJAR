@@ -407,14 +407,143 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  let currentStep = 1;
-  const totalSteps = 4;
+  const formElement = document.getElementById('verificationForm');
+  if (!formElement) return;
 
-  // DOM Elements
+  const config = window.verifyDraftConfig || {};
+  let currentStep = config.errorStep || 1;
+  const totalSteps = 4;
+  const draftFiles = { ...(config.draftFiles || {}) };
+
   const btnNext = document.getElementById('btnFormNext');
   const btnBack = document.getElementById('btnFormBack');
   const progressBarFill = document.getElementById('progressBarFill');
-  const formElement = document.getElementById('verificationForm');
+  const draftIndicator = document.getElementById('draftSaveIndicator');
+  const draftFieldNames = [
+    'account_type',
+    'address',
+    'phone_number',
+    'ktp_number',
+    'bank_name',
+    'bank_account_number',
+    'bank_account_name',
+  ];
+
+  let draftSaveTimer = null;
+
+  function setDraftIndicator(text, color = '#b0b7c3') {
+    if (!draftIndicator) return;
+    draftIndicator.textContent = text;
+    draftIndicator.style.color = color;
+    draftIndicator.style.display = text ? 'inline' : 'none';
+  }
+
+  function collectDraftPayload() {
+    const data = {};
+    draftFieldNames.forEach((name) => {
+      const el = formElement.querySelector(`[name="${name}"]`);
+      if (el) data[name] = el.value;
+    });
+    return data;
+  }
+
+  function saveDraft() {
+    setDraftIndicator('Menyimpan draf...', '#21A3FF');
+
+    fetch(config.draftUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': config.csrf,
+      },
+      body: JSON.stringify(collectDraftPayload()),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.message || 'Gagal menyimpan draf.');
+        }
+        setDraftIndicator('Draf tersimpan', '#22c55e');
+        setTimeout(() => setDraftIndicator(''), 2500);
+      })
+      .catch((err) => {
+        setDraftIndicator(err.message || 'Gagal menyimpan draf', '#ef4444');
+      });
+  }
+
+  function scheduleDraftSave() {
+    clearTimeout(draftSaveTimer);
+    draftSaveTimer = setTimeout(saveDraft, 700);
+  }
+
+  draftFieldNames.forEach((name) => {
+    const el = formElement.querySelector(`[name="${name}"]`);
+    el?.addEventListener('input', scheduleDraftSave);
+    el?.addEventListener('change', scheduleDraftSave);
+  });
+
+  function updateDraftFileHint(field, filename) {
+    const upload = formElement.querySelector(`input[name="${field}"]`)?.closest('.custom-file-upload');
+    if (!upload) return;
+
+    let hint = upload.querySelector(`.draft-file-hint[data-field="${field}"]`);
+    if (!hint) {
+      hint = document.createElement('span');
+      hint.className = 'draft-file-hint';
+      hint.dataset.field = field;
+      hint.style.cssText = 'display:block;margin-top:6px;font-size:.85rem;color:#22c55e;';
+      upload.appendChild(hint);
+    }
+
+    hint.textContent = filename ? `Tersimpan: ${filename}` : '';
+    hint.style.display = filename ? 'block' : 'none';
+  }
+
+  function restoreDraftFileUi() {
+    Object.entries(draftFiles).forEach(([field, filename]) => {
+      if (!filename) return;
+
+      const input = formElement.querySelector(`input[name="${field}"]`);
+      if (!input) return;
+
+      input.removeAttribute('required');
+
+      const textMain = input.parentElement?.querySelector('.upload-text-main');
+      if (textMain) {
+        if (!textMain.dataset.defaultText) {
+          textMain.dataset.defaultText = textMain.textContent;
+        }
+        textMain.textContent = `Tersimpan: ${filename}`;
+        textMain.style.color = '#22c55e';
+      }
+
+      updateDraftFileHint(field, filename);
+    });
+  }
+
+  async function uploadDraftFile(field, file) {
+    const fd = new FormData();
+    fd.append('field', field);
+    fd.append('file', file);
+    fd.append('_token', config.csrf);
+
+    const res = await fetch(config.draftFileUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': config.csrf,
+      },
+      body: fd,
+    });
+
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(body.message || 'Gagal mengunggah file.');
+    }
+
+    return body;
+  }
 
   // ── UPDATE PROGRESS FORM MULTI-STEP ──
   function updateFormProgress() {
@@ -422,14 +551,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const panel = document.getElementById(`stepPanel${i}`);
       const node = document.getElementById(`node${i}`);
       const label = document.getElementById(`labelText${i}`);
-      
+
       if (i === currentStep) {
-        if(panel) panel.classList.add('active');
-        if(node) node.classList.add('active');
-        if(label) label.classList.add('active');
+        if (panel) panel.classList.add('active');
+        if (node) node.classList.add('active');
+        if (label) label.classList.add('active');
       } else {
-        if(panel) panel.classList.remove('active');
-        if(node) {
+        if (panel) panel.classList.remove('active');
+        if (node) {
           if (i < currentStep) {
             node.classList.add('completed');
             node.classList.remove('active');
@@ -437,32 +566,30 @@ document.addEventListener('DOMContentLoaded', () => {
             node.classList.remove('completed', 'active');
           }
         }
-        if(label && i > currentStep) label.classList.remove('active');
+        if (label && i > currentStep) label.classList.remove('active');
       }
     }
 
-    // Hitung persentase bar (Step 1 = 25%, Step 2 = 50%, dst)
-    // Hitung lebar garis biru dalam pixel, supaya pas sama posisi titik node
     if (progressBarFill) {
       const track = document.querySelector('.form-steps-track');
       const trackWidth = track.offsetWidth;
-      const usableWidth = trackWidth - 40; // 40 = lebar 1 step-node (buat offset kiri-kanan)
+      const usableWidth = trackWidth - 40;
       const fraction = (currentStep - 1) / (totalSteps - 1);
       progressBarFill.style.width = `${usableWidth * fraction}px`;
     }
 
-    // Visibilitas tombol Back
     if (btnBack) {
       btnBack.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
     }
 
-    // Ubah text tombol Next di akhir halaman
-    if (currentStep === totalSteps) {
-      btnNext.textContent = 'Ajukan Verifikasi';
-      btnNext.style.background = '#FFAA00'; 
-    } else {
-      btnNext.textContent = 'Lanjut';
-      btnNext.style.background = '#21A3FF';
+    if (btnNext) {
+      if (currentStep === totalSteps) {
+        btnNext.textContent = 'Ajukan Verifikasi';
+        btnNext.style.background = '#FFAA00';
+      } else {
+        btnNext.textContent = 'Lanjut';
+        btnNext.style.background = '#21A3FF';
+      }
     }
   }
 
@@ -470,18 +597,22 @@ document.addEventListener('DOMContentLoaded', () => {
   function validateCurrentStepInputs() {
     const currentPanel = document.getElementById(`stepPanel${currentStep}`);
     if (!currentPanel) return true;
-    
-    // Hanya periksa input yang berada di panel aktif saat ini
+
     const requiredInputs = currentPanel.querySelectorAll('input[required], select[required]');
     let isValid = true;
 
-    requiredInputs.forEach(input => {
-      if (!input.value || input.value.trim() === "") {
+    requiredInputs.forEach((input) => {
+      if (input.type === 'file') {
+        const fieldName = input.name;
+        if (draftFiles[fieldName] || input.files?.length) {
+          return;
+        }
+      }
+
+      if (!input.value || input.value.trim() === '') {
         isValid = false;
-        // Beri efek border merah penanda error
         input.style.border = '1.5px solid #ef4444';
-        
-        // Hapus border merah jika user mulai mengetik atau mengubah isi
+
         input.addEventListener('input', () => {
           input.style.border = '1.5px solid rgba(33, 163, 255, 0.15)';
         }, { once: true });
@@ -491,28 +622,68 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const requiredFilesByStep = {
+      2: ['ktp_photo', 'selfie_ktp_photo'],
+      3: ['passbook_photo'],
+      4: ['statement_letter'],
+    };
+
+    (requiredFilesByStep[currentStep] || []).forEach((field) => {
+      const input = formElement.querySelector(`input[name="${field}"]`);
+      if (!input) return;
+
+      if (!draftFiles[field] && !input.files?.length) {
+        isValid = false;
+        input.closest('.custom-file-upload')?.style.setProperty('border', '1.5px solid #ef4444', 'important');
+        input.addEventListener('change', () => {
+          input.closest('.custom-file-upload')?.style.removeProperty('border');
+        }, { once: true });
+      }
+    });
+
     if (!isValid) {
       alert('Mohon isi semua kolom wajib yang bertanda merah sebelum melanjutkan.');
+      return isValid;
     }
+
+    if (currentStep === 2) {
+      const phone = document.getElementById('verifyPhoneInput');
+      const nik = document.getElementById('verifyKtpInput');
+
+      if (phone && !/^[0-9]{9,15}$/.test(phone.value)) {
+        phone.style.border = '1.5px solid #ef4444';
+        alert('Nomor HP hanya boleh berisi angka, 9–15 digit.');
+        return false;
+      }
+
+      if (nik && !/^[0-9]{16}$/.test(nik.value)) {
+        nik.style.border = '1.5px solid #ef4444';
+        alert('Nomor NIK harus 16 digit angka.');
+        return false;
+      }
+    }
+
     return isValid;
   }
 
-  // Event Klik Lanjut
+  restoreDraftFileUi();
+  updateFormProgress();
+
   if (!btnNext) return;
+
   btnNext.addEventListener('click', () => {
-  if (!validateCurrentStepInputs()) return;
+    if (!validateCurrentStepInputs()) return;
 
-  if (currentStep < totalSteps) {
-    currentStep++;
-    updateFormProgress();
-  } else if (formElement) {
-    btnNext.textContent = 'Mengirim...';
-    btnNext.disabled = true;
-    formElement.submit();
-  }
-});
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateFormProgress();
+    } else {
+      btnNext.textContent = 'Mengirim...';
+      btnNext.disabled = true;
+      formElement.submit();
+    }
+  });
 
-  // Event Klik Kembali
   btnBack?.addEventListener('click', () => {
     if (currentStep > 1) {
       currentStep--;
@@ -520,24 +691,93 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Handler nama file pada Dropzone Upload
-  const fileInputs = document.querySelectorAll('.custom-file-upload input[type="file"]');
-  fileInputs.forEach(input => {
-    input.addEventListener('change', (e) => {
-      const fileName = e.target.files[0]?.name;
-      if (fileName) {
-        const textMain = input.parentElement.querySelector('.upload-text-main');
-        if(textMain) {
-          textMain.textContent = 'Terpilih: ' + fileName;
+  document.getElementById('verifyPhoneInput')?.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 15);
+  });
+
+  document.getElementById('verifyKtpInput')?.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 16);
+  });
+
+  const photoFields = new Set(['ktp_photo', 'selfie_ktp_photo', 'profile_photo', 'passbook_photo']);
+  const pdfFields = new Set(['statement_letter', 'supporting_docs']);
+  const photoExts = ['jpg', 'jpeg', 'png'];
+
+  function getFileExt(name) {
+    return name.split('.').pop()?.toLowerCase() ?? '';
+  }
+
+  function isValidPhotoFile(file) {
+    return photoExts.includes(getFileExt(file.name));
+  }
+
+  function isValidPdfFile(file) {
+    return getFileExt(file.name) === 'pdf';
+  }
+
+  const fileInputs = formElement.querySelectorAll('.custom-file-upload input[type="file"]');
+  fileInputs.forEach((input) => {
+    const textMain = input.parentElement.querySelector('.upload-text-main');
+    if (textMain && !textMain.dataset.defaultText) {
+      textMain.dataset.defaultText = textMain.textContent;
+    }
+
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const fieldName = input.name;
+      let valid = true;
+      let message = '';
+
+      if (photoFields.has(fieldName) && !isValidPhotoFile(file)) {
+        valid = false;
+        message = 'Format foto harus PNG, JPG, atau JPEG.';
+      } else if (pdfFields.has(fieldName) && !isValidPdfFile(file)) {
+        valid = false;
+        message = 'Format dokumen harus PDF.';
+      }
+
+      if (!valid) {
+        alert(message);
+        input.value = '';
+        if (textMain) {
+          textMain.textContent = textMain.dataset.defaultText;
+          textMain.style.color = '';
+        }
+        return;
+      }
+
+      if (textMain) {
+        textMain.textContent = 'Mengunggah...';
+        textMain.style.color = '#21A3FF';
+      }
+
+      try {
+        const result = await uploadDraftFile(fieldName, file);
+        draftFiles[fieldName] = result.filename;
+        input.removeAttribute('required');
+
+        if (textMain) {
+          textMain.textContent = `Tersimpan: ${result.filename}`;
           textMain.style.color = '#22c55e';
+        }
+
+        updateDraftFileHint(fieldName, result.filename);
+        input.closest('.custom-file-upload')?.style.removeProperty('border');
+      } catch (err) {
+        alert(err.message || 'Gagal mengunggah file.');
+        input.value = '';
+        if (textMain) {
+          textMain.textContent = textMain.dataset.defaultText;
+          textMain.style.color = '';
         }
       }
     });
   });
 
-  /// Handler Request OTP
   const btnReqOtp = document.getElementById('btnReqOtp');
-  if(btnReqOtp) {
+  if (btnReqOtp) {
     btnReqOtp.addEventListener('click', () => {
       btnReqOtp.textContent = 'Terkirim (60s)';
       btnReqOtp.disabled = true;
@@ -545,7 +785,6 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Kode OTP simulasi telah dikirim ke nomor WhatsApp Anda!');
     });
   }
-
 });
 (function () {
   const settingsNavItems = document.querySelectorAll('.settings-nav-item');

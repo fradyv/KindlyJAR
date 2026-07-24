@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -46,8 +45,7 @@ class CampaignController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         if ($user->kyc_status !== 'verified') {
             return redirect()->route('inisiasi')

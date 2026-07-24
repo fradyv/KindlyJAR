@@ -97,7 +97,7 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
+            @include('partials.user-avatar')
             <div>
               <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
               <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
@@ -155,6 +155,17 @@
 </div>
 
 <!-- ── MAIN FORM BLOCK ── -->
+@php
+  $requiredDraftFiles = ['ktp_photo', 'selfie_ktp_photo', 'passbook_photo', 'statement_letter'];
+  $draftFileNames = [
+    'ktp_photo'        => optional($verification)->ktp_photo ? basename($verification->ktp_photo) : null,
+    'selfie_ktp_photo' => optional($verification)->selfie_ktp_photo ? basename($verification->selfie_ktp_photo) : null,
+    'profile_photo'    => optional($verification)->profile_photo ? basename($verification->profile_photo) : null,
+    'passbook_photo'   => optional($verification)->passbook_photo ? basename($verification->passbook_photo) : null,
+    'statement_letter' => optional($verification)->statement_letter ? basename($verification->statement_letter) : null,
+    'supporting_docs'  => optional($verification)->supporting_docs ? basename($verification->supporting_docs) : null,
+  ];
+@endphp
 <form id="verificationForm" action="{{ route('verify.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
   @csrf
 
@@ -191,11 +202,11 @@
     <div class="form-grid-2">
       <div class="form-group">
         <label class="form-label">Nomor HP (WhatsApp) Aktif</label>
-        <input type="tel" name="phone_number" class="form-input-style" value="{{ old('phone_number', auth()->user()->phone_number) }}" placeholder="Contoh: 081234567xxx" required />
+        <input type="tel" name="phone_number" id="verifyPhoneInput" class="form-input-style" inputmode="numeric" pattern="[0-9]{9,15}" maxlength="15" title="Isi hanya dengan angka, 9–15 digit" value="{{ old('phone_number', auth()->user()->phone_number) }}" placeholder="Contoh: 081234567xxx" required />
       </div>
       <div class="form-group">
-        <label class="form-label">Nomor KIK / KTP</label>
-        <input type="text" name="ktp_number" class="form-input-style" value="{{ old('ktp_number', optional($verification)->ktp_number) }}" placeholder="16 Digit Nomor Induk Kependudukan" required />
+        <label class="form-label">Nomor NIK / KTP</label>
+        <input type="text" name="ktp_number" id="verifyKtpInput" class="form-input-style" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" title="NIK harus 16 digit angka" value="{{ old('ktp_number', optional($verification)->ktp_number) }}" placeholder="16 Digit Nomor Induk Kependudukan" required />
       </div>
       
       <!-- Upload Dropzones -->
@@ -204,8 +215,11 @@
         <div class="custom-file-upload">
           <span class="upload-icon-style">🪪</span>
           <span class="upload-text-main">Pilih file Foto KTP</span>
-          <span class="upload-text-sub">Format: JPG, PNG max 5MB</span>
-          <input type="file" name="ktp_photo" accept="image/*" required />
+          <span class="upload-text-sub">Format: PNG, JPG, JPEG (max 5MB)</span>
+          <input type="file" name="ktp_photo" accept=".png,.jpg,.jpeg,image/png,image/jpeg" @if(! $draftFileNames['ktp_photo']) required @endif />
+          @if ($draftFileNames['ktp_photo'])
+            <span class="draft-file-hint" data-field="ktp_photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['ktp_photo'] }}</span>
+          @endif
         </div>
       </div>
       <div class="form-group">
@@ -213,8 +227,11 @@
         <div class="custom-file-upload">
           <span class="upload-icon-style">📸</span>
           <span class="upload-text-main">Ambil / Pilih Foto Selfie</span>
-          <span class="upload-text-sub">Pastikan KTP terbaca jelas</span>
-          <input type="file" name="selfie_ktp_photo" accept="image/*" required />
+          <span class="upload-text-sub">Format: PNG, JPG, JPEG (max 5MB)</span>
+          <input type="file" name="selfie_ktp_photo" accept=".png,.jpg,.jpeg,image/png,image/jpeg" @if(! $draftFileNames['selfie_ktp_photo']) required @endif />
+          @if ($draftFileNames['selfie_ktp_photo'])
+            <span class="draft-file-hint" data-field="selfie_ktp_photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['selfie_ktp_photo'] }}</span>
+          @endif
         </div>
       </div>
       <div class="form-group full-width">
@@ -222,8 +239,11 @@
         <div class="custom-file-upload">
           <span class="upload-icon-style">👤</span>
           <span class="upload-text-main">Pilih Foto Profil Anda</span>
-          <span class="upload-text-sub">Rasio Disarankan 1:1</span>
-          <input type="file" name="profile_photo" accept="image/*" />
+          <span class="upload-text-sub">Format: PNG, JPG, JPEG (max 5MB)</span>
+          <input type="file" name="profile_photo" accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
+          @if ($draftFileNames['profile_photo'])
+            <span class="draft-file-hint" data-field="profile_photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['profile_photo'] }}</span>
+          @endif
         </div>
       </div>
     </div>
@@ -255,8 +275,11 @@
         <label class="form-label">Upload Scan/Foto Buku Tabungan</label>
         <div class="custom-file-upload">
           <span class="upload-text-main">Unggah Foto Halaman Depan Buku Tabungan</span>
-          <span class="upload-text-sub">Menampilkan Nama & No Rekening</span>
-          <input type="file" name="passbook_photo" accept="image/*" required />
+          <span class="upload-text-sub">Format: PNG, JPG, JPEG (max 5MB)</span>
+          <input type="file" name="passbook_photo" accept=".png,.jpg,.jpeg,image/png,image/jpeg" @if(! $draftFileNames['passbook_photo']) required @endif />
+          @if ($draftFileNames['passbook_photo'])
+            <span class="draft-file-hint" data-field="passbook_photo" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['passbook_photo'] }}</span>
+          @endif
         </div>
       </div>
     </div>
@@ -275,8 +298,11 @@
         <div class="custom-file-upload">
           <span class="upload-icon-style">📄</span>
           <span class="upload-text-main">Pilih File Surat Pernyataan</span>
-          <span class="upload-text-sub">Format: PDF/JPG hasil tanda tangan</span>
-          <input type="file" name="statement_letter" accept=".pdf, image/*" required />
+          <span class="upload-text-sub">Format: PDF saja (max 5MB)</span>
+          <input type="file" name="statement_letter" accept=".pdf,application/pdf" @if(! $draftFileNames['statement_letter']) required @endif />
+          @if ($draftFileNames['statement_letter'])
+            <span class="draft-file-hint" data-field="statement_letter" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['statement_letter'] }}</span>
+          @endif
         </div>
       </div>
       <div class="form-group">
@@ -285,8 +311,11 @@
         <div class="custom-file-upload">
           <span class="upload-icon-style">📂</span>
           <span class="upload-text-main">Pilih Berkas Legalitas / Sertifikat</span>
-          <span class="upload-text-sub">Format: PDF/ZIP jika ada</span>
-          <input type="file" name="supporting_docs" accept=".pdf, .zip, .rar, image/*" />
+          <span class="upload-text-sub">Format: PDF saja (max 10MB)</span>
+          <input type="file" name="supporting_docs" accept=".pdf,application/pdf" />
+          @if ($draftFileNames['supporting_docs'])
+            <span class="draft-file-hint" data-field="supporting_docs" style="display:block;margin-top:6px;font-size:.85rem;color:#22c55e;">Tersimpan: {{ $draftFileNames['supporting_docs'] }}</span>
+          @endif
         </div>
       </div>
       
@@ -303,6 +332,7 @@
 
   <!-- FORM NAVIGASI BAWAH -->
   <div class="form-action-footer">
+    <span id="draftSaveIndicator" style="font-size:.85rem;color:#b0b7c3;margin-right:auto;display:none;"></span>
     <button type="button" class="btn-form-back" id="btnFormBack" style="visibility: hidden;">Kembali</button>
     <button type="button" class="btn-form-next" id="btnFormNext">Lanjut</button>
   </div>
@@ -358,6 +388,15 @@
 
   </div><!-- .dash-right -->
 
+  <script>
+    window.verifyDraftConfig = @json([
+      'csrf'         => csrf_token(),
+      'draftUrl'     => route('verify.draft'),
+      'draftFileUrl' => route('verify.draft-file'),
+      'errorStep'    => (int) session('verify_error_step', 1),
+      'draftFiles'   => $draftFileNames,
+    ]);
+  </script>
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
 </body>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\DigitalProduct;
 use App\Models\TransactionItem;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,8 +14,7 @@ class DigitalProductController extends Controller
 {
     public function create(): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
         $campaigns = Campaign::where('status', 'active')->orderBy('title')->get();
 
@@ -25,8 +23,7 @@ class DigitalProductController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
 
         if (! $shop) {
@@ -65,8 +62,7 @@ class DigitalProductController extends Controller
 
     public function sold(): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
         $productIds = $shop ? $shop->products()->pluck('id') : collect();
 
@@ -92,8 +88,7 @@ class DigitalProductController extends Controller
 
     public function edit(DigitalProduct $product): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);
@@ -105,8 +100,7 @@ class DigitalProductController extends Controller
 
     public function update(Request $request, DigitalProduct $product): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);
@@ -142,8 +136,7 @@ class DigitalProductController extends Controller
 
     public function destroy(DigitalProduct $product): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $shop = $user->shop;
 
         abort_if(! $shop || $product->shop_id !== $shop->id, 403);

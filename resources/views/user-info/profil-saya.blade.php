@@ -86,7 +86,7 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" id="dashUserAvatar" />
+            @include('partials.user-avatar', ['id' => 'dashUserAvatar'])
             <div>
               <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
               <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
@@ -110,7 +110,7 @@
           <h2 class="dash-card-title">Profil Saya</h2>
           <p class="dash-card-sub">Kelola informasi profil dan preferensi tampilan publik Anda di KindlyJAR.</p>
 
-          <form id="profilSayaForm" action="{{ route('profil.update') }}" method="POST" autocomplete="off">
+          <form id="profilSayaForm" action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             @csrf
 
             @if ($errors->any())
@@ -124,17 +124,17 @@
 
             <div class="profile-photo-row">
               <label class="profile-photo-edit" for="profilPhotoInput" aria-label="Ganti foto profil">
-                <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="Foto profil" class="profile-photo-preview" id="profilPhotoPreview" />
+                @include('partials.user-avatar', ['class' => 'profile-photo-preview', 'id' => 'profilPhotoPreview', 'alt' => 'Foto profil'])
                 <span class="profile-photo-btn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>
                   </svg>
                 </span>
-                <input type="file" id="profilPhotoInput" accept="image/*" hidden />
+                <input type="file" id="profilPhotoInput" name="pp" accept="image/*" hidden />
               </label>
               <div>
                 <p class="profile-photo-name">Ganti Foto Profil</p>
-                <p class="profile-photo-hint">Format JPG atau PNG, maksimal 2MB. (Segera hadir)</p>
+                <p class="profile-photo-hint">Format JPG atau PNG, maksimal 2MB.</p>
               </div>
             </div>
 
@@ -231,18 +231,32 @@
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-    // ── Preview foto profil (upload belum tersedia) ──
+    // ── Preview foto profil sebelum simpan ──
     const profilPhotoInput   = document.getElementById('profilPhotoInput');
     const profilPhotoPreview = document.getElementById('profilPhotoPreview');
     const dashUserAvatar     = document.getElementById('dashUserAvatar');
+
+    function setAvatarPreview(el, dataUrl) {
+      if (!el) return;
+      if (el.tagName === 'IMG') {
+        el.src = dataUrl;
+        return;
+      }
+      const img = document.createElement('img');
+      img.id = el.id;
+      img.className = el.className.replace('dash-avatar-empty', '').trim();
+      img.alt = el.getAttribute('aria-label') || '';
+      img.src = dataUrl;
+      el.replaceWith(img);
+    }
 
     profilPhotoInput?.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (ev) => {
-        profilPhotoPreview.src = ev.target.result;
-        if (dashUserAvatar) dashUserAvatar.src = ev.target.result;
+        setAvatarPreview(profilPhotoPreview, ev.target.result);
+        setAvatarPreview(dashUserAvatar, ev.target.result);
       };
       reader.readAsDataURL(file);
     });

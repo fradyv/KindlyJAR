@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,8 +11,7 @@ class WithdrawalController extends Controller
 {
     public function index(): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $wallet = $user->wallet ?? Wallet::create(['user_id' => $user->id]);
 
         $campaigns = $user->campaigns()->get();
@@ -42,8 +40,7 @@ class WithdrawalController extends Controller
             'bank_or_ewallet_info' => ['required', 'string', 'max:255'],
         ]);
 
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $wallet = $user->wallet ?? Wallet::create(['user_id' => $user->id]);
 
         $totalAvailable = $user->campaigns()->get()->sum(fn ($campaign) => $campaign->available_balance);

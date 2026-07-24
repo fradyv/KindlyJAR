@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('fundraiser_verifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
-            $table->enum('account_type', ['individu', 'yayasan', 'komunitas', 'organisasi_mahasiswa']);
+            $table->enum('account_type', ['individu', 'yayasan', 'komunitas', 'organisasi_mahasiswa'])->nullable();
             $table->string('ktp_number')->nullable();
             $table->string('ktp_photo')->nullable()->comment('URL/Path file KTP');
             $table->string('selfie_ktp_photo')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('passbook_photo')->nullable();
             $table->string('statement_letter')->nullable();
             $table->string('supporting_docs')->nullable()->comment('Opsional');
-            $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
+            $table->enum('status', ['draft', 'pending', 'verified', 'rejected'])->default('draft');
             $table->timestamp('created_at')->nullable();
         });
     }

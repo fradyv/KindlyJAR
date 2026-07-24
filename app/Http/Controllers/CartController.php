@@ -7,7 +7,6 @@ use App\Models\CartItem;
 use App\Models\DigitalProduct;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
-use App\Models\User;
 use App\Services\MidtransService;
 use App\Services\TransactionCompletionService;
 use Illuminate\Http\RedirectResponse;
@@ -23,8 +22,7 @@ class CartController extends Controller
 
     private function userCart(bool $create = false): ?Cart
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         if ($create) {
             return Cart::firstOrCreate(['user_id' => $user->id]);
@@ -78,8 +76,7 @@ class CartController extends Controller
 
     public function updateQuantity(Request $request, CartItem $cartItem): RedirectResponse
     {
-        /** @var User $user */
-        $user = $request->user();
+        $user = $this->authUserFromRequest($request);
         abort_if($cartItem->cart->user_id !== $user->id, 403);
 
         $quantity = max(1, (int) $request->input('quantity', 1));
@@ -95,9 +92,7 @@ class CartController extends Controller
 
     public function remove(CartItem $cartItem): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-        abort_if($cartItem->cart->user_id !== $user->id, 403);
+        $user = $this->authUser();
 
         $cart = $cartItem->cart;
         $cartItem->delete();
@@ -135,8 +130,7 @@ class CartController extends Controller
         $extraDonation = $validated['extra_donation'] ?? 0;
         $totalPaid = $totalProductPrice + $extraDonation;
 
-        /** @var User $user */
-        $user = $request->user();
+        $user = $this->authUserFromRequest($request);
 
         $transaction = Transaction::create([
             'buyer_id'             => $user->id,

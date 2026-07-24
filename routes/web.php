@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
     })->name('inisiasi');
 
     Route::get('/verify', [FundraiserVerificationController::class, 'create'])->name('verify');
+    Route::post('/verify/draft', [FundraiserVerificationController::class, 'saveDraft'])->name('verify.draft');
+    Route::post('/verify/draft-file', [FundraiserVerificationController::class, 'uploadDraftFile'])->name('verify.draft-file');
     Route::post('/verify', [FundraiserVerificationController::class, 'store'])->name('verify.store');
 
     // User Info

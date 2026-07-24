@@ -107,4 +107,19 @@ class User extends Authenticatable
     {
         return $this->hasRole('fundraiser');
     }
+
+    public function avatarAssetUrl(): ?string
+    {
+        return $this->avatar_url ? asset($this->avatar_url) : null;
+    }
+
+    public function hasAvatar(): bool
+    {
+        return filled($this->avatar_url);
+    }
+
+    public function avatarInitial(): string
+    {
+        return strtoupper(substr($this->display_name, 0, 1));
+    }
 }

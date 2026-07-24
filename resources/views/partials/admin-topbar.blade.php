@@ -3,7 +3,7 @@
   <div class="dash-topbar-right">
     <div class="profile-wrap">
       <div class="dash-profile" id="profileBtn">
-        <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
+        @include('partials.user-avatar')
         <div>
           <p class="dash-profile-name">{{ auth()->user()->display_name }}</p>
           <p class="dash-profile-email">{{ auth()->user()->email }}</p>

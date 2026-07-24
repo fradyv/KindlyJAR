@@ -1,16 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gabung Jadi Hero · KindlyJAR</title>
+  <title>Gabung Jadi Hero � KindlyJAR</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="{{ asset('global/style.css') }}"/>
   <link rel="stylesheet" href="{{ asset('global/dashboard.css') }}"/>
 </head>
 <body class="dashboard-body">
 
-  <!-- ── SIDEBAR ── -->
+  <!-- -- SIDEBAR -- -->
   <aside class="sidebar">
     <div class="sidebar-top">
       <a class="logo sidebar-logo" href="{{ route('home') }}">
@@ -66,7 +66,7 @@
     </div>
   </aside>
 
-  <!-- ── KANAN: topbar (tidak scroll) + konten (scroll) ── -->
+  <!-- -- KANAN: topbar (tidak scroll) + konten (scroll) -- -->
   <div class="dash-right">
 
     <div class="dash-topbar">
@@ -92,7 +92,7 @@
         </div>
         <div class="profile-wrap">
           <div class="dash-profile" id="profileBtn">
-            <img src="{{ asset('assets/pp dahsboard.jpg') }}" alt="{{ auth()->user()->display_name }}" class="dash-avatar" />
+            @include('partials.user-avatar')
             <div>
               <p class="dash-profile-name" id="dashProfileName">{{ auth()->user()->display_name }}</p>
               <p class="dash-profile-email" id="dashProfileEmail">{{ auth()->user()->email }}</p>
@@ -110,7 +110,7 @@
 
         <div id="heroFormWrap">
 
-          <!-- ── 1. HERO SECTION ── -->
+          <!-- -- 1. HERO SECTION -- -->
           <div class="dash-section inisiasi-hero">
             <div class="inisiasi-hero-bg">
               <img src="{{ asset('assets/photo baru.jpg') }}" alt="" />
@@ -120,34 +120,34 @@
             <a href="#formPendaftaranToko" class="btn-hero inisiasi-cta-btn">Isi Form Pendaftaran</a>
           </div>
 
-          <!-- ── 2. KENAPA HARUS JADI HERO ── -->
+          <!-- -- 2. KENAPA HARUS JADI HERO -- -->
           <div class="dash-section">
             <h3 class="dash-card-title">Kenapa Harus Jadi Hero?</h3>
             <div class="inisiasi-why-grid">
               <div class="inisiasi-why-card">
-                <span class="inisiasi-why-icon">🛒</span>
+                <span class="inisiasi-why-icon">??</span>
                 <h4>Buka Toko Sendiri</h4>
                 <p>Jual produk apapun yang mendukung program kebaikan.</p>
               </div>
               <div class="inisiasi-why-card">
-                <span class="inisiasi-why-icon">📦</span>
+                <span class="inisiasi-why-icon">??</span>
                 <h4>Kelola Pesanan dengan Mudah</h4>
                 <p>Pantau pesanan masuk langsung dari dashboard.</p>
               </div>
               <div class="inisiasi-why-card">
-                <span class="inisiasi-why-icon">❤️</span>
+                <span class="inisiasi-why-icon">??</span>
                 <h4>100% Hasil Penjualan Tersalurkan</h4>
                 <p>Semua dana dari produk yang terjual langsung masuk ke program donasi, bukan keuntungan pribadi.</p>
               </div>
               <div class="inisiasi-why-card">
-                <span class="inisiasi-why-icon">✅</span>
+                <span class="inisiasi-why-icon">?</span>
                 <h4>Proses Cepat</h4>
                 <p>Gak perlu verifikasi ribet, langsung isi data toko.</p>
               </div>
             </div>
           </div>
 
-          <!-- ── 3 & 4. FORM PENDAFTARAN TOKO + TOMBOL AKSI ── -->
+          <!-- -- 3 & 4. FORM PENDAFTARAN TOKO + TOMBOL AKSI -- -->
           <div class="dash-section" id="formPendaftaranToko">
             <h3 class="dash-card-title">Form Pendaftaran Toko</h3>
             <p class="dash-card-sub">Lengkapi data toko kamu, prosesnya cepat kok.</p>
@@ -155,7 +155,7 @@
             @if ($errors->any())
               <div class="verification-banner" style="background:#fef2f2;border-color:#fecaca;margin-bottom:16px;">
                 <div class="banner-content">
-                  <span class="banner-icon">⚠️</span>
+                  <span class="banner-icon">??</span>
                   <p>{{ $errors->first() }}</p>
                 </div>
               </div>
@@ -257,7 +257,7 @@
   <script src="{{ asset('global/script.js') }}"></script>
   @include('partials.dash-dropdown-script')
   <script>
-    // ── Nomor HP/WhatsApp: cuma boleh angka, huruf/simbol otomatis dibuang ──
+    // -- Nomor HP/WhatsApp: cuma boleh angka, huruf/simbol otomatis dibuang --
     document.getElementById('tokoHpInput').addEventListener('input', (e) => {
       e.target.value = e.target.value.replace(/\D/g, '');
     });

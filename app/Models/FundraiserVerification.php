@@ -22,6 +22,7 @@ class FundraiserVerification extends Model
         'statement_letter',
         'supporting_docs',
         'status',
+        'created_at',
     ];
 
     public function user()

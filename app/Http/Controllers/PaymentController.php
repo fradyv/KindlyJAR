@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
-use App\Models\User;
 use App\Services\MidtransService;
 use App\Services\TransactionCompletionService;
 use Illuminate\Http\RedirectResponse;
@@ -21,8 +20,7 @@ class PaymentController extends Controller
 
     public function show(Transaction $transaction): View|RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         abort_if($transaction->buyer_id !== $user->id, 403);
 
@@ -52,8 +50,7 @@ class PaymentController extends Controller
 
     public function finish(Request $request, Transaction $transaction): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         abort_if($transaction->buyer_id !== $user->id, 403);
 

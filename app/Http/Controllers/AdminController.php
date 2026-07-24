@@ -132,8 +132,7 @@ class AdminController extends Controller
             }
         }
 
-        /** @var User $admin */
-        $admin = auth()->user();
+        $admin = $this->authUser();
 
         $withdrawal->update([
             'status'   => 'approved',
@@ -149,8 +148,7 @@ class AdminController extends Controller
             return back()->with('error', 'Permintaan pencairan ini sudah diproses sebelumnya.');
         }
 
-        /** @var User $admin */
-        $admin = auth()->user();
+        $admin = $this->authUser();
 
         $withdrawal->update([
             'status'   => 'rejected',

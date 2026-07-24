@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentMethod;
-use App\Models\User;
 use App\Models\UserSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,8 +14,7 @@ class SettingsController extends Controller
 {
     public function index(): View
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $verification = $user->fundraiserVerification;
         $settings = $user->settings ?? new UserSettings([
             'enable_2fa'               => false,
@@ -33,24 +31,27 @@ class SettingsController extends Controller
         $validated = $request->validate([
             'current_password' => ['required', 'string'],
             'password'          => ['required', 'string', 'min:8', 'confirmed'],
+            
         ]);
 
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
 
         if (! Hash::check($validated['current_password'], $user->hash_password)) {
             return back()->withErrors(['current_password' => 'Password saat ini salah.']);
         }
 
-        $user->update(['hash_password' => Hash::make($validated['password'])]);
+        
+
+        $user->update([
+            'hash_password' => Hash::make($validated['password']),
+        ]);
 
         return back()->with('success', 'Password berhasil diperbarui.');
     }
 
     public function updateTwoFactor(Request $request): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['enable_2fa' => $request->boolean('enable_2fa')]);
 
@@ -66,8 +67,7 @@ class SettingsController extends Controller
             $preferences[$key] = $request->boolean("notif.$key");
         }
 
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['notification_preferences' => $preferences]);
 
@@ -83,8 +83,7 @@ class SettingsController extends Controller
             $permissions[$key] = $request->boolean("privacy.$key");
         }
 
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $settings = $user->settings()->firstOrCreate([]);
         $settings->update(['privacy_permissions' => $permissions]);
 
@@ -99,8 +98,7 @@ class SettingsController extends Controller
             'account_name'    => ['required', 'string', 'max:255'],
         ]);
 
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $makeDefault = ! $user->paymentMethods()->exists();
 
         $method = $user->paymentMethods()->create([
@@ -113,8 +111,7 @@ class SettingsController extends Controller
 
     public function setDefaultPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         abort_if($paymentMethod->user_id !== $user->id, 403);
 
         $user->paymentMethods()->update(['is_default' => false]);
@@ -125,8 +122,7 @@ class SettingsController extends Controller
 
     public function destroyPaymentMethod(PaymentMethod $paymentMethod): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         abort_if($paymentMethod->user_id !== $user->id, 403);
 
         $wasDefault = $paymentMethod->is_default;
@@ -142,8 +138,7 @@ class SettingsController extends Controller
 
     public function deactivate(Request $request): RedirectResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
+        $user = $this->authUser();
         $user->update(['is_active' => false]);
 
         Auth::logout();
